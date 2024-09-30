@@ -7,7 +7,7 @@ const users = [
     email: "daniel.szabo@travel.com",
     hashedPassword: "hash1",
     isLoggedIn: false,
-    createdOn: "2024-12-10",
+    createdOn: new Date(),
     destinations: [
       {
         _id: new ObjectId(), // Unique ID for the destination (MongoDb by defualt only creates it for the users)
@@ -24,7 +24,7 @@ const users = [
     email: "john.smith@example.com",
     hashedPassword: "hash2",
     isLoggedIn: true,
-    createdOn: "2024-01-15",
+    createdOn: new Date(),
     destinations: [
       {
         _id: new ObjectId(),
@@ -49,7 +49,7 @@ const users = [
     email: "emily.davis@example.com",
     hashedPassword: "hash3",
     isLoggedIn: false,
-    createdOn: "2024-02-20",
+    createdOn: new Date(),
     destinations: [
       {
         _id: new ObjectId(),
@@ -66,7 +66,7 @@ const users = [
     email: "michael.brown@example.com",
     hashedPassword: "hash4",
     isLoggedIn: true,
-    createdOn: "2024-03-05",
+    createdOn: new Date(),
     destinations: [
       {
         _id: new ObjectId(),
@@ -83,7 +83,7 @@ const users = [
     email: "sophia.wilson@example.com",
     hashedPassword: "hash5",
     isLoggedIn: false,
-    createdOn: "2024-04-10",
+    createdOn: new Date(),
     destinations: [
       {
         _id: new ObjectId(),
