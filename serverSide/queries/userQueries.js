@@ -1,140 +1,102 @@
-import mongoose from "../db/connect.js";
+import mongoose from '../db/connect.js'
 import User from "../schemas/userSchema.js";
+
 
 // GET
 
 // Get all users
 export async function getUsers() {
   try {
-    return User.find();
+    return await User.find();
   } catch (error) {
     console.error("Failed to get users:", error);
     throw new Error("Failed to get users");
-  } finally {
-    mongoose.close();
   }
 }
 
 // // Get a user by id
-// export async function getUserById(id) {
-//   try {
-//     const db = await connect();
+export async function getUserById(id) {
+  try {
 
-//     // Convert string id to ObjectId (MongoDb uses ObjectId type)
-//     const objectId = new ObjectId(id);
-//     console.log("Id= " + id);
-//     console.log("ObjectId= " + objectId);
-//     // Query specific user by objectId
-//     const user = await db.collection("users").findOne({ _id: objectId });
-
-//     return user;
-//   } catch (error) {
-//     console.error("Failed to get user by id:", error);
-//     throw new Error("Failed to get user by id");
-//   } finally {
-//     await closeConnection();
-//   }
-// }
+    return User.findById(id);
+  } catch (error) {
+    console.error("Failed to get user by id:", error);
+    throw new Error("Failed to get user by id");
+  }
+}
 
 // // Get a user by email
-// export async function getUserByEmail(email) {
-//   try {
-//     const db = await connect();
-//     const user = await db.collection("users").findOne({ email });
-//     return user;
-//   } catch (error) {
-//     console.error("Failed to get user by email:", error);
-//     throw new Error("Failed to get user by email");
-//   } finally {
-//     await closeConnection();
-//   }
-// }
+export async function getUserByEmail(email) {
+  try {
+    return User.findOne({ email });
+  } catch (error) {
+    console.error("Failed to get user by email:", error);
+    throw new Error("Failed to get user by email");
+  }
+}
 
-// // Authentica user, gives back user object on success or null on fail
-// export async function authenticateUser(credentials) {
-//   const { email, password } = credentials;
+// Authentica user, gives back user object on success or null on fail
+export async function authenticateUser(credentials) {
+  const { email, password } = credentials;
 
-//   try {
-//     const db = await connect();
-//     const user = await db.collection("users").findOne(
-//       { email },
-//       { projection: { destinations: 0 } } // Exclude the destinations
-//     );
-//     console.log("Found email");
-//     if (!user) {
-//       return null;
-//     }
+  try {
+    const user = await User.findOne(
+      { email })
 
-//     // Compare the "hashed" password
-//     if (user.hashedPassword !== password) {
-//       return null;
-//     }
+    if (!user) {
+      return null;
+    }
 
-//     return user; // Return user if authentication is successful
-//   } catch (error) {
-//     console.error("Failed to authenticate user:", error);
-//     throw new Error("Failed to authenticate user");
-//   }
-// }
+    // Compare the "hashed" password
+    if (user.hashedPassword !== password) {
+      return null;
+    }
 
-// // Create a new user
-// export async function createUser(user) {
-//   const db = await connect();
-//   try {
-//     const result = await db.collection("users").insertOne(user);
-//     if (result.acknowledged) {
-//       return result.insertedId;
-//     } else {
-//       throw new Error("Failed to insert user");
-//     }
-//   } catch (error) {
-//     console.error("Error creating user:", error);
-//     throw error;
-//   } finally {
-//     await closeConnection();
-//   }
-// }
+    return user; // Return user if authentication is successful
+  } catch (error) {
+    console.error("Failed to authenticate user:", error);
+    throw new Error("Failed to authenticate user");
+  }
+}
 
-// // Update a user by email - Work in Progress
-// export async function updateUserByEmail(email, updates) {
-//   const db = await connect();
-//   const result = await db
-//     .collection("users")
-//     .updateOne({ email }, { $set: updates });
-//   return result.modifiedCount;
-// }
+// Create a new user
+export async function createUser(user) {
+  try {
+    const newUser = new User(user);
+    return newUser.save();
+  } catch (error) {
+    console.error("Error creating user:", error);
+    throw error;
+  }
+}
 
-// // Toggle the loggedIn status of a user by email
-// export async function toggleUserLoggedInStatus(email) {
-//   try {
-//     const db = await connect();
-//     const user = await db.collection("users").findOne({ email });
+// Update a user by email - Work in Progress
+export async function updateUserByEmail(email, updates) {
+  try {
+    return User.findOneAndUpdate(email, updates);
+  } catch (error) {
+    console.error("Error updating user:", error);
+    throw error;
+  }
+}
 
-//     if (!user) {
-//       throw new Error("User not found");
-//     }
-
-//     // Toggle the isLoggedIn status true/false
-//     const newStatus = !user.isLoggedIn;
-
-//     // Update the user with the new status
-//     const result = await db
-//       .collection("users")
-//       .updateOne({ email }, { $set: { isLoggedIn: newStatus } });
-
-//     if (result.modifiedCount > 0) {
-//       console.log(`User ${email} loggedIn status changed to ${newStatus}`);
-//       return { email, isLoggedIn: newStatus };
-//     } else {
-//       throw new Error("Failed to update user status");
-//     }
-//   } catch (error) {
-//     console.error("Error toggling user loggedIn status:", error);
-//     throw error;
-//   } finally {
-//     await closeConnection();
-//   }
-// }
+// Toggle the loggedIn status of a user by email
+export async function toggleUserLoggedInStatus(email) {
+  try {
+    const user = await User.findOne({email})
+    if (!user) {
+      throw new Error("User not found");
+    }
+   
+    user.isLoggedIn = !user.isLoggedIn;
+  
+    // Update the user with the new status
+    return user.save();
+  } catch (error) {
+    console.error("Error toggling user loggedIn status:", error);
+    throw error;
+  }
+}
 
 // // Delete a user by email - Work in progress
 // export async function deleteUserByEmail(email) {
