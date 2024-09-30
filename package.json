@@ -8,7 +8,7 @@
     "nodemon": "^3.1.7"
   },
   "scripts": {
-    "setup": "node db/setupDB.js",
+    "setup": "node serverSide/db/setupDB.js",
     "queries": "node queries/queryExercises.js"
   }
 }

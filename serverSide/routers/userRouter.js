@@ -1,7 +1,7 @@
 import express from "express";
 const usersRouter = express.Router();
 
-import { getUsers, getUserById, getUserByEmail, toggleUserLoggedInStatus, authenticateUser, createUser } from "../queries/userQueries.js";
+import { getUsers, getUserById, getUserByEmail, toggleUserLoggedInStatus, authenticateUser, createUser} from "../queries/userQueries.js";
 
 // GET all users
 usersRouter.get("/", async (req, res) => {
@@ -28,7 +28,7 @@ usersRouter.get("/id/:id", async (req, res) => {
   }
 });
 
-// GET user by email
+// // GET user by email
 usersRouter.get("/email/:email", async (req, res) => {
   try {
     const email = req.params.email;

@@ -1,88 +1,37 @@
-import { MongoClient, ObjectId, ServerApiVersion } from "mongodb";
+import mongoose from '../db/connect.js'
+import User from "../schemas/userSchema.js";
 
-const uri = "mongodb://127.0.0.1:27017/";
-const dbName = "travelDestinations";
-
-let client;
-
-// Connect to MongoDB
-async function connect() {
-  if (!client) {
-    client = new MongoClient(uri, {
-      serverApi: {
-        version: ServerApiVersion.v1,
-        strict: true,
-        deprecationErrors: true,
-      },
-    });
-    try {
-      await client.connect();
-      console.log("Connected to MongoDB");
-    } catch (error) {
-      console.error("Failed to connect to MongoDB", error);
-      throw error;
-    }
-  }
-  return client.db(dbName);
-}
-
-// Close the MongoDB connection
-async function closeConnection() {
-  if (client) {
-    await client.close();
-    client = null;
-    console.log("Disconnected from MongoDB");
-  }
-}
 
 // GET
 
 // Get all users
 export async function getUsers() {
   try {
-    const db = await connect();
-    const users = await db.collection("users").find({}).toArray();
-    return users;
+    return await User.find();
   } catch (error) {
     console.error("Failed to get users:", error);
     throw new Error("Failed to get users");
-  } finally {
-    await closeConnection();
   }
 }
 
-// Get a user by id
+// // Get a user by id
 export async function getUserById(id) {
-    try {
-        const db = await connect();
+  try {
 
-        // Convert string id to ObjectId (MongoDb uses ObjectId type)
-        const objectId = new ObjectId(id);
-        console.log('Id= ' + id);
-        console.log('ObjectId= ' + objectId);
-        // Query specific user by objectId
-        const user = await db.collection('users').findOne({ _id: objectId });
-      
-        return user;
-    } catch (error) {
-        console.error("Failed to get user by id:", error);
-        throw new Error("Failed to get user by id");
-    } finally {
-        await closeConnection();
-    };
-};
+    return User.findById(id);
+  } catch (error) {
+    console.error("Failed to get user by id:", error);
+    throw new Error("Failed to get user by id");
+  }
+}
 
-// Get a user by email
+// // Get a user by email
 export async function getUserByEmail(email) {
   try {
-    const db = await connect();
-    const user = await db.collection("users").findOne({ email });
-    return user;
+    return User.findOne({ email });
   } catch (error) {
     console.error("Failed to get user by email:", error);
     throw new Error("Failed to get user by email");
-  } finally {
-    await closeConnection();
   }
 }
 
@@ -90,91 +39,71 @@ export async function getUserByEmail(email) {
 export async function authenticateUser(credentials) {
   const { email, password } = credentials;
 
-
   try {
-    const db = await connect();
-    const user = await db.collection("users").findOne(
-      { email },
-      { projection: { destinations: 0 } } // Exclude the destinations
-    );
-    console.log("Found email");
+    const user = await User.findOne(
+      { email })
+
     if (!user) {
       return null;
-    };
+    }
 
     // Compare the "hashed" password
     if (user.hashedPassword !== password) {
       return null;
-    };
+    }
 
     return user; // Return user if authentication is successful
   } catch (error) {
     console.error("Failed to authenticate user:", error);
     throw new Error("Failed to authenticate user");
   }
-};
+}
 
 // Create a new user
 export async function createUser(user) {
-  const db = await connect();
   try {
-    const result = await db.collection("users").insertOne(user);
-    if (result.acknowledged) {
-      return result.insertedId;
-    } else {
-      throw new Error("Failed to insert user");
-    }
+    const newUser = new User(user);
+    return newUser.save();
   } catch (error) {
     console.error("Error creating user:", error);
     throw error;
-  } finally {
-    await closeConnection();
   }
 }
 
 // Update a user by email - Work in Progress
 export async function updateUserByEmail(email, updates) {
-  const db = await connect();
-  const result = await db.collection("users").updateOne({ email }, { $set: updates });
-  return result.modifiedCount;
+  try {
+    return User.findOneAndUpdate(email, updates);
+  } catch (error) {
+    console.error("Error updating user:", error);
+    throw error;
+  }
 }
 
 // Toggle the loggedIn status of a user by email
 export async function toggleUserLoggedInStatus(email) {
   try {
-    const db = await connect();
-    const user = await db.collection("users").findOne({ email });
-
+    const user = await User.findOne({email})
     if (!user) {
       throw new Error("User not found");
     }
-
-    // Toggle the isLoggedIn status true/false
-    const newStatus = !user.isLoggedIn;
-
+   
+    user.isLoggedIn = !user.isLoggedIn;
+  
     // Update the user with the new status
-    const result = await db.collection("users").updateOne({ email }, { $set: { isLoggedIn: newStatus } });
-
-    if (result.modifiedCount > 0) {
-      console.log(`User ${email} loggedIn status changed to ${newStatus}`);
-      return { email, isLoggedIn: newStatus };
-    } else {
-      throw new Error("Failed to update user status");
-    }
+    return user.save();
   } catch (error) {
     console.error("Error toggling user loggedIn status:", error);
     throw error;
-  } finally {
-    await closeConnection();
   }
 }
 
-// Delete a user by email - Work in progress
-export async function deleteUserByEmail(email) {
-  const db = await connect();
-  const result = await db.collection("users").deleteOne({ email });
-  return result.deletedCount;
-}
+// // Delete a user by email - Work in progress
+// export async function deleteUserByEmail(email) {
+//   const db = await connect();
+//   const result = await db.collection("users").deleteOne({ email });
+//   return result.deletedCount;
+// }
 
 // // Create indexes for email in user collection
 // async function createIndexes() {

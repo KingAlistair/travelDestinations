@@ -7,13 +7,13 @@ Content-Type: application/json
 ###
 
 // Get User by id
-GET http://localhost:3000/api/users/id/66f55a3969b40ef3c762b1f5
+GET http://localhost:3000/api/users/id/66fa8b7c8b7083b1e05c3be1
 Content-Type: application/json
 
 ###
 
 // Get User by Email
-GET http://localhost:3000/api/users/email/john.smith@example.com
+GET http://localhost:3000/api/users/email/daniel.szabo@travel.com
 Content-Type: application/json
 
 ###
@@ -24,8 +24,8 @@ POST http://localhost:3000/api/users/authentication
 Content-Type: application/json
 
 {
-  "email": "daniel.szabo@travel.com",
-  "password": "hash1"
+  "email": "daniel.sszabo@travel.com",
+  "password": "hash1s"
 }
 
 
@@ -36,11 +36,13 @@ POST http://localhost:3000/api/users/
 Content-Type: application/json
 
 {
-    "email": "admin@admin.com",
-    "first_name": "admin",
-    "last_name": "admin",
-    "password": "admin"
-}
+    "userName": "Daniel2 Szabo",
+    "email": "daniel2.szabo@travel.com",
+    "hashedPassword": "hash1",
+    "isLoggedIn": false,
+    "createdOn": "2024-09-30T11:29:00.180Z",
+    "countryCode": "us"
+  }
 
 ###
 
