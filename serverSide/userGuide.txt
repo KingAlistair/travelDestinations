@@ -1,0 +1,9 @@
+
+1. clone repository
+2. npm i 
+3. node app.js - to run express server
+4. node mongoDB - to run mongoDB server
+5. npm run setup - creates ( deletes if exists) default database 
+
+
+6. npm run queries - to console.log query exercises 

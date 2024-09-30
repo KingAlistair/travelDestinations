@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add your travel destination</title>
+    <script src="formsAction.js" type="module"></script>
+    <!-- <script src="script.js" type="module"></script> -->
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header><h1>Add your travel destination</h1></header>
+    <main>
+      <!-- display when the user is signed in or logged in (logInStatus has to be true)  -->
+      <div id="addDestinationContainer" class="formContainer">
+        <form id="addDestinationForm">
+          <legend>Add a new destination</legend>
+          <div>
+            <input type="text" id="destinationTitle" placeholder="Title" required />
+          </div>
+          <div>
+            <input type="text" id="destinationDescription" placeholder="Description" required />
+          </div>
+          <div>
+            <input type="text" id="destinationImageUrl" placeholder="Image URL" />
+          </div>
+          <div>
+            <input type="text" id="destinationWikiLink" placeholder="Wikipedia Link" />
+          </div>
+          <div>
+            <input type="text" id="destinationTag" placeholder="Tag" />
+          </div>
+          <div>
+            <input type="submit" value="Create now" />
+          </div>
+        </form>
+      </div>
+
+      <!-- display when user is NOT signed in (logInStatus is false)-->
+      <div id="userAccessContainer" class="formContainer">
+        <div>
+          <p id="signInMessage">Please sign in to add a new destination</p>
+        </div>
+        <div id="signInContainer">
+          <form id="signInForm">
+            <legend>Sign in</legend>
+            <div>
+              <input type="email" id="userEmail" placeholder="Email" required />
+            </div>
+            <div>
+              <input type="password" id="userPassword" placeholder="Password" required />
+            </div>
+            <div>
+              <input type="submit" value="Sign in" />
+            </div>
+          </form>
+        </div>
+        <div id="registerContainer">
+          <p id="registerMessage">Don't have an account?</p>
+          <button id="registerButton" name="register">Register now</button>
+          <form id="registerForm" class="hidden">
+            <legend>Register your account</legend>
+            <div>
+              <input type="text" id="newUsername" name="username" placeholder="Username" required />
+            </div>
+            <div>
+              <input type="email" id="newUserEmail" name="email" placeholder="Email" required />
+            </div>
+            <div>
+              <input type="password" id="newUserPassword" name="password" placeholder="Password" required />
+            </div>
+            <div>
+              <input type="submit" value="Register" />
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+    <footer></footer>
+  </body>
+</html>

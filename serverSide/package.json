@@ -1,0 +1,14 @@
+{
+  "type": "module",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.0",
+    "mongodb": "^6.9.0",
+    "mongoose": "^8.7.0",
+    "nodemon": "^3.1.7"
+  },
+  "scripts": {
+    "setup": "node db/setupDB.js",
+    "queries": "node queries/queryExercises.js"
+  }
+}

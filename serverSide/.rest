@@ -1,0 +1,107 @@
+// Users
+
+// Get all users
+GET http://localhost:3000/api/users
+Content-Type: application/json
+
+###
+
+// Get User by id
+GET http://localhost:3000/api/users/id/66f55a3969b40ef3c762b1f5
+Content-Type: application/json
+
+###
+
+// Get User by Email
+GET http://localhost:3000/api/users/email/john.smith@example.com
+Content-Type: application/json
+
+###
+
+// Authenticate user
+
+POST http://localhost:3000/api/users/authentication
+Content-Type: application/json
+
+{
+  "email": "daniel.szabo@travel.com",
+  "password": "hash1"
+}
+
+
+###
+
+// Create new user
+POST http://localhost:3000/api/users/
+Content-Type: application/json
+
+{
+    "email": "admin@admin.com",
+    "first_name": "admin",
+    "last_name": "admin",
+    "password": "admin"
+}
+
+###
+
+
+// Toggle user status by email
+PATCH http://localhost:3000/api/users/daniel.szabo@travel.com/toggle_status
+Content-Type: application/json
+
+###
+
+
+// Destinations
+
+// Get all destinations
+GET http://localhost:3000/api/destinations
+Content-Type: application/json
+
+###
+
+// Get all destinations for specific user by email
+GET http://localhost:3000/api/destinations/users/daniel.szabo@travel.com
+Content-Type: application/json
+
+###
+
+// Get specific destinations by user email and id
+GET http://localhost:3000/api/destinations/66f1a999ba7401bfc5cfe838/users/daniel.szabo@travel.com
+Content-Type: application/json
+
+###
+
+// Create new destination for user by email
+POST http://localhost:3000/api/destinations/users/daniel.szabo@travel.com
+Content-Type: application/json
+
+  {
+    "title": "Summer in Nepal 2",
+    "description": "It was fun there",
+    "image": "path/to/image",
+    "link": "https://en.wikipedia.org/wiki/Nepal",
+    "tag": "Nepal"
+  }
+
+###
+
+// Update destination by user email and destination id
+PUT http://localhost:3000/api/destinations/66f1b8e6f0e5c43afb81aff7/users/daniel.szabo@travel.com
+Content-Type: application/json
+
+  {
+    "title": "Summer in Nepal 4",
+    "description": "It was fun there",
+    "image": "path/to/image",
+    "link": "https://en.wikipedia.org/wiki/Nepal",
+    "tag": "Nepal"
+  }
+
+###
+
+// DELETE destination by user email and destination id
+DELETE http://localhost:3000/api/destinations/66f1b8e6f0e5c43afb81aff7/users/daniel.szabo@travel.com
+Content-Type: application/json
+
+###

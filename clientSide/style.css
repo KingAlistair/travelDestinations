@@ -1,0 +1,87 @@
+.hidden {
+  display: none;
+}
+.visible {
+  display: block;
+}
+body {
+  display: flex;
+  flex-direction: column;
+  gap: 5rem;
+  text-align: center;
+}
+img {
+  width: 300px;
+  height: 200px;
+  /* max-width: 100%;
+    max-height: 100%; */
+  object-fit: cover;
+}
+
+button {
+  background-color: white;
+  padding: 0.7rem 1.8rem;
+  border: 2px solid rgb(29, 90, 164);
+  border-radius: 8px;
+  color: rgb(29, 90, 164);
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 400ms ease-in-out;
+}
+button:hover {
+  border: 2px solid transparent;
+  cursor: pointer;
+  background-color: rgb(229, 225, 255);
+}
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  background-color: aliceblue;
+  padding: 1rem;
+  border-radius: 8px;
+  max-width: 14rem;
+}
+form > div {
+  min-width: 100%;
+}
+form > div > input {
+  min-width: 100%;
+}
+form > div > input:not([type="submit"]) {
+  border: none;
+}
+.formContainer {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  width: 30rem;
+  gap: 2rem;
+  justify-content: space-around;
+  align-content: center;
+  margin: auto;
+}
+#destinationsContainer > div {
+  display: flex;
+  flex-direction: column;
+  max-width: 300px;
+  min-height: 150px;
+  max-height: 300px;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#destinationsContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-evenly;
+}
+#destinationsContainer > div > img {
+  margin-bottom: auto;
+}
+#destinationsContainer > div > a {
+  margin-top: auto;
+}
