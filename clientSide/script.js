@@ -1,9 +1,6 @@
-import { getCountryFlag } from "./countries/getCountryFlagcountries";
-
 //import users and destinations
 const destinationsContainer = document.getElementById("destinationsContainer");
 
-document.getElementById("countryFlag").src= getCountryFlag("ad")
 
 //FETCH userStatus - checking with local storage too
 export const checkLoginStatus = async () => {

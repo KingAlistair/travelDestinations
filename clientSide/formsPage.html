@@ -4,8 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Add your travel destination</title>
-    <script src="formsAction.js" type="module"></script>
-    <!-- <script src="script.js" type="module"></script> -->
+    <script src="./script.js" type="module" defer></script>
+    <script src="./formsAction.js" type="module" defer></script>
+    
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
@@ -28,7 +29,9 @@
             <input type="text" id="destinationWikiLink" placeholder="Wikipedia Link" />
           </div>
           <div>
-            <input type="text" id="destinationTag" placeholder="Tag" />
+            <select id="destinationCountryCode" placeholder="Select a country" required>
+            </select>
+            <img id="countryFlag" class="countryFlag" />
           </div>
           <div>
             <input type="submit" value="Create now" />

@@ -9,6 +9,7 @@
   },
   "scripts": {
     "setup": "node serverSide/db/setupDB.js",
-    "queries": "node queries/queryExercises.js"
+    "queries": "node queries/queryExercises.js",
+    "dev": "node serverSide/app.js"
   }
 }
