@@ -42,10 +42,10 @@ destinationsRouter.get("/users/:email", async (req, res) => {
 // POST new destination
 destinationsRouter.post("/", async (req, res) => {
   try {
-    const destination = req.body;
-    const userEmail = req.user?.email;
+    const destination = req.body.destination;
+    const userEmail = req.body.userEmail;
     if (!userEmail) {
-      return res.status(401).json({ error: "Unauthorized: User not logged in" });
+      return res.status(401).json({ error: "Unauthorized: User not logged in!" });
     }
     const newDestination = await createDestination(userEmail, destination);
 
@@ -64,7 +64,7 @@ destinationsRouter.post("/", async (req, res) => {
 destinationsRouter.put("/:id", async (req, res) => {
   try {
     const destinationId = req.params.id;
-    const userEmail = req.user?.email;
+    const userEmail = req.body.userEmail;
     if (!userEmail) {
       return res.status(401).json({ error: "Unauthorized: User not logged in" });
     }
@@ -87,7 +87,7 @@ destinationsRouter.put("/:id", async (req, res) => {
 destinationsRouter.delete("/:id", async (req, res) => {
   try {
     const destinationId = req.params.id;
-    const userEmail = req.user?.email;
+    const userEmail = req.body.userEmail;
     if (!userEmail) {
       return res.status(401).json({ error: "Unauthorized: User not logged in" });
     }

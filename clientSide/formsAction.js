@@ -1,6 +1,6 @@
 //import users and destinations here
 import { checkLoginStatus } from "./script.js";
-import { populateCountryDropdown, getCountryFlagUrl } from './countries/countries.js';
+import { populateCountryDropdown, getCountryFlagUrl } from "./countries/countries.js";
 //global variables used by both events
 const registerButton = document.getElementById("registerButton");
 const addDestinationContainer = document.getElementById("addDestinationContainer");
@@ -11,10 +11,8 @@ const addDestinationForm = document.getElementById("addDestinationForm");
 const signInContainer = document.getElementById("signInContainer");
 const signInMessage = document.getElementById("signInMessage");
 const registerMessage = document.getElementById("registerMessage");
-const countryDropdown = document.getElementById('destinationCountryCode');
-const countryFlag = document.getElementById('countryFlag');
-
-
+const countryDropdown = document.getElementById("destinationCountryCode");
+const countryFlag = document.getElementById("countryFlag");
 
 const currentUserLogin = (await checkLoginStatus()) || false;
 
@@ -63,9 +61,8 @@ const registerUser = async (e) => {
       hashedPassword: newUserPassword,
       email: newUserEmail,
       cretedOn: currentDate,
-      lastLoggedIn: currentDate,
+      // lastLoggedIn: currentDate,
       isLoggedIn: true,
-      destinations: [],
     };
     const registeredUser = await createNewUser(userPayload);
     //update local storage with user email and login status
@@ -89,7 +86,6 @@ const createNewUser = async (userPayload) => {
   return registeredUser;
 };
 
-
 const signInUser = async (e) => {
   localStorage.clear();
   //avoid reloading the page
@@ -103,6 +99,7 @@ const signInUser = async (e) => {
     const credentials = { email: userEmail, password: userPassword };
     const authenticatedUser = await authenticateUser(credentials);
     alert(`You are now signed in. Welcome back ${authenticatedUser.user.userName}!`);
+    console.log("authenticatedUser", authenticatedUser);
     localStorage.setItem("currentUser", JSON.stringify({ isLoggedIn: authenticatedUser.user.isLoggedIn, email: authenticatedUser.user.email }));
     displayCreateForm(true);
   }
@@ -123,7 +120,9 @@ const authenticateUser = async (credentials) => {
 
 const addDestination = async (e) => {
   e.preventDefault();
-
+  const currentUserObject = localStorage.getItem("currentUser");
+  const currentUser = JSON.parse(currentUserObject);
+  console.log(currentUser);
   const title = document.getElementById("destinationTitle").value;
   const description = document.getElementById("destinationDescription").value;
   const imageURL = document.getElementById("destinationImageUrl").value;
@@ -138,20 +137,22 @@ const addDestination = async (e) => {
     countryCode: countryCode,
   };
 
-  console.log(destinationPayload)
+  const payload = { destination: destinationPayload, userEmail: currentUser.email };
+  console.log("payload", payload);
+  const createdDestination = await createDestination(payload);
 
-  const createdDestination = await createDestination(destinationPayload);
-  alert(`${createdDestination.title} has been added to the list of destinations!`);
+  if (createdDestination) {
+    alert(`${createdDestination.title} has been added to the list of destinations!`);
+  } else {
+    alert(`${createdDestination.title} could not be added`);
+  }
   return createdDestination;
 };
 
-const createDestination = async (destinationPayload) => {
-  const currentUserObject = localStorage.getItem("currentUser");
-  const currentUser = JSON.parse(currentUserObject);
-
-  const response = await fetch(`http://localhost:3000/api/destinations/users/${currentUser.email}`, {
+const createDestination = async (payload) => {
+  const response = await fetch(`http://localhost:3000/api/destinations`, {
     method: "POST",
-    body: JSON.stringify(destinationPayload),
+    body: JSON.stringify(payload),
     headers: {
       "Content-Type": "application/json",
     },
@@ -187,18 +188,17 @@ window.addEventListener("load", () => displayCreateForm(currentUserLogin));
 populateCountryDropdown(countryDropdown);
 
 // Event listener to handle country selection and flag display
-countryDropdown.addEventListener('change', function () {
+countryDropdown.addEventListener("change", function () {
   const selectedCode = this.value;
-  console.log('Selected country code:', selectedCode);
-
+  console.log("Selected country code:", selectedCode);
 
   const flagUrl = getCountryFlagUrl(selectedCode);
-  
+
   // Update the flag image source and display it
   if (selectedCode) {
     countryFlag.src = flagUrl;
-    countryFlag.style.display = 'block'; // Show the flag image
+    countryFlag.style.display = "block"; // Show the flag image
   } else {
-    countryFlag.style.display = 'none'; // Hide the flag image if no country is selected
+    countryFlag.style.display = "none"; // Hide the flag image if no country is selected
   }
 });
