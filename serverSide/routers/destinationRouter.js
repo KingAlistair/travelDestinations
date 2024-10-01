@@ -1,107 +1,104 @@
-import express from 'express';
+import express from "express";
 const destinationsRouter = express.Router();
 
-import {
-    getDestinations,
-    getDestinationsByUserId,
-    getDestinationByEmailAndId,
-    createDestination,
-    updateDestination,
-    deleteDestination
-  } from '../queries/destinationQueries.js';
+import { getDestinations, getDestinationsByUserId, createDestination, updateDestination, deleteDestination } from "../queries/destinationQueries.js";
 
 // GET all destinations
-destinationsRouter.get('/', async (req, res) => {
+destinationsRouter.get("/", async (req, res) => {
   try {
     const destinations = await getDestinations();
     res.json(destinations);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch destinations' });
+    res.status(500).json({ error: "Failed to fetch destinations" });
+  }
+});
+
+// GET a destination by destinationId
+destinationsRouter.get("/:id", async (req, res) => {
+  try {
+    const destinationId = req.params.id;
+    const destination = await getDestinationByDestinationId(destinationId);
+    if (destination) {
+      res.json(destination);
+    } else {
+      res.status(404).json({ error: "Destination not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch destination" });
   }
 });
 
 // GET destinations by user email
-destinationsRouter.get('/users/:email', async (req, res) => {
+destinationsRouter.get("/users/:email", async (req, res) => {
   try {
     const email = req.params.email;
     const destinations = await getDestinationsByUserId(email);
     res.json(destinations);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch destinations for user' });
-  }
-});
-
-// GET a specific destination by user email and destination ID
-destinationsRouter.get('/:id/users/:email', async (req, res) => {
-  try {
-    const email = req.params.email;
-    const destinationId = req.params.id;
-
-    const destination = await getDestinationByEmailAndId(email, destinationId);
-
-    if (destination) {
-      res.json(destination); // Return the destination if found
-    } else {
-      res.status(404).json({ error: 'Destination not found' });
-    }
-  } catch (error) {
-    console.error('Error fetching destination:', error);
-    res.status(500).json({ error: 'Failed to fetch destination' });
+    res.status(500).json({ error: "Failed to fetch destinations for user" });
   }
 });
 
 // POST new destination
-destinationsRouter.post('/users/:email/', async (req, res) => {
+destinationsRouter.post("/", async (req, res) => {
   try {
-    const email = req.params.email;
     const destination = req.body;
-
-    const newDestination = await createDestination(email, destination);
+    const userEmail = req.user?.email;
+    if (!userEmail) {
+      return res.status(401).json({ error: "Unauthorized: User not logged in" });
+    }
+    const newDestination = await createDestination(userEmail, destination);
 
     if (newDestination) {
       res.status(201).json(newDestination); // Return the new destination object
     } else {
-      res.status(404).json({ error: 'User not found or destination could not be added' });
+      res.status(404).json({ error: "User not found or destination could not be added" });
     }
   } catch (error) {
-    console.error('Error creating destination:', error);
-    res.status(500).json({ error: 'Failed to create destination' });
+    console.error("Error creating destination:", error);
+    res.status(500).json({ error: "Failed to create destination" });
   }
 });
 
 // Update destination by id and email
-destinationsRouter.put('/:id/users/:email', async (req, res) => {
+destinationsRouter.put("/:id", async (req, res) => {
   try {
     const destinationId = req.params.id;
-    const userEmail = req.params.email;
+    const userEmail = req.user?.email;
+    if (!userEmail) {
+      return res.status(401).json({ error: "Unauthorized: User not logged in" });
+    }
     const updatedData = req.body;
 
     const updatedDestination = await updateDestination(userEmail, destinationId, updatedData);
 
     if (updatedDestination) {
-      res.json({ message: 'Destination updated successfully' });
+      res.json({ message: "Destination updated successfully" });
     } else {
-      res.status(404).json({ error: 'Destination not found or no changes made' });
+      res.status(404).json({ error: "Destination not found or no changes made" });
     }
   } catch (error) {
-    console.error('Error updating destination:', error);
-    res.status(500).json({ error: 'Failed to update destination' });
+    console.error("Error updating destination:", error);
+    res.status(500).json({ error: "Failed to update destination" });
   }
 });
 
 // DELETE destination
-destinationsRouter.delete('/:id/users/:email', async (req, res) => {
+destinationsRouter.delete("/:id", async (req, res) => {
   try {
     const destinationId = req.params.id;
-    const userEmail = req.params.email;
+    const userEmail = req.user?.email;
+    if (!userEmail) {
+      return res.status(401).json({ error: "Unauthorized: User not logged in" });
+    }
     const deleted = await deleteDestination(userEmail, destinationId);
     if (deleted) {
-      res.json({ message: 'Destination deleted successfully' });
+      res.json({ message: "Destination deleted successfully" });
     } else {
-      res.status(404).json({ error: 'Destination not found' });
+      res.status(404).json({ error: "Destination not found" });
     }
   } catch (error) {
-    res.status(500).json({ error: 'Failed to delete destination' });
+    res.status(500).json({ error: "Failed to delete destination" });
   }
 });
 
