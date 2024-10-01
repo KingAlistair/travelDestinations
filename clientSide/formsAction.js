@@ -1,5 +1,6 @@
 //import users and destinations here
 import { checkLoginStatus } from "./script.js";
+import { populateCountryDropdown, getCountryFlagUrl } from './countries/countries.js';
 //global variables used by both events
 const registerButton = document.getElementById("registerButton");
 const addDestinationContainer = document.getElementById("addDestinationContainer");
@@ -10,6 +11,10 @@ const addDestinationForm = document.getElementById("addDestinationForm");
 const signInContainer = document.getElementById("signInContainer");
 const signInMessage = document.getElementById("signInMessage");
 const registerMessage = document.getElementById("registerMessage");
+const countryDropdown = document.getElementById('destinationCountryCode');
+const countryFlag = document.getElementById('countryFlag');
+
+
 
 const currentUserLogin = (await checkLoginStatus()) || false;
 
@@ -22,7 +27,7 @@ const currentDate = new Date().toLocaleString([], {
   second: undefined,
 });
 
-//if the user clicks on the register button, we hide the mssages hinting at signing in or register
+//if the user clicks on the register button, we hide the messages hinting at signing in or register
 const displayRegisterForm = () => {
   signInMessage.classList.add("hidden");
   registerMessage.classList.add("hidden");
@@ -84,6 +89,7 @@ const createNewUser = async (userPayload) => {
   return registeredUser;
 };
 
+
 const signInUser = async (e) => {
   localStorage.clear();
   //avoid reloading the page
@@ -122,15 +128,17 @@ const addDestination = async (e) => {
   const description = document.getElementById("destinationDescription").value;
   const imageURL = document.getElementById("destinationImageUrl").value;
   const wikiLink = document.getElementById("destinationWikiLink").value;
-  const tag = document.getElementById("destinationTag").value;
+  const countryCode = document.getElementById("destinationCountryCode").value;
 
   const destinationPayload = {
     title: title,
     description: description,
     image: imageURL,
     link: wikiLink,
-    tag: tag,
+    countryCode: countryCode,
   };
+
+  console.log(destinationPayload)
 
   const createdDestination = await createDestination(destinationPayload);
   alert(`${createdDestination.title} has been added to the list of destinations!`);
@@ -174,3 +182,22 @@ const displayCreateForm = async (currentUserLogin) => {
   }
 };
 window.addEventListener("load", () => displayCreateForm(currentUserLogin));
+
+populateCountryDropdown(countryDropdown);
+
+// Event listener to handle country selection and flag display
+countryDropdown.addEventListener('change', function () {
+  const selectedCode = this.value;
+  console.log('Selected country code:', selectedCode);
+
+
+  const flagUrl = getCountryFlagUrl(selectedCode);
+  
+  // Update the flag image source and display it
+  if (selectedCode) {
+    countryFlag.src = flagUrl;
+    countryFlag.style.display = 'block'; // Show the flag image
+  } else {
+    countryFlag.style.display = 'none'; // Hide the flag image if no country is selected
+  }
+});

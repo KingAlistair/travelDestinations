@@ -85,3 +85,15 @@ form > div > input:not([type="submit"]) {
 #destinationsContainer > div > a {
   margin-top: auto;
 }
+
+select {
+  max-width: 100%;
+}
+
+.countryFlag {
+  height: 2rem;
+  width: 4rem;
+  margin: auto;
+  display: none;
+  margin-top: 0.5rem;
+}

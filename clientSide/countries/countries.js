@@ -1,17 +1,46 @@
 
 
-export function getCountryFlag(countryCode) {
+// Get country name by country code
+export function getCountryNameByCode(countryCode) {
+    return countries[countryCode.toLowerCase()] || "Country not found";
+}
 
-    const api = `https://flagcdn.com/16x12/${countryCode.toLowerCase()}.png`;
-    
+// Get country code by country name
+export function getCountryCodeByName(countryName) {
+    for (let code in countries) {
+        if (countries[code].toLowerCase() === countryName.toLowerCase()) {
+            return code;
+        }
+    }
+    return "Country code not found";
+}
+
+// Get the flag image URL by country code
+export function getCountryFlagUrl(countryCode) {
+    const api = `https://flagcdn.com/64x48/${countryCode.toLowerCase()}.png`;
     console.log(api);
     return api;
 }
 
-//Api for flag
-const getCountryFlag = "https://flagcdn.com/16x12/ua.png"
+export function populateCountryDropdown(dropdown) {
+    dropdown.innerHTML = '';
+  
+    // Create default placeholder option
+    const defaultOption = document.createElement('option');
+    defaultOption.value = '';
+    defaultOption.textContent = 'Select a country';
+    dropdown.appendChild(defaultOption);
+  
+    // Populate the dropdown with country names as options
+    for (const code in countries) {
+      const option = document.createElement('option');
+      option.value = code; // Set country code as the value
+      option.textContent = countries[code]; // Set country name as the display text
+      dropdown.appendChild(option);
+    }
+  }
 
-export const countries = [
+export const countries =
     {
         "ad": "Andorra",
         "ae": "United Arab Emirates",
@@ -304,7 +333,7 @@ export const countries = [
         "us-wy": "Wyoming",
         "uy": "Uruguay",
         "uz": "Uzbekistan",
-        "va": "Vatican City (Holy See)",
+        "va": "Vatican City",
         "vc": "Saint Vincent and the Grenadines",
         "ve": "Venezuela",
         "vg": "British Virgin Islands",
@@ -320,4 +349,3 @@ export const countries = [
         "zm": "Zambia",
         "zw": "Zimbabwe"
         }
-    ];
