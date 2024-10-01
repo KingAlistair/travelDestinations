@@ -5,17 +5,145 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="script.js" type="module"></script>
 
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- INTER Font-family -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <!-- Libre Baskerville Font-family -->
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Icons Library -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
     <link rel="stylesheet" href="style.css" />
     <title>Travel Destinations</title>
   </head>
+
+
   <body>
     <img id="countryFlag" src="`https://flagcdn.com/16x12/ua.png`" style="width: 60px; height: 60px;">
-    <header><h1>Travel Destinations</h1></header>
+    
+    <!-- Header -->
+    <header>
+
+      <!-- Logo --> 
+      <div class="logo">
+        <img src="photos/logo.svg" alt="Logo">
+      </div>
+        
+      <!-- Sign-in button (shown when user is not logged in) -->
+      <div class="auth-buttons" id="sign-in">
+        <a href="formsPage.html">
+          <button class="sign-in-btn">Sign In <i class="fa-solid fa-arrow-right" style="color: #ffffff;"></i></button>
+        </a>
+      
+      </div>
+        
+      <!-- Profile icon with dropdown menu (shown when user is logged in) -->
+      <div class="profile-menu" id="profile-menu" style="display: none;">
+        <img src="photos/profile-photo.jpg" alt="Profile" class="profile-icon">
+        <button class="sign-out-btn">Sign Out <i class="fa-solid fa-arrow-right" style="color: #ffffff;"></i></button>
+      </div>     
+        
+    </header>
     <main>
-      <!-- display all destinations -->
-      <div id="destinationsContainer"></div>
-      <a href="formsPage.html"><button id="addDestinationButton" name="addDestinationButton">Add a new destination</button></a>
+
+      <!-- Hero Section -->
+      <section class="hero">
+        <div class="hero-content">
+          <h1>Wander the world, <br>one destination at a time</h1>
+          <p>From hidden gems to world-famous landmarks, we bring you the places that inspire adventure, connection, and discovery.</p>
+          <button class="sign-up-btn"><i id="arrow-right" class="fa-solid fa-arrow-right" style="color: #ffffff;"></i>Sign Up</button>
+        </div>
+      </section> 
+    
+      
+      <!-- Destinations grid with 'Add new destination' button -->
+  
+        <section class="call-to-action">
+          <a href="formsPage.html">
+            <button id="addDestinationButton" name="addDestinationButton">Add new destination<i id="plus-icon" class="fa-solid fa-plus" style="color: #ffffff;"></i></button>
+          </a>
+        </section>
+      
+        <section class="destinations">
+            <!-- Card1 -->
+            <div class="destination-card">
+              <img src="photos/france.jpg" alt="Destination Image" class="destination-image">
+              <h2 class="destination-title">The city of love</h2>
+              <div class="user-info">
+                <img src="photos/profile-photo.jpg" alt="User Photo" class="profile-photo">
+                <span class="user-name">ExploringEthan</span>
+                <span class="user-location">Hamburg, Germany</span>
+              </div>
+              <p class="destination-description">I recently visited the Louvre Museum in Paris, and it was unforgettable! The stunning architecture alone is worth the trip, especially the glass pyramid. I marveled at the Mona Lisa up close and explored countless masterpieces. The art and history in every corner left me in awe. Highly recommend it to every art lover!</p>
+              <div class="post-info">
+                <i class="fa-solid fa-clock" style="color: #333333;"></i>
+                <span class="post-date">19 Sep, 2024 - 11 Oct 2024</span>
+              </div>
+              <div class="action-buttons">
+                <button class="edit-btn">Edit</button>
+                <button class="delete-btn">Delete</button>
+              </div>
+            </div>
+        
+            <!-- Card2 -->
+            <div class="destination-card">
+              <img src="photos/france.jpg" alt="Destination Image" class="destination-image">
+              <h2 class="destination-title">The city of love</h2>
+              <div class="user-info">
+                <img src="photos/profile-photo.jpg" alt="User Photo" class="profile-photo">
+                <span class="user-name">ExploringEthan</span>
+                <span class="user-location">Hamburg, Germany</span>
+              </div>
+              <p class="destination-description">I recently visited the Louvre Museum in Paris, and it was unforgettable! The stunning architecture alone is worth the trip, especially the glass pyramid. I marveled at the Mona Lisa up close and explored countless masterpieces. The art and history in every corner left me in awe. Highly recommend it to every art lover!</p>
+              <div class="post-info">
+                <i class="fa-solid fa-clock" style="color: #333333;"></i>
+                <span class="post-date">19 Sep, 2024 - 11 Oct 2024</span>
+              </div>
+              <div class="action-buttons">
+                <button class="edit-btn">Edit</button>
+                <button class="delete-btn">Delete</button>
+              </div>
+            </div>
+        
+            <!-- Card3 -->
+            <div class="destination-card">
+              <img src="photos/france.jpg" alt="Destination Image" class="destination-image">
+              <h2 class="destination-title">The city of love</h2>
+              <div class="user-info">
+                <img src="photos/profile-photo.jpg" alt="User Photo" class="profile-photo">
+                <span class="user-name">ExploringEthanr</span>
+                <span class="user-location">Hamburg, Germany</span>
+              </div>
+              <p class="destination-description">I recently visited the Louvre Museum in Paris, and it was unforgettable! The stunning architecture alone is worth the trip, especially the glass pyramid. I marveled at the Mona Lisa up close and explored countless masterpieces. The art and history in every corner left me in awe. Highly recommend it to every art lover!</p>
+              <div class="post-info">
+                <i class="fa-solid fa-clock" style="color: #333333;"></i>
+                <span class="post-date">19 Sep, 2024 - 11 Oct 2024</span>
+              </div>
+              <div class="action-buttons">
+                <button class="edit-btn">Edit</button>
+                <button class="delete-btn">Delete</button>
+              </div>
+            </div>
+        
+            </section>
+  
     </main>
-    <footer></footer>
+
+    <footer class="footer"></footer>
+      <div class="footer-content">
+
+        <div class="footer-logo">
+          <img src="photos/logo.svg" alt="Logo">
+        </div>
+        
+        <div class="footer-text">
+          <p>Copyright © 2024 Group3 | All Rights Reserved</p>
+        </div>
+
+      </div>
+    </footer>
+    
   </body>
 </html>
