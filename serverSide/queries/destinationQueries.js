@@ -1,195 +1,108 @@
-import { MongoClient, ObjectId, ServerApiVersion } from "mongodb";
+import mongoose from "../db/connect.js";
+import Destination from "../schemas/destinationsSchema.js";
+import { getUserByEmail } from "./userQueries.js";
 
-const uri = "mongodb://127.0.0.1:27017/";
-const dbName = "travelDestinations";
-
-let client;
-
-// Connect to MongoDB
-async function connect() {
-  if (!client) {
-    client = new MongoClient(uri, {
-      serverApi: {
-        version: ServerApiVersion.v1,
-        strict: true,
-        deprecationErrors: true,
-      },
-    });
-    try {
-      await client.connect();
-      console.log("Connected to MongoDB");
-    } catch (error) {
-      console.error("Failed to connect to MongoDB", error);
-      throw error;
-    };
-  };
-  return client.db(dbName);
-};
-
-// Close the MongoDB connection
-async function closeConnection() {
-  if (client) {
-    await client.close();
-    client = null;
-    console.log('Disconnected from MongoDB');
-  };
-};
-
-// Helper function to get the users collection to use for destinations
-async function getUsersCollection() {
-  const db = await connect();
-  return db.collection('users');
-};
-
-// Get all destinations from all users
+// Get all destinations
 export async function getDestinations() {
-  let usersCollection;
   try {
-    usersCollection = await getUsersCollection();
-    const users = await usersCollection.find({}, { projection: { destinations: 1 } }).toArray();
-    const allDestinations = users.flatMap(user => user.destinations || []); // Flatten the destinations into single array
-    return allDestinations;
+    const destinations = await Destination.find();
+    return destinations;
   } catch (error) {
-    console.error('Failed to fetch destinations:', error);
-    throw new Error('Failed to fetch destinations');
-  } finally {
-    await closeConnection(); // Close conenction at the end
-  };
-};
+    console.error("Failed to fetch destinations:", error);
+    throw new Error("Failed to fetch destinations");
+  }
+}
 
-// Get all destinations for a specific user
+// Get all destinations for a specific user by user email
 export async function getDestinationsByUserId(email) {
-  let usersCollection;
   try {
-    usersCollection = await getUsersCollection();
-    const user = await usersCollection.findOne(
-      { email: email },
-      { projection: { destinations: 1 } } // Get only the destinations array
-    );
-    return user.destinations || []; // Return destinations or an empty array
+    if (!email) {
+      throw new Error("User email is required");
+    }
+    const user = await getUserByEmail(email);
+    if (!user) {
+      throw new Error("User not found");
+    }
+    const destinations = await Destination.find({ userId: user._id });
+    return destinations;
   } catch (error) {
-    console.error('Failed to fetch destinations by user ID:', error);
-    throw new Error('Failed to fetch destinations by user ID');
-  } finally {
-    await closeConnection();
-  };
-};
+    console.error("Failed to get destinations for the user:", error);
+    throw new Error("Failed to get destinations for the user");
+  }
+}
 
-// Get specific destination by user email and destination id
-export async function getDestinationByEmailAndId(userEmail, destinationId) {
+// Get specific destination by destination id
+export async function getDestinationByDestinationId(destinationId) {
   try {
-    const usersCollection = await getUsersCollection();
-
-    // Convert destinationId to ObjectId
-    const objectId = new ObjectId(destinationId);
-    console.log("In query: " + destinationId);
-
-    const user = await usersCollection.findOne(
-      {
-        email: userEmail,
-        destinations: { $elemMatch: { _id: objectId } } // Find destination by _id within the destinations array
-      },
-      {
-        projection: { "destinations.$": 1 }, // Get only the matched destination
-      }
-    );
-
-    // Return the matched destination if it exists
-    return user ? user.destinations[0] : null;
+    if (!destinationId) {
+      throw new Error("Destination ID is required");
+    }
+    const destination = await Destination.findOne({ _id: destinationId });
+    if (!destination) {
+      throw new Error("Destination not found");
+    }
+    return destination;
   } catch (error) {
     console.error("Failed to fetch destination:", error);
     throw new Error("Failed to fetch destination");
-  } finally {
-    await closeConnection();
   }
 }
 
 // Create a new destination for a specific user
 export async function createDestination(email, destination) {
   try {
-    const usersCollection = await getUsersCollection();
-
-    // Create a new destination ObjectId
-    const newDestination = { _id: new ObjectId(), ...destination };
-
-    // Insert destination into user that matches email
-    const result = await usersCollection.insertOne(
-      { email: email },
-      { $push: { destinations: newDestination } }
-    );
-
-    // Check if the destination was added successfully
-    if (result.modifiedCount > 0) {
-      console.log(`Destination added successfully for user: ${email}`);
-      return newDestination;
-    } else {
-      console.log(`No user found with email: ${email}`);
-      return null;
+    const user = await getUserByEmail(email);
+    if (!user) {
+      throw new Error("User not found");
     }
+    const newDestination = new Destination({ userId: user._id, ...destination });
+    return newDestination.save();
   } catch (error) {
-    console.error("Failed to create destination:", error);
+    console.error("Error creating destination:", error);
     throw new Error("Failed to create destination");
-  } finally {
-    await closeConnection();
-  };
-};
+  }
+}
 
 // Update a specific destination for a user
-export async function updateDestination(userEmail, destinationId, updatedData) {
+export async function updateDestination(email, destinationId, updatedData) {
   try {
-    const usersCollection = await getUsersCollection();
-    const result = await usersCollection.updateOne(
-      {
-        email: userEmail,
-        'destinations._id': new ObjectId(destinationId)
-      },
-      {
-        $set: {
-          "destinations.$.title": updatedData.title,
-          "destinations.$.description": updatedData.description,
-          "destinations.$.image": updatedData.image,
-          "destinations.$.link": updatedData.link,
-          "destinations.$.tag": updatedData.tag,
-        },
-      }
+    //user has to be logged in to update a destination - will have to change this later for authentication
+    const user = await getUserByEmail(email);
+    if (!user) {
+      throw new Error("User not found");
+    }
+    // Update the destination document
+    const updatedDestination = await Destination.findByIdAndUpdate(
+      destinationId,
+      updatedData,
+      { new: true } // This returns the updated document based on mongoose docs
     );
-
-    return result.modifiedCount > 0;
+    if (!updatedDestination) {
+      throw new Error("Destination not found and couldn't be updated");
+    }
+    return updatedDestination;
   } catch (error) {
     console.error("Failed to update destination:", error);
-    throw new Error("Failed to update destination");
-  } finally {
-    await closeConnection();
+    throw new Error("Failed to update destination. Make sure the user is logged in before attempting to update a destination");
   }
 }
 
 // Delete a specific destination for a user identified by email and destination ID
-export async function deleteDestination(userEmail, destinationId) {
+export async function deleteDestination(email, destinationId) {
   try {
-    const usersCollection = await getUsersCollection();
-    const objectId = new ObjectId(destinationId);
-
-    // Remove destination from array where id match using $pull
-    const result = await usersCollection.updateOne(
-      {
-        email: userEmail,
-      },
-      {
-        $pull: { destinations: { _id: objectId } },
-      }
-    );
-
-    if (result.modifiedCount === 0) {
-      console.log("No document matched the given userEmail and destinationId, or no changes were made.");
-    } else {
-      console.log("Destination deleted successfully.");
+    //user has to be logged in to delete a destination - will have to change this later for authentication
+    const user = await getUserByEmail(email);
+    if (!user) {
+      throw new Error("User not found");
     }
-
-    return result.modifiedCount > 0;
+    //delete the destination
+    const destinationToDelete = await Destination.findByIdAndDelete(destinationId);
+    if (!destinationToDelete) {
+      throw new Error("Destination not found and couldn't be deleted");
+    }
+    return console.log(`Destination successfully deleted by ${user}`);
   } catch (error) {
-    console.error("Failed to delete destination:", error);
-    throw new Error("Failed to delete destination");
-  } finally {
-    await closeConnection();
+    console.error("Failed to update destination:", error);
+    throw new Error("Failed to update destination. Make sure the user is logged in before attempting to update a destination");
   }
 }
