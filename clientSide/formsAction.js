@@ -183,6 +183,7 @@ const displayCreateForm = async (currentUserLogin) => {
 };
 window.addEventListener("load", () => displayCreateForm(currentUserLogin));
 
+//Populate Country select with countries
 populateCountryDropdown(countryDropdown);
 
 // Event listener to handle country selection and flag display

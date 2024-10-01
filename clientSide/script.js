@@ -60,12 +60,3 @@ const displayDestinations = async () => {
 
 //ONLOAD call function to fetch user status
 window.addEventListener("load", displayDestinations);
-
-
-
-export async function fetchAndDisplayFlag(countryCode) {
-  const flagUrl = getCountryFlag(countryCode);
-  const img = document.createElement('img');
-  img.src = flagUrl;
-  document.body.appendChild(img); // Add flag image to the page
-}

@@ -22,6 +22,7 @@ export function getCountryFlagUrl(countryCode) {
     return api;
 }
 
+// Populate the country select with options
 export function populateCountryDropdown(dropdown) {
     dropdown.innerHTML = '';
   
