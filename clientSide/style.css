@@ -91,7 +91,7 @@ select {
 }
 
 .countryFlag {
-  height: 2rem;
+  height: 3rem;
   width: 4rem;
   margin: auto;
   display: none;
