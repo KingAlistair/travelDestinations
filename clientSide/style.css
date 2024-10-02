@@ -35,7 +35,7 @@ header {
 .auth-buttons{
   display: flex;
 }
-.auth-buttons .sign-in-btn {
+.auth-buttons .sign-in-btn, .sign-out-btn {
 padding: 10px 20px;
 background-color: var(--primary-color);
 color: var(--white);
@@ -50,24 +50,33 @@ display: flex;
 align-items: center;
 }
 
-.auth-buttons .sign-in-btn:hover {
+.auth-buttons .sign-in-btn:hover, .sign-out-btn:hover {
 background-color: var(--primary-color-dark);
 }
 
 /* Profile */
 .profile-menu {
-position: relative;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .profile-icon {
-height: 40px;
-width: 40px;
-border-radius: 50%;
-cursor: pointer;
+  width: 50px; 
+  height: 50px; 
+  border-radius: 8px; 
+  margin-right: 10px; 
+  object-fit: cover;
+  border: 1px solid var(--white);
 }
 
-.profile-menu:hover {
-display: block;
+.profile-menu h3 {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--white); 
+  padding: 10px; 
 }
 
 /* Hero Section */
@@ -134,7 +143,9 @@ display: block;
   padding: 5px; 
   margin-right: 5px;
 }
-
+#arrow-right:hover{
+  background-color: var(--primary-color-dark);
+}
 /* Add new destination Button */
 .call-to-action {
   width: 1066px; 
@@ -158,7 +169,7 @@ display: block;
   margin-left: 5px;
 }
 #addDestinationButton:hover {
-  background-color: var(--primary-color-light);
+  background-color: var(--primary-color-dark);
 }
 
 /* Destinations Section */
@@ -262,7 +273,7 @@ display: block;
   font-size: 12px;
 }
 .edit-btn:hover {
-  background-color: var(--primary-color-light);
+  background-color: var(--primary-color-dark);
 }
 
 .delete-btn {
