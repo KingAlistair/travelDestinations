@@ -21,7 +21,7 @@
 
 
   <body>
-    <img id="countryFlag" src="`https://flagcdn.com/16x12/ua.png`" style="width: 60px; height: 60px;">
+
     
     <!-- Header -->
     <header>
@@ -59,14 +59,76 @@
       </section> 
     
       
+      <!-- ADD/EDIT desutinations -->
+      <div id="destinationsForms">
+        <div id="addDestinationContainer">
+          <form id="addDestinationForm">
+            <legend>Add a new destination</legend>
+
+            <div class="cardInformation">
+              <div>
+                <input type="text" id="destinationTitle" placeholder="Title" required />
+              </div>
+              <div>
+                <input type="text" id="destinationDescription" placeholder="Description" required />
+              </div>
+              <div>
+                <input type="text" id="destinationWikiLink" placeholder="Wikipedia Link" />
+              </div>
+              <div>
+                <select id="destinationCountryCode" placeholder="Select a country" required>
+                </select>
+                <img id="countryFlag" class="countryFlag" />
+              </div>
+              <div>
+                <input type="submit" value="Create now" />
+              </div>
+              
+            </div>
+
+            <div class="uploadImage">
+              <input type="text" id="destinationImageUrl" placeholder="Image URL" />
+            </div>
+
+          </form>
+        </div> 
+
+        <div id="editDestinationContainer" style="display: none;">
+          <form id="editDestinationForm">
+            <legend>Edit destination</legend>
+
+            <div class="cardInformation">
+              <div>
+                <input type="text" id="destinationTitle" placeholder="Title" required />
+              </div>
+              <div>
+                <input type="text" id="destinationDescription" placeholder="Description" required />
+              </div>
+              <div>
+                <input type="text" id="destinationWikiLink" placeholder="Wikipedia Link" />
+              </div>
+              <div>
+                <select id="destinationCountryCode" placeholder="Select a country" required>
+                </select>
+                <img id="countryFlag" class="countryFlag" />
+              </div>
+              <div>
+                <input type="submit" value="Create now" />
+              </div>
+              
+            </div>
+
+            <div class="uploadImage">
+              <input type="text" id="destinationImageUrl" placeholder="Image URL" />
+            </div>
+            
+          </form>
+        </div>
+      </div>
+
+
+
       <!-- Destinations grid with 'Add new destination' button -->
-  
-        <section class="call-to-action">
-          <a href="formsPage.html">
-            <button id="addDestinationButton" name="addDestinationButton">Add new destination<i id="plus-icon" class="fa-solid fa-plus" style="color: #ffffff;"></i></button>
-          </a>
-        </section>
-      
         <section class="destinations">
             <!-- Card1 -->
             <div class="destination-card">
@@ -77,10 +139,10 @@
                 <span class="user-name">ExploringEthan</span>
                 <span class="user-location">Hamburg, Germany</span>
               </div>
-              <p class="destination-description">I recently visited the Louvre Museum in Paris, and it was unforgettable! The stunning architecture alone is worth the trip, especially the glass pyramid. I marveled at the Mona Lisa up close and explored countless masterpieces. The art and history in every corner left me in awe. Highly recommend it to every art lover!</p>
+              <p class="destination-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
               <div class="post-info">
-                <i class="fa-solid fa-clock" style="color: #333333;"></i>
-                <span class="post-date">19 Sep, 2024 - 11 Oct 2024</span>
+                <i class="fa-solid fa-location-dot" style="color: #333333;"></i>
+                <a href="#">Open in Maps</a>
               </div>
               <div class="action-buttons">
                 <button class="edit-btn">Edit</button>
@@ -97,10 +159,10 @@
                 <span class="user-name">ExploringEthan</span>
                 <span class="user-location">Hamburg, Germany</span>
               </div>
-              <p class="destination-description">I recently visited the Louvre Museum in Paris, and it was unforgettable! The stunning architecture alone is worth the trip, especially the glass pyramid. I marveled at the Mona Lisa up close and explored countless masterpieces. The art and history in every corner left me in awe. Highly recommend it to every art lover!</p>
+              <p class="destination-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
               <div class="post-info">
-                <i class="fa-solid fa-clock" style="color: #333333;"></i>
-                <span class="post-date">19 Sep, 2024 - 11 Oct 2024</span>
+                <i class="fa-solid fa-location-dot" style="color: #333333;"></i>
+                <a href="#">Open in Maps</a>
               </div>
               <div class="action-buttons">
                 <button class="edit-btn">Edit</button>
@@ -117,10 +179,10 @@
                 <span class="user-name">ExploringEthanr</span>
                 <span class="user-location">Hamburg, Germany</span>
               </div>
-              <p class="destination-description">I recently visited the Louvre Museum in Paris, and it was unforgettable! The stunning architecture alone is worth the trip, especially the glass pyramid. I marveled at the Mona Lisa up close and explored countless masterpieces. The art and history in every corner left me in awe. Highly recommend it to every art lover!</p>
+              <p class="destination-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
               <div class="post-info">
-                <i class="fa-solid fa-clock" style="color: #333333;"></i>
-                <span class="post-date">19 Sep, 2024 - 11 Oct 2024</span>
+                <i class="fa-solid fa-location-dot" style="color: #333333;"></i>
+                <a href="#">Open in Maps</a>
               </div>
               <div class="action-buttons">
                 <button class="edit-btn">Edit</button>

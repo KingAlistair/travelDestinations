@@ -122,6 +122,7 @@ background-color: var(--primary-color-dark);
   font-family: 'Inter', sans-serif;
   font-size: 18px;
   margin-bottom: 20px;
+  text-align: left;
 }
 
 .sign-up-btn {
@@ -146,31 +147,17 @@ background-color: var(--primary-color-dark);
 #arrow-right:hover{
   background-color: var(--primary-color-dark);
 }
-/* Add new destination Button */
-.call-to-action {
-  width: 1066px; 
-  margin: 20px auto; /* Center the section */
-  display: flex; 
-  justify-content: flex-end; /* Align the button to the right */
-  padding: 10px 0; 
+/* Add7Edit destination*/
+.destinationsForms {
+  width: 1066px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-#addDestinationButton {
-  background-color: var(--primary-color);
-  color: var(--white); 
-  border: none;
-  border-radius: 5px; 
-  padding: 10px 20px; 
-  cursor: pointer; 
-  font-family: 'Inter', sans-serif;
-  font-weight: 600;
-  font-size: 12px;
-}
-#plus-icon{
-  margin-left: 5px;
-}
-#addDestinationButton:hover {
-  background-color: var(--primary-color-dark);
-}
+
+form addDestinationForm{
+  width: 100%;
+} 
 
 /* Destinations Section */
 .destinations {
@@ -185,7 +172,7 @@ background-color: var(--primary-color-dark);
 /* Destination Card */
 .destination-card {
   width: 334px; 
-  height: 535px; 
+  height: auto; 
   border-radius: 14.68px; 
   background-color: var(--text-color); 
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Optional shadow */
@@ -207,8 +194,8 @@ background-color: var(--primary-color-dark);
 /* Title */
 .destination-title {
   font-family: 'Inter', sans-serif;
-  font-size: 22px; 
-  font-weight: 600; 
+  font-size: 18px; 
+  font-weight: 700; 
   margin: 10px 0; 
 }
 
@@ -219,47 +206,56 @@ background-color: var(--primary-color-dark);
   margin-bottom: 10px; 
 }
 .profile-photo {
-  width: 40px; 
-  height: 40px; 
+  width: 30px; 
+  height: 30px; 
   border-radius: 50%; 
   margin-right: 10px; 
   object-fit: cover;
 }
 .user-name {
-  font-size: 12px;
-  font-weight: bold; 
+  font-size: 14px;
+  font-weight: 600; 
   margin-right: 5px; 
 }
 .user-location {
   color: var(--destinationCard-details-color); 
   font-size: 12px;
+  font-weight: 500;
 }
 
 /* Description */
 .destination-description {
   margin-bottom: 20px; 
-  font-size: 14px;
+  font-size: 12px;
+  text-align: left;
+  color: var(--text-color-dark);
+  font-weight: 500;
   
 }
 
 /* Post Info */
 .post-info {
-  font-size: 14px;
+  font-size: 12px;
   font-weight: bold;
   display: flex; 
-  align-items: center; 
+  align-items: center;
   margin-bottom: 20px;
-  color: var(--destinationCard-details-color);
 }
 .post-info i {
   margin-right: 5px; 
 }
+.post-info a{
+  color: var(--destinationCard-details-color);
+  font-style: none;
+}
+
 
 /* Action Buttons */
 .action-buttons {
   display: flex; 
   justify-content: space-between;
   width: 100%;
+  margin-bottom: 10px;
 }
 .edit-btn{
   background-color: var(--primary-color); 
@@ -269,7 +265,7 @@ background-color: var(--primary-color-dark);
   padding: 10px; 
   cursor: pointer; 
   font-family: 'Inter', sans-serif;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 12px;
 }
 .edit-btn:hover {
@@ -284,7 +280,7 @@ background-color: var(--primary-color-dark);
   padding: 10px; 
   cursor: pointer; 
   font-family: 'Inter', sans-serif; 
-  font-weight: 600;
+  font-weight: 700;
   font-size: 12px;
 }
 .delete-btn:hover {
@@ -323,6 +319,7 @@ background-color: var(--primary-color-dark);
   font-family: 'Inter', sans-serif;
   margin:0;
 }
+
 
 
 
