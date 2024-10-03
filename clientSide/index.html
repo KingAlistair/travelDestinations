@@ -3,8 +3,6 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="script.js" type="module"></script>
-
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,43 +12,31 @@
     <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     <!-- Icons Library -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
+    <script src="script.js" type="module" defer></script>
     <link rel="stylesheet" href="style.css" />
     <title>Travel Destinations</title>
   </head>
-
-
   <body>
-
-
-    
     <!-- Header -->
     <header>
-
       <!-- Logo --> 
       <div class="logo">
         <img src="photos/logo.svg" alt="Logo">
       </div>
-        
       <!-- Sign-in button (shown when user is not logged in) -->
       <div class="auth-buttons" id="sign-in">
         <a href="formsPage.html">
           <button class="sign-in-btn">Sign In <i class="fa-solid fa-arrow-right" style="color: #ffffff;"></i></button>
         </a>
-      
       </div>
-        
       <!-- Username + Profile icon + sign-out button- shown when user is logged in -->
-      <div class="profile-menu" id="profile-menu" style="display: none;">
+      <div class="profile-menu hidden" id="profile-menu">
         <h3>ExploringEthan</h3>
         <img src="photos/profile-photo.jpg" alt="Profile" class="profile-icon">
-        <button class="sign-out-btn">Sign Out <i class="fa-solid fa-arrow-right" style="color: #ffffff;"></i></button>
+        <button class="sign-out-btn" id="signOutButton">Sign Out <i class="fa-solid fa-arrow-right" style="color: #ffffff;"></i></button>
       </div>     
-        
     </header>
-
     <main>
-
       <!-- Hero Section -->
       <section class="hero">
         <div class="hero-content">
@@ -60,13 +46,11 @@
         </div>
       </section> 
     
-      
       <!-- ADD/EDIT desutinations -->
       <div id="destinationsForms">
         <div id="addDestinationContainer">
           <form id="addDestinationForm">
             <legend>Add a new destination</legend>
-
             <div class="cardInformation">
               <div>
                 <input type="text" id="destinationTitle" placeholder="Title" required />
@@ -80,25 +64,21 @@
               <div>
                 <select id="destinationCountryCode" placeholder="Select a country" required>
                 </select>
-                <img id="countryFlag" class="countryFlag" />
+                <img id="countryFlag" class="countryFlag" alt="countryFlag" />
+              </div>
+              <div class="uploadImage">
+                <input type="text" id="destinationImageUrl" placeholder="Image URL" />
               </div>
               <div>
                 <input type="submit" value="Create now" />
               </div>
-              
             </div>
-
-            <div class="uploadImage">
-              <input type="text" id="destinationImageUrl" placeholder="Image URL" />
-            </div>
-
           </form>
         </div> 
 
         <div id="editDestinationContainer" style="display: none;">
           <form id="editDestinationForm">
             <legend>Edit destination</legend>
-
             <div class="cardInformation">
               <div>
                 <input type="text" id="destinationTitle" placeholder="Title" required />
@@ -112,23 +92,19 @@
               <div>
                 <select id="destinationCountryCode" placeholder="Select a country" required>
                 </select>
-                <img id="countryFlag" class="countryFlag" />
+                <img id="countryFlag" class="countryFlag" alt="countryFlag"/>
+              </div>
+              <div class="uploadImage">
+                <input type="text" id="destinationImageUrl" placeholder="Image URL" />
               </div>
               <div>
                 <input type="submit" value="Create now" />
               </div>
-              
             </div>
-
-            <div class="uploadImage">
-              <input type="text" id="destinationImageUrl" placeholder="Image URL" />
-            </div>
-            
+           
           </form>
         </div>
       </div>
-
-
 
       <!-- Destinations grid with 'Add new destination' button -->
         <section class="destinations">
@@ -195,20 +171,16 @@
             </section>
   
     </main>
-
     <footer class="footer"></footer>
       <div class="footer-content">
-
         <div class="footer-logo">
           <img src="photos/logo.svg" alt="Logo">
         </div>
-        
         <div class="footer-text">
           <p>Copyright © 2024 Group3 | All Rights Reserved</p>
         </div>
-
       </div>
     </footer>
-    
   </body>
+
 </html>

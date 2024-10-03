@@ -1,20 +1,13 @@
-//import users and destinations here
-import { checkLoginStatus } from "./script.js";
-import { populateCountryDropdown, getCountryFlagUrl } from "./countries/countries.js";
 //global variables used by both events
 const registerButton = document.getElementById("registerButton");
-const addDestinationContainer = document.getElementById("addDestinationContainer");
-const userAccessContainer = document.getElementById("userAccessContainer");
+const signInButton = document.getElementById("signInButton");
 const registerForm = document.getElementById("registerForm");
 const signInForm = document.getElementById("signInForm");
-const addDestinationForm = document.getElementById("addDestinationForm");
 const signInContainer = document.getElementById("signInContainer");
-const signInMessage = document.getElementById("signInMessage");
-const registerMessage = document.getElementById("registerMessage");
-const countryDropdown = document.getElementById("destinationCountryCode");
-const countryFlag = document.getElementById("countryFlag");
+const registerContainer = document.getElementById("registerContainer");
+const messageToUser = document.getElementById("messageToUser");
 
-const currentUserLogin = (await checkLoginStatus()) || false;
+//const currentUserLogin = (await checkLoginStatus()) || false;
 
 const currentDate = new Date().toLocaleString([], {
   year: "numeric",
@@ -25,31 +18,22 @@ const currentDate = new Date().toLocaleString([], {
   second: undefined,
 });
 
-//Check the login status when the page loads
-window.addEventListener("load", () =>{
-  const currentUserObject = localStorage.getItem("currentUser");
-  const currentUser = JSON.parse(currentUserObject);
-
-  if (currentUser && currentUser.isLoggedIn) {
-    currentUserLogin = true;
-    displayCreateForm(true);
-  } else {
-    displayCreateForm(false);
-  }
-});
-
-
-
 //if the user clicks on the register button, we hide the messages hinting at signing in or register
-const displayRegisterForm = () => {
-  signInMessage.classList.add("hidden");
-  registerMessage.classList.add("hidden");
-  registerForm.classList.remove("hidden");
-  registerButton.classList.add("hidden");
-  signInContainer.classList.add("hidden");
+const displayForm = (buttonName) => {
+  console.log(buttonName);
+  if (buttonName === "signIn") {
+    signInContainer.classList.remove("hidden");
+    registerContainer.classList.add("hidden");
+    messageToUser.textContent = "Please sign in to add a new destination";
+  } else if (buttonName === "register") {
+    registerContainer.classList.remove("hidden");
+    signInContainer.classList.add("hidden");
+    messageToUser.textContent = "Please register to add a new destination";
+  }
 };
-//listen for register button
-registerButton.addEventListener("click", displayRegisterForm);
+//listen for which button is clicked and show the right form
+registerButton.addEventListener("click", () => displayForm(registerButton.name));
+signInButton.addEventListener("click", () => displayForm(signInButton.name));
 
 const registerUser = async (e) => {
   //clear local storage to make sure this doesn't cause troubles
@@ -143,102 +127,7 @@ const authenticateUser = async (credentials) => {
   return newlyAuthenticatedUser;
 };
 
-const addDestination = async (e) => {
-  e.preventDefault();
-  const currentUserObject = localStorage.getItem("currentUser");
-  const currentUser = JSON.parse(currentUserObject);
-  console.log(currentUser);
-  const title = document.getElementById("destinationTitle").value;
-  const description = document.getElementById("destinationDescription").value;
-  const imageURL = document.getElementById("destinationImageUrl").value;
-  const wikiLink = document.getElementById("destinationWikiLink").value;
-  const countryCode = document.getElementById("destinationCountryCode").value;
-
-  const destinationPayload = {
-    title: title,
-    description: description,
-    image: imageURL,
-    link: wikiLink,
-    countryCode: countryCode,
-  };
-
-  const payload = { destination: destinationPayload, userEmail: currentUser.email };
-  console.log("payload", payload);
-  const createdDestination = await createDestination(payload);
-
-  if (createdDestination) {
-    alert(`${createdDestination.title} has been added to the list of destinations!`);
-  } else {
-    alert(`${createdDestination.title} could not be added`);
-  }
-  return createdDestination;
-};
-
-const createDestination = async (payload) => {
-  const response = await fetch(`http://localhost:3000/api/destinations`, {
-    method: "POST",
-    body: JSON.stringify(payload),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  const createdDestination = await response.json();
-  console.log("createdDestination", createdDestination);
-  return createdDestination;
-};
-
 //when register form is submitted
 registerForm.addEventListener("submit", (e) => registerUser(e));
 //if user signs in - displayed by default
 signInForm.addEventListener("submit", (e) => signInUser(e));
-//when the user clicks on create new destination
-addDestinationForm.addEventListener("submit", (e) => addDestination(e));
-//on reload check if the user is still logged in
-const displayCreateForm = async (currentUserLogin) => {
-  if (currentUserLogin === true) {
-    console.log(currentUserLogin);
-    addDestinationContainer.classList.remove("hidden");
-    addDestinationContainer.classList.add("formContainer");
-    userAccessContainer.classList.remove("formContainer");
-    userAccessContainer.classList.add("hidden");
-  } else if (currentUserLogin === false) {
-    addDestinationContainer.classList.remove("formContainer");
-    addDestinationContainer.classList.add("hidden");
-    userAccessContainer.classList.remove("hidden");
-  }
-};
-window.addEventListener("load", () => displayCreateForm(currentUserLogin));
-
-//Populate Country select with countries
-populateCountryDropdown(countryDropdown);
-
-// Event listener to handle country selection and flag display
-countryDropdown.addEventListener("change", function () {
-  const selectedCode = this.value;
-  console.log("Selected country code:", selectedCode);
-
-  const flagUrl = getCountryFlagUrl(selectedCode);
-
-  // Update the flag image source and display it
-  if (selectedCode) {
-    countryFlag.src = flagUrl;
-    countryFlag.style.display = "block"; // Show the flag image
-  } else {
-    countryFlag.style.display = "none"; // Hide the flag image if no country is selected
-  }
-});
-
-//Sign-out functionality
-const logout = () => {
-  localStorage.removeItem("currentUser");
-  displayCreateForm(false); // Update UI to show user access
-};
-
-const signOutButton = document.querySelector('.sign-out-btn');
-if (signOutButton) {
-  signOutButton.addEventListener ('click', () => {
-    logout();
-  });
-};
-
-

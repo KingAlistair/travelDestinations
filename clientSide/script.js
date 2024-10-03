@@ -1,6 +1,10 @@
 //import users and destinations
+import { populateCountryDropdown, getCountryFlagUrl } from "./countries/countries.js";
 const destinationsContainer = document.getElementById("destinationsContainer");
-
+const countryDropdown = document.getElementById("destinationCountryCode");
+const countryFlag = document.getElementById("countryFlag");
+const addDestinationForm = document.getElementById("addDestinationForm");
+const addDestinationContainer = document.getElementById("addDestinationContainer");
 
 //FETCH userStatus - checking with local storage too
 export const checkLoginStatus = async () => {
@@ -33,6 +37,7 @@ export const checkLoginStatus = async () => {
   console.log("isLoggedIn?", isLoggedIn);
   return isLoggedIn;
 };
+
 //FECTH destinations
 const getAllDestinations = async () => {
   const response = await fetch("http://localhost:3000/api/destinations");
@@ -47,6 +52,14 @@ const displayDestinations = async () => {
   console.log(allDestinations);
   //IF user is logged in:
   if (currentUserStatus) {
+    //NEED TO BE REWORKED
+    //adjusting header with user details to show/hide buttons and user email
+    const currentUserObject = localStorage.getItem("currentUser");
+    const currentUser = JSON.parse(currentUserObject);
+    console.log(currentUser.email);
+    document.getElementById("sign-in").classList.add("hidden");
+    document.getElementById("profile-menu").classList.remove("hidden");
+    document.querySelector("#profile-menu h3").textContent = currentUser.email;
     allDestinations.forEach((destination) => {
       //display destinations including edit and delete button + profile icon
       //we will use a template for this
@@ -57,6 +70,86 @@ const displayDestinations = async () => {
     //we will use a template for this
   }
 };
+//Sign-out functionality
+const logout = () => {
+  localStorage.removeItem("currentUser");
+  alert("You are now logged out");
+  document.getElementById("sign-in").classList.remove("hidden");
+  document.getElementById("profile-menu").classList.add("hidden");
+};
 
+const signOutButton = document.getElementById("signOutButton");
+if (signOutButton) {
+  signOutButton.addEventListener("click", () => {
+    logout();
+  });
+}
+
+//ADD destination
+const addDestination = async (e) => {
+  e.preventDefault();
+  const currentUserObject = localStorage.getItem("currentUser");
+  const currentUser = JSON.parse(currentUserObject);
+  console.log(currentUser);
+  const title = document.getElementById("destinationTitle").value;
+  const description = document.getElementById("destinationDescription").value;
+  const imageURL = document.getElementById("destinationImageUrl").value;
+  const wikiLink = document.getElementById("destinationWikiLink").value;
+  const countryCode = document.getElementById("destinationCountryCode").value;
+
+  const destinationPayload = {
+    title: title,
+    description: description,
+    image: imageURL,
+    link: wikiLink,
+    countryCode: countryCode,
+  };
+
+  const payload = { destination: destinationPayload, userEmail: currentUser.email };
+  console.log("payload", payload);
+  const createdDestination = await createDestination(payload);
+  //NEEDS TO BE ADJUSTED
+  if (createdDestination) {
+    alert(`${createdDestination.title} has been added to the list of destinations!`);
+  } else {
+    console.log("not added");
+  }
+  return createdDestination;
+};
+
+const createDestination = async (payload) => {
+  const response = await fetch(`http://localhost:3000/api/destinations`, {
+    method: "POST",
+    body: JSON.stringify(payload),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const createdDestination = await response.json();
+  console.log("createdDestination", createdDestination);
+  return createdDestination;
+};
+
+// Event listener to handle country selection and flag display
+if (countryDropdown) {
+  countryDropdown.addEventListener("change", function () {
+    const selectedCode = this.value;
+    console.log("Selected country code:", selectedCode);
+    const flagUrl = getCountryFlagUrl(selectedCode);
+    // Update the flag image source and display it
+    if (selectedCode) {
+      countryFlag.src = flagUrl;
+      countryFlag.style.display = "block"; // Show the flag image
+    } else {
+      countryFlag.style.display = "none"; // Hide the flag image if no country is selected
+    }
+  });
+  //Populate Country select with countries
+  populateCountryDropdown(countryDropdown);
+}
+if (addDestinationForm) {
+  //when the user clicks on create new destination
+  addDestinationForm.addEventListener("submit", (e) => addDestination(e));
+}
 //ONLOAD call function to fetch user status
 window.addEventListener("load", displayDestinations);
