@@ -80,10 +80,14 @@ const registerUser = async (e) => {
       isLoggedIn: true,
     };
     const registeredUser = await createNewUser(userPayload);
-    //update local storage with user email and login status
-    localStorage.setItem("currentUser", JSON.stringify({ isLoggedIn: registeredUser.isLoggedIn, email: registeredUser.email }));
-    //when all is good and the user is registered, display the create a new destination form
-    displayCreateForm(true);
+    if (registeredUser) {
+      //update local storage with user email and login status
+      localStorage.setItem("currentUser", JSON.stringify({ isLoggedIn: registeredUser.isLoggedIn, email: registeredUser.email }));
+      window.location.replace("/clientSide/index.html");
+    } else {
+      console.error("Failed to register user", response.statusText);
+      alert("Registration failed. Please try again.");
+    }
   }
 };
 
@@ -113,10 +117,15 @@ const signInUser = async (e) => {
     //POST to authenticate user
     const credentials = { email: userEmail, password: userPassword };
     const authenticatedUser = await authenticateUser(credentials);
-    alert(`You are now signed in. Welcome back ${authenticatedUser.user.userName}!`);
-    console.log("authenticatedUser", authenticatedUser);
-    localStorage.setItem("currentUser", JSON.stringify({ isLoggedIn: authenticatedUser.user.isLoggedIn, email: authenticatedUser.user.email }));
-    displayCreateForm(true);
+    if (authenticatedUser) {
+      alert(`You are now signed in. Welcome back ${authenticatedUser.user.userName}!`);
+      console.log("authenticatedUser", authenticatedUser);
+      localStorage.setItem("currentUser", JSON.stringify({ isLoggedIn: authenticatedUser.user.isLoggedIn, email: authenticatedUser.user.email }));
+      window.location.replace("/clientSide/index.html");
+    } else {
+      console.error("Failed to log in the user", response.statusText);
+      alert("User log in failed. Please try again.");
+    }
   }
 };
 
@@ -128,9 +137,10 @@ const authenticateUser = async (credentials) => {
       "Content-Type": "application/json",
     },
   });
-  const authenticatedUser = await response.json();
-  console.log("authenticatedUser", authenticatedUser);
-  return authenticatedUser;
+  const newlyAuthenticatedUser = await response.json();
+  console.log("authenticatedUser!", newlyAuthenticatedUser);
+
+  return newlyAuthenticatedUser;
 };
 
 const addDestination = async (e) => {
