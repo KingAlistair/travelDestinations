@@ -25,6 +25,21 @@ const currentDate = new Date().toLocaleString([], {
   second: undefined,
 });
 
+//Check the login status when the page loads
+window.addEventListener("load", () =>{
+  const currentUserObject = localStorage.getItem("currentUser");
+  const currentUser = JSON.parse(currentUserObject);
+
+  if (currentUser && currentUser.isLoggedIn) {
+    currentUserLogin = true;
+    displayCreateForm(true);
+  } else {
+    displayCreateForm(false);
+  }
+});
+
+
+
 //if the user clicks on the register button, we hide the messages hinting at signing in or register
 const displayRegisterForm = () => {
   signInMessage.classList.add("hidden");
@@ -60,7 +75,7 @@ const registerUser = async (e) => {
       userName: username,
       hashedPassword: newUserPassword,
       email: newUserEmail,
-      cretedOn: currentDate,
+      createdOn: currentDate,
       // lastLoggedIn: currentDate,
       isLoggedIn: true,
     };
@@ -212,3 +227,18 @@ countryDropdown.addEventListener("change", function () {
     countryFlag.style.display = "none"; // Hide the flag image if no country is selected
   }
 });
+
+//Sign-out functionality
+const logout = () => {
+  localStorage.removeItem("currentUser");
+  displayCreateForm(false); // Update UI to show user access
+};
+
+const signOutButton = document.querySelector('.sign-out-btn');
+if (signOutButton) {
+  signOutButton.addEventListener ('click', () => {
+    logout();
+  });
+};
+
+
