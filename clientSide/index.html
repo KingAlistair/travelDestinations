@@ -1,206 +1,210 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- INTER Font-family -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
-    <!-- Libre Baskerville Font-family -->
-    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-    <!-- Icons Library -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <script src="script.js" type="module" defer></script>
-    <link rel="stylesheet" href="style.css" />
-    <title>Travel Destinations</title>
-  </head>
-  <body>
-    <!-- Header -->
-    <header>
-      <!-- Logo --> 
-      <div class="logo">
-        <img src="photos/logo.svg" alt="Logo">
-      </div>
-      <!-- Sign-in button (shown when user is not logged in) -->
-      <div class="auth-buttons" id="sign-in">
-        <a href="formsPage.html">
-          <button class="sign-in-btn">Sign In <i class="fa-solid fa-arrow-right" style="color: #ffffff;"></i></button>
-        </a>
-      </div>
-      <!-- Username + Profile icon + sign-out button- shown when user is logged in -->
-      <div class="profile-menu hidden" id="profile-menu">
-        <h3>ExploringEthan</h3>
-        <img src="photos/profile-photo.jpg" alt="Profile" class="profile-icon">
-        <button class="sign-out-btn" id="signOutButton">Sign Out <i class="fa-solid fa-arrow-right" style="color: #ffffff;"></i></button>
-      </div>     
-    </header>
-    <main>
-      <!-- Hero Section -->
-      <section class="hero">
-        <div class="hero-content">
-          <h1>Wander the world, <br>one destination at a time</h1>
-          <p>From hidden gems to world-famous landmarks, we bring you the places that inspire adventure, connection, and discovery.</p>
-          <button class="sign-up-btn"><i id="arrow-right" class="fa-solid fa-arrow-right" style="color: #ffffff;"></i>Sign Up</button>
-        </div>
-      </section> 
-    
-      <!-- ADD/EDIT desutinations -->
-      <div id="destinationsForms">
-        <div id="addDestinationContainer">
-          <form id="addDestinationForm">
-            <legend>Add a new destination</legend>
-            <div class="cardInformation">
-              <div>
-                <input type="text" id="destinationTitle" placeholder="Title" required />
-              </div>
-              <div>
-                <input type="text" id="destinationDescription" placeholder="Description" required />
-              </div>
-              <div>
-                <input type="text" id="destinationWikiLink" placeholder="Wikipedia Link" />
-              </div>
-              <div>
-                <select id="destinationCountryCode" placeholder="Select a country" required>
-                </select>
-                <img id="countryFlag" class="countryFlag" alt="countryFlag" />
-              </div>
-              <div class="uploadImage">
-                <input type="text" id="destinationImageUrl" placeholder="Image URL" />
-              </div>
-              <div>
-                <input type="submit" value="Create now" />
-              </div>
-            </div>
-          </form>
-        </div> 
 
-        <div id="editDestinationContainer" style="display: none;">
-          <form id="editDestinationForm">
-            <legend>Edit destination</legend>
-            <div class="cardInformation">
-              <div>
-                <input type="text" id="destinationTitle" placeholder="Title" required />
-              </div>
-              <div>
-                <input type="text" id="destinationDescription" placeholder="Description" required />
-              </div>
-              <div>
-                <input type="text" id="destinationWikiLink" placeholder="Wikipedia Link" />
-              </div>
-              <div>
-                <select id="destinationCountryCode" placeholder="Select a country" required>
-                </select>
-                <img id="countryFlag" class="countryFlag" alt="countryFlag"/>
-              </div>
-              <div class="uploadImage">
-                <input type="text" id="destinationImageUrl" placeholder="Image URL" />
-              </div>
-              <div>
-                <input type="submit" value="Create now" />
-              </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Icons Library -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <script src="script.js" type="module" defer></script>
+  <link rel="stylesheet" href="style.css" />
+  <title>Travel Destinations</title>
+</head>
+
+<body>
+  <!-- Header -->
+  <header>
+    <!-- Logo -->
+    <div class="logo">
+      <img src="photos/logo.svg" alt="Logo">
+    </div>
+    <!-- Sign-in button (shown when user is not logged in) -->
+    <div class="auth-buttons" id="sign-in">
+      <a href="formsPage.html">
+        <button class="sign-in-btn">Sign In <i class="fa-solid fa-arrow-right" style="color: #ffffff;"></i></button>
+      </a>
+    </div>
+    <!-- Username + Profile icon + sign-out button- shown when user is logged in -->
+    <div class="profile-menu hidden" id="profile-menu">
+      <h3>ExploringEthan</h3>
+      <img src="photos/profile-photo.jpg" alt="Profile" class="profile-icon">
+      <button class="sign-out-btn" id="signOutButton">Sign Out <i class="fa-solid fa-arrow-right"
+          style="color: #ffffff;"></i></button>
+    </div>
+  </header>
+  <main>
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-content">
+        <h1>Wander the world, <br>one destination at a time</h1>
+        <p>From hidden gems to world-famous landmarks, we bring you the places that inspire adventure, connection, and
+          discovery.</p>
+        <button class="sign-up-btn"><i id="arrow-right" class="fa-solid fa-arrow-right" style="color: #ffffff;"></i>Sign
+          Up</button>
+      </div>
+    </section>
+
+    <!-- ADD/EDIT desutinations -->
+    <div id="destinationsForms">
+      <div id="addDestinationContainer">
+        <form id="addDestinationForm">
+          <legend>Add a new destination</legend>
+          <div class="cardInformation">
+            <div>
+              <input type="text" id="destinationTitle" placeholder="Title" required />
             </div>
-           
-          </form>
-        </div>
+            <div>
+              <input type="text" id="destinationDescription" placeholder="Description" required />
+            </div>
+            <div>
+              <input type="text" id="destinationWikiLink" placeholder="Wikipedia Link" />
+            </div>
+            <div>
+              <select id="destinationCountryCode" placeholder="Select a country" required>
+              </select>
+              <img id="countryFlag" class="countryFlag" alt="countryFlag" />
+            </div>
+            <div class="uploadImage">
+              <input type="text" id="destinationImageUrl" placeholder="Image URL" />
+            </div>
+            <div>
+              <input type="submit" value="Create now" />
+            </div>
+          </div>
+        </form>
       </div>
 
-      <!-- Destinations grid with 'Add new destination' button -->
-        <section class="destinations">
-            <!-- Card1 -->
-            <div class="destination-card">
-              <img src="photos/france.jpg" alt="Destination Image" class="destination-image">
-              <h2 class="destination-title">The city of love</h2>
-              <div class="user-info">
-                <img src="photos/profile-photo.jpg" alt="User Photo" class="profile-photo">
-                <span class="user-name">ExploringEthan</span>
-                <span class="user-location">Hamburg, Germany</span>
-              </div>
-              <p class="destination-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-              <div class="post-info">
-                <i class="fa-solid fa-location-dot" style="color: #333333;"></i>
-                <a href="#">Open in Maps</a>
-              </div>
-              <div class="action-buttons">
-                <button class="edit-btn">Edit</button>
-                <button class="delete-btn">Delete</button>
-              </div>
+      <div id="editDestinationContainer" style="display: none;">
+        <form id="editDestinationForm">
+          <legend>Edit destination</legend>
+          <div class="cardInformation">
+            <div>
+              <input type="text" id="destinationTitle" placeholder="Title" required />
             </div>
-        
-            <!-- Card2 -->
-            <div class="destination-card">
-              <img src="photos/france.jpg" alt="Destination Image" class="destination-image">
-              <h2 class="destination-title">The city of love</h2>
-              <div class="user-info">
-                <img src="photos/profile-photo.jpg" alt="User Photo" class="profile-photo">
-                <span class="user-name">ExploringEthan</span>
-                <span class="user-location">Hamburg, Germany</span>
-              </div>
-              <p class="destination-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-              <div class="post-info">
-                <i class="fa-solid fa-location-dot" style="color: #333333;"></i>
-                <a href="#">Open in Maps</a>
-              </div>
-              <div class="action-buttons">
-                <button class="edit-btn">Edit</button>
-                <button class="delete-btn">Delete</button>
-              </div>
+            <div>
+              <input type="text" id="destinationDescription" placeholder="Description" required />
             </div>
-        
-            <!-- Card3 -->
-            <div class="destination-card">
-              <img src="photos/france.jpg" alt="Destination Image" class="destination-image">
-              <h2 class="destination-title">The city of love</h2>
-              <div class="user-info">
-                <img src="photos/profile-photo.jpg" alt="User Photo" class="profile-photo">
-                <span class="user-name">ExploringEthanr</span>
-                <span class="user-location">Hamburg, Germany</span>
-              </div>
-              <p class="destination-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-              <div class="post-info">
-                <i class="fa-solid fa-location-dot" style="color: #333333;"></i>
-                <a href="#" id="linkToMaps">Open in Maps</a>
-              </div>
-              <div class="action-buttons">
-                <button class="edit-btn">Edit</button>
-                <button class="delete-btn">Delete</button>
-              </div>
+            <div>
+              <input type="text" id="destinationWikiLink" placeholder="Wikipedia Link" />
             </div>
-            </section>
+            <div>
+              <select id="destinationCountryCode" placeholder="Select a country" required>
+              </select>
+              <img id="countryFlag" class="countryFlag" alt="countryFlag" />
+            </div>
+            <div class="uploadImage">
+              <input type="text" id="destinationImageUrl" placeholder="Image URL" />
+            </div>
+            <div>
+              <input type="submit" value="Create now" />
+            </div>
+          </div>
 
-            <!-- Hidden HTML template for a destination card -->
-            <template id = "destinationCardTemplate">
-              <div class="destination-card">
-                <img src="" alt="Destination Image" id="destinationImage" class="destination-image">
-                <h2 class="destination-title" id="destinationTitle""></h2>
-                <div class="user-info">
-                  <span class="user-name" id="userName"></span>
-                </div>
-                <p class="destination-description" id="destinationDescription"></p>
-                <div class="post-info">
-                  <i class="fa-solid fa-location-dot" style="color: #333333;"></i>
-                  <a href="#" id="wikiLink">Open in Maps</a>
-                </div>
-                <div class="action-buttons">
-                  <button class="edit-btn">Edit</button>
-                  <button class="delete-btn">Delete</button>
-                </div>
-              </div>
-            </template>            
-            
+        </form>
+      </div>
+    </div>
 
-    </main>
-    <footer class="footer"></footer>
-      <div class="footer-content">
-        <div class="footer-logo">
-          <img src="photos/logo.svg" alt="Logo">
+    <!-- Destinations grid with 'Add new destination' button -->
+    <section class="destinations">
+      <!-- Card1 -->
+      <div class="destination-card">
+        <img src="photos/france.jpg" alt="Destination Image" class="destination-image">
+        <h2 class="destination-title">The city of love</h2>
+        <div class="user-info">
+          <img src="photos/profile-photo.jpg" alt="User Photo" class="profile-photo">
+          <span class="user-name">ExploringEthan</span>
+          <span class="user-location">Hamburg, Germany</span>
         </div>
-        <div class="footer-text">
-          <p>Copyright © 2024 Group3 | All Rights Reserved</p>
+        <p class="destination-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+          tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+          laboris nisi ut aliquip ex ea commodo consequat.</p>
+        <div class="post-info">
+          <i class="fa-solid fa-location-dot" style="color: #333333;"></i>
+          <a href="#">Open in Maps</a>
+        </div>
+        <div class="action-buttons">
+          <button class="edit-btn">Edit</button>
+          <button class="delete-btn">Delete</button>
         </div>
       </div>
-    </footer>
-  </body>
+
+      <!-- Card2 -->
+      <div class="destination-card">
+        <img src="photos/france.jpg" alt="Destination Image" class="destination-image">
+        <h2 class="destination-title">The city of love</h2>
+        <div class="user-info">
+          <img src="photos/profile-photo.jpg" alt="User Photo" class="profile-photo">
+          <span class="user-name">ExploringEthan</span>
+          <span class="user-location">Hamburg, Germany</span>
+        </div>
+        <p class="destination-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+          tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+          laboris nisi ut aliquip ex ea commodo consequat.</p>
+        <div class="post-info">
+          <i class="fa-solid fa-location-dot" style="color: #333333;"></i>
+          <a href="#">Open in Maps</a>
+        </div>
+        <div class="action-buttons">
+          <button class="edit-btn">Edit</button>
+          <button class="delete-btn">Delete</button>
+        </div>
+      </div>
+
+      <!-- Card3 -->
+      <div class="destination-card">
+        <img src="photos/france.jpg" alt="Destination Image" class="destination-image">
+        <h2 class="destination-title">The city of love</h2>
+        <div class="user-info">
+          <img src="photos/profile-photo.jpg" alt="User Photo" class="profile-photo">
+          <span class="user-name">ExploringEthanr</span>
+          <span class="user-location">Hamburg, Germany</span>
+        </div>
+        <p class="destination-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+          tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+          laboris nisi ut aliquip ex ea commodo consequat.</p>
+        <div class="post-info">
+          <i class="fa-solid fa-location-dot" style="color: #333333;"></i>
+          <a href="#" id="linkToMaps">Open in Maps</a>
+        </div>
+        <div class="action-buttons">
+          <button class="edit-btn">Edit</button>
+          <button class="delete-btn">Delete</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Hidden HTML template for a destination card -->
+    <template id="destinationCardTemplate">
+      <div class="destination-card">
+        <img src="" alt="Destination Image" id="destinationImage" class="destination-image">
+        <h2 class="destination-title" id="destinationTitle""></h2>
+                <div class=" user-info">
+          <span class="user-name" id="userName"></span>
+      </div>
+      <p class="destination-description" id="destinationDescription"></p>
+      <div class="post-info">
+        <i class="fa-solid fa-location-dot" style="color: #333333;"></i>
+        <a href="#" id="wikiLink">Open in Maps</a>
+      </div>
+      <div class="action-buttons">
+        <button class="edit-btn">Edit</button>
+        <button class="delete-btn">Delete</button>
+      </div>
+      </div>
+    </template>
+
+
+  </main>
+  <footer class="footer"></footer>
+  <div class="footer-content">
+    <div class="footer-logo">
+      <img src="photos/logo.svg" alt="Logo">
+    </div>
+    <div class="footer-text">
+      <p>Copyright © 2024 Group3 | All Rights Reserved</p>
+    </div>
+  </div>
+  </footer>
+</body>
 
 </html>
