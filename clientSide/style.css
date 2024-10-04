@@ -571,3 +571,12 @@ legend {
 #destinationImageUrl {
   height: 100%;
 }
+
+input.error {
+  border: 1px solid red;
+}
+
+input.error:focus {
+  outline: none;
+  box-shadow: 0 0 5px red;
+}
