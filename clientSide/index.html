@@ -160,16 +160,36 @@
               <p class="destination-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
               <div class="post-info">
                 <i class="fa-solid fa-location-dot" style="color: #333333;"></i>
-                <a href="#">Open in Maps</a>
+                <a href="#" id="linkToMaps">Open in Maps</a>
               </div>
               <div class="action-buttons">
                 <button class="edit-btn">Edit</button>
                 <button class="delete-btn">Delete</button>
               </div>
             </div>
-        
             </section>
-  
+
+            <!-- Hidden HTML template for a destination card -->
+            <template id = "destinationCardTemplate">
+              <div class="destination-card">
+                <img src="" alt="Destination Image" id="destinationImage" class="destination-image">
+                <h2 class="destination-title" id="destinationTitle""></h2>
+                <div class="user-info">
+                  <span class="user-name" id="userName"></span>
+                </div>
+                <p class="destination-description" id="destinationDescription"></p>
+                <div class="post-info">
+                  <i class="fa-solid fa-location-dot" style="color: #333333;"></i>
+                  <a href="#" id="wikiLink">Open in Maps</a>
+                </div>
+                <div class="action-buttons">
+                  <button class="edit-btn">Edit</button>
+                  <button class="delete-btn">Delete</button>
+                </div>
+              </div>
+            </template>            
+            
+
     </main>
     <footer class="footer"></footer>
       <div class="footer-content">

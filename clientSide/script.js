@@ -5,6 +5,7 @@ const countryDropdown = document.getElementById("destinationCountryCode");
 const countryFlag = document.getElementById("countryFlag");
 const addDestinationForm = document.getElementById("addDestinationForm");
 const addDestinationContainer = document.getElementById("addDestinationContainer");
+const template = document.getElementById("destinationTemplate");
 
 //FETCH userStatus - checking with local storage too
 export const checkLoginStatus = async () => {
@@ -50,6 +51,45 @@ const displayDestinations = async () => {
   console.log("currentUserStatus", currentUserStatus);
   const allDestinations = await getAllDestinations();
   console.log(allDestinations);
+
+  allDestinations.forEach((destination) => {
+    //Create card using template
+    const card = document.importNode(template.content, true);
+
+    //populate the template with data
+    card.querySelector("#destinationImage").src = destination.image;
+    card.querySelector("#destinationTitle").textContent = destination.title;
+    card.querySelector("#userName").textContent = destination.userName;
+    card.querySelector("#destinationDescription").textContent = destination.description;
+    card.querySelector("#wikiLink").href = destination.link;
+  
+
+  // If user is logged in, show edit and delete buttons
+  if (currentUserStatus) {
+    card.querySelector(".edit-btn").style.display = "inline";
+    card.querySelector(".delete-btn").style.display = "inline";
+
+    //Event listeners for edit and delete buttons
+    card.querySelector(".edit-btn").addEventListener("click", () => {
+      console.log("Edit destination:", destination);
+      //Add edit functionality here
+    });
+
+    card.querySelector(".delete-btn").addEventListener("click", async () => {
+      const confirmDelete = confirm("Are you sure you want to delete this destination?");
+      if (confirmDelete) {
+        await deleteDestination(destination._id);
+        await displayDestinations(); //refresh the display after deleting
+      }
+    });
+  } else {
+    // If user is not logged in, hide edit and delete buttons
+    card.querySelector(".edit-btn").style.display = "none";
+    card.querySelector(".delete-btn").style.display = "none";
+  }
+  destinationsContainer.appendChild(card);
+  });
+
   //IF user is logged in:
   if (currentUserStatus) {
     //NEED TO BE REWORKED
