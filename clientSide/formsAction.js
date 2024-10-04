@@ -1,3 +1,5 @@
+import { changeUserLoggedInStatus } from "./apiCalls/fetchUsers.js";
+
 //global variables used by both events
 const registerButton = document.getElementById("registerButton");
 const signInButton = document.getElementById("signInButton");
@@ -102,6 +104,13 @@ const signInUser = async (e) => {
     const credentials = { email: userEmail, password: userPassword };
     const authenticatedUser = await authenticateUser(credentials);
     if (authenticatedUser) {
+
+      // Try to change user loggedIn status in db.
+      try {
+      await changeUserLoggedInStatus(userEmail, true);
+      } catch (error) {
+        console.log(`Error changing ${userEmail} isLoggedIn status in database:` + error)
+      }
       alert(`You are now signed in. Welcome back ${authenticatedUser.user.userName}!`);
       console.log("authenticatedUser", authenticatedUser);
       localStorage.setItem("currentUser", JSON.stringify({ isLoggedIn: authenticatedUser.user.isLoggedIn, email: authenticatedUser.user.email }));

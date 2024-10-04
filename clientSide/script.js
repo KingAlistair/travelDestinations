@@ -1,5 +1,7 @@
 //import users and destinations
 import { populateCountryDropdown, getCountryFlagUrl } from "./countries/countries.js";
+import { changeUserLoggedInStatus } from "./apiCalls/fetchUsers.js";
+
 const destinationsContainer = document.getElementById("destinationsContainer");
 const countryDropdown = document.getElementById("destinationCountryCode");
 const countryFlag = document.getElementById("countryFlag");
@@ -111,7 +113,20 @@ const displayDestinations = async () => {
   }
 };
 //Sign-out functionality
-const logout = () => {
+const logout = async() => {
+
+  // Get email from localStorage
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  const currentUserEmail = currentUser.email;
+
+  if (currentUserEmail) {
+  try {
+    await changeUserLoggedInStatus(currentUserEmail, false);
+    } catch (error) {
+      console.log(`Error changing ${userEmail} isLoggedIn status in database:` + error)
+    };
+  };
+
   localStorage.removeItem("currentUser");
   alert("You are now logged out");
   document.getElementById("sign-in").classList.remove("hidden");

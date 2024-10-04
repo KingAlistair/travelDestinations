@@ -80,23 +80,23 @@ export async function updateUserByEmail(email, updates) {
   }
 }
 
-// Toggle the loggedIn status of a user by email
-export async function toggleUserLoggedInStatus(email) {
-  try {
-    const user = await User.findOne({email})
-    if (!user) {
-      throw new Error("User not found");
-    }
-   
-    user.isLoggedIn = !user.isLoggedIn;
-  
-    // Update the user with the new status
-    return user.save();
-  } catch (error) {
-    console.error("Error toggling user loggedIn status:", error);
-    throw error;
+// Change loggedIn status of a user by email, returns user
+export async function changeUserLoggedInStatus(email, status) {
+  // Find the user by email
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    throw new Error("User not found");
   }
-}
+
+  // Set the new status (true or false)
+  user.isLoggedIn = status;
+
+  // Save the updated user status
+  const updatedUser = await user.save();
+
+  return updatedUser;
+};
 
 // // Delete a user by email - Work in progress
 // export async function deleteUserByEmail(email) {
