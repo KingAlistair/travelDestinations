@@ -1,4 +1,4 @@
-const url = "http://127.0.0.1:3000/destinations"
+const url = "http://127.0.0.1:3000/api/destinations"
 
 // Delete destination by id
 export async function deleteDestination(destinationId) {

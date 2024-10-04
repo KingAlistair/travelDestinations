@@ -1,7 +1,7 @@
 import express from "express";
 const usersRouter = express.Router();
 
-import { getUsers, getUserById, getUserByEmail, toggleUserLoggedInStatus, authenticateUser, createUser} from "../queries/userQueries.js";
+import { getUsers, getUserById, getUserByEmail, changeUserLoggedInStatus, authenticateUser, createUser} from "../queries/userQueries.js";
 
 // GET all users
 usersRouter.get("/", async (req, res) => {
@@ -56,17 +56,17 @@ usersRouter.post("/", async (req, res) => {
   }
 });
 
-// Toggle the loggedIn status of a user by email
-usersRouter.patch("/:email/toggle_status", async (req, res) => {
+// Change loggedIn status of a user by email, returns user
+usersRouter.patch("/:email/session/:status", async (req, res) => {
   try {
     const email = req.params.email;
-    const result = await toggleUserLoggedInStatus(email);
+    const status = req.params.status.toLowerCase() === 'true'; // Convert 'true' or 'false' string to boolean
 
-    res.json({
-      message: `User ${result.email} loggedIn status changed to ${result.isLoggedIn}`,
-    });
+    const user = await changeUserLoggedInStatus(email, status);
+
+    res.json(user);
   } catch (error) {
-    console.error("Error in toggling user login status:", error);
+    console.error("Error in changing user login status:", error);
     res.status(500).json({ error: "Failed to toggle user loggedIn status" });
   }
 });

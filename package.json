@@ -10,6 +10,6 @@
   "scripts": {
     "setup": "node serverSide/db/setupDB.js",
     "queries": "node queries/queryExercises.js",
-    "dev": "node serverSide/app.js"
+    "dev": "nodemon serverSide/app.js"
   }
 }

@@ -47,8 +47,8 @@ Content-Type: application/json
 ###
 
 
-// Toggle user status by email
-PATCH http://localhost:3000/api/users/daniel.szabo@travel.com/toggle_status
+// Change user loggedIn status by email returns user
+PATCH http://localhost:3000/api/users/daniel.szabo@travel.com/session/true
 Content-Type: application/json
 
 ###

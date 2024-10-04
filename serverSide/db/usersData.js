@@ -7,7 +7,6 @@ const users = [
     hashedPassword: "hash1",
     isLoggedIn: false,
     createdOn: new Date(),
-    countryCode: "us",
   },
   {
     userName: "John Smith",
@@ -15,7 +14,6 @@ const users = [
     hashedPassword: "hash2",
     isLoggedIn: true,
     createdOn: new Date(),
-    countryCode: "us",
   },
   {
     userName: "Emily Davis",
@@ -23,7 +21,6 @@ const users = [
     hashedPassword: "hash3",
     isLoggedIn: false,
     createdOn: new Date(),
-    countryCode: "us",
   },
   {
     userName: "Michael Brown",
@@ -31,7 +28,6 @@ const users = [
     hashedPassword: "hash4",
     isLoggedIn: true,
     createdOn: new Date(),
-    countryCode: "us",
   },
   {
     userName: "Sophia Wilson",
@@ -39,7 +35,6 @@ const users = [
     hashedPassword: "hash5",
     isLoggedIn: false,
     createdOn: new Date(),
-    countryCode: "us",
   },
 ];
 
