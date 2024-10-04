@@ -44,65 +44,80 @@
       </div>
     </section>
 
-    <!-- ADD/EDIT desutinations -->
+    <!-- ADD/EDIT destinations -->
     <div id="destinationsForms">
       <div id="addDestinationContainer">
         <form id="addDestinationForm">
           <legend>Add a new destination</legend>
-          <div class="cardInformation">
-            <div>
-              <input type="text" id="destinationTitle" placeholder="Title" required />
+          <div id="destinationFormContainer">
+            <div class="uploadImage input-container">
+              <label for="destinationImageUrl">Upload your image</label>
+              <input type="file" id="destinationImageUrl" placeholder="Image URL" />
             </div>
             <div>
-              <input type="text" id="destinationDescription" placeholder="Description" required />
-            </div>
-            <div>
-              <input type="text" id="destinationWikiLink" placeholder="Wikipedia Link" />
-            </div>
-            <div>
-              <select id="destinationCountryCode" placeholder="Select a country" required>
-              </select>
-              <img id="countryFlag" class="countryFlag" alt="countryFlag" />
-            </div>
-            <div class="uploadImage">
-              <input type="text" id="destinationImageUrl" placeholder="Image URL" />
-            </div>
-            <div>
-              <input type="submit" value="Create now" />
+              <div class="cardInformation"></div>
+              <div class="input-container">
+                <label for="destinationTitle">Destination title</label>
+                <input type="text" id="destinationTitle" placeholder="Title" required />
+              </div>
+              <div class="input-container">
+                <label for="destinationDescription">Description</label>
+                <input type="text" id="destinationDescription" placeholder="Description" required />
+              </div>
+              <div class="input-container">
+                <label for="destinationWikiLink">Wikipedia Link</label>
+                <input type="text" id="destinationWikiLink" placeholder="Wikipedia Link" />
+              </div>
+              <div class="input-container">
+                <label for="destinationCountryCode">Select a country</label>
+                <select id="destinationCountryCode" placeholder="Select a country" required></select>
+                <img id="countryFlag" class="countryFlag" alt="countryFlag" />
+              </div>
+              <div>
+                <button class="login-button" type="submit" value="Create now">Add destination</button>
+              </div>
             </div>
           </div>
         </form>
       </div>
 
+      <!-- Edit Destination Container -->
       <div id="editDestinationContainer" style="display: none;">
         <form id="editDestinationForm">
           <legend>Edit destination</legend>
-          <div class="cardInformation">
-            <div>
-              <input type="text" id="destinationTitle" placeholder="Title" required />
+          <div id="destinationFormContainer">
+            <div class="uploadImage input-container">
+              <label for="editDestinationImageUrl">Upload your image</label>
+              <input type="file" id="editDestinationImageUrl" placeholder="Image URL" />
             </div>
             <div>
-              <input type="text" id="destinationDescription" placeholder="Description" required />
-            </div>
-            <div>
-              <input type="text" id="destinationWikiLink" placeholder="Wikipedia Link" />
-            </div>
-            <div>
-              <select id="destinationCountryCode" placeholder="Select a country" required>
-              </select>
-              <img id="countryFlag" class="countryFlag" alt="countryFlag" />
-            </div>
-            <div class="uploadImage">
-              <input type="text" id="destinationImageUrl" placeholder="Image URL" />
-            </div>
-            <div>
-              <input type="submit" value="Create now" />
+              <div class="cardInformation"></div>
+              <div class="input-container">
+                <label for="editDestinationTitle">Destination title</label>
+                <input type="text" id="editDestinationTitle" placeholder="Title" required />
+              </div>
+              <div class="input-container">
+                <label for="editDestinationDescription">Description</label>
+                <input type="text" id="editDestinationDescription" placeholder="Description" required />
+              </div>
+              <div class="input-container">
+                <label for="editDestinationWikiLink">Wikipedia Link</label>
+                <input type="text" id="editDestinationWikiLink" placeholder="Wikipedia Link" />
+              </div>
+              <div class="input-container">
+                <label for="editDestinationCountryCode">Select a country</label>
+                <select id="editDestinationCountryCode" placeholder="Select a country" required></select>
+                <img id="editCountryFlag" class="countryFlag" alt="countryFlag" />
+              </div>
+              <div>
+                <button class="login-button" type="submit" value="Update now">Edit destination</button>
+              </div>
             </div>
           </div>
-
         </form>
       </div>
     </div>
+
 
     <!-- Destinations grid with 'Add new destination' button -->
     <section class="destinations">
