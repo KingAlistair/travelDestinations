@@ -14,6 +14,7 @@ export const checkLoginStatus = async () => {
   let isLoggedIn;
   //check if there is a currentUser stored
   const currentUserObject = localStorage.getItem("currentUser");
+  console.log(currentUserObject);
   if (currentUserObject) {
     //if there is, retrieve the status from local storage
     const currentUser = JSON.parse(currentUserObject);
@@ -55,12 +56,15 @@ const loadUI = async () => {
     //if user is loggedin
     //adjusting header with user details to show/hide buttons and user email
     const currentUser = await getUserFromLocalStorage();
+
     document.getElementById("signInHeader").style.display = "none";
     document.getElementById("profileMenu").style.display = "flex";
-    document.querySelector("#profile-menu h3").textContent = currentUser.email;
+    document.querySelector("#profileMenu h3").textContent = currentUser.email;
+    document.getElementById("signUpButton").style.display = "none";
   } else {
     document.getElementById("signInHeader").style.display = "flex";
     document.getElementById("profileMenu").style.display = "none";
+    document.getElementById("signUpButton").style.display = "flex";
   }
   await displayDestinations(currentUserStatus);
 };
@@ -73,7 +77,6 @@ const displayDestinations = async (currentUserStatus) => {
   if (allDestinations.length > 0) {
     //loop through destinations and display each of them
     allDestinations.forEach((destination) => {
-      console.log("displaying the destinations");
       const user = allUsers.find((user) => user._id === destination.userId);
       const destinationAuthor = user ? user.userName : "Unknown";
       displayDestination(destination, destinationAuthor, currentUserStatus);
@@ -111,8 +114,10 @@ const displayDestination = async (destination, destinationAuthor, currentUserSta
       clone.querySelector(".action-buttons").style.display = "flex";
       clone.querySelector(".login-button").style.display = "none";
       //add event listeners for the buttons here
-      clone.querySelector(".edit-btn").addEventListener("click", () => editDestination(destination));
-      clone.querySelector(".delete-btn").addEventListener("click", () => deleteDestination(destination));
+
+      //NEED TO CONTINUE
+      // clone.querySelector(".edit-btn").addEventListener("click", () => editDestination(destination));
+      // clone.querySelector(".delete-btn").addEventListener("click", () => deleteDestination(destination));
     } else {
       clone.querySelector(".action-buttons").style.display = "none";
       clone.querySelector(".login-button").style.display = "block";
@@ -131,18 +136,23 @@ const logout = async () => {
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
   const currentUserEmail = currentUser.email;
 
-  if (currentUserEmail) {
+  if (currentUserEmail && currentUserEmail !== "") {
     try {
       await changeUserLoggedInStatus(currentUserEmail, false);
+      localStorage.setItem("currentUser", JSON.stringify({ isLoggedIn: false, email: "" }));
+      // Clear destination cards from the DOM
+      document.getElementById("destinations").innerHTML = "";
+      //update the UI
+      console.log("updating ui");
+      await loadUI();
+      // localStorage.removeItem("currentUser");
+      alert("You are now logged out");
+      // document.getElementById("signInHeader").style.display = "flex";
+      // document.getElementById("profileMenu").style.display = "none";
     } catch (error) {
       console.log(`Error changing ${userEmail} isLoggedIn status in database:` + error);
     }
   }
-
-  localStorage.removeItem("currentUser");
-  alert("You are now logged out");
-  document.getElementById("sign-in").classList.remove("hidden");
-  document.getElementById("profile-menu").classList.add("hidden");
 };
 
 const signOutButton = document.getElementById("signOutButton");

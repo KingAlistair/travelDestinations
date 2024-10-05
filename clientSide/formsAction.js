@@ -32,9 +32,7 @@ const displayForm = (buttonName) => {
 };
 
 // Listen for which button is clicked and show the correct form
-registerButton.addEventListener("click", () =>
-  displayForm(registerButton.name)
-);
+registerButton.addEventListener("click", () => displayForm(registerButton.name));
 signInButton.addEventListener("click", () => displayForm(signInButton.name));
 
 // Function to validate form inputs and trim values
@@ -52,9 +50,7 @@ const validateAndTrimForm = (formElements) => {
     if (input.hasAttribute("required") && trimmedValue === "") {
       isValid = false;
       input.classList.add("error"); // Add an error class to the invalid input
-      input.setCustomValidity(
-        "This field cannot be empty or contain only spaces."
-      );
+      input.setCustomValidity("This field cannot be empty or contain only spaces.");
     } else {
       input.classList.remove("error"); // Remove error class if input is valid
       input.setCustomValidity(""); // Clear any custom validity messages
@@ -69,17 +65,14 @@ const validateAndTrimForm = (formElements) => {
 
 // Register user functionality
 const registerUser = async (e) => {
+  localStorage.clear();
   e.preventDefault();
 
   const newUserEmail = document.getElementById("newUserEmail").value;
   const username = document.getElementById("newUsername").value;
   const newUserPassword = document.getElementById("newUserPassword").value;
 
-  const inputsToValidate = [
-    document.getElementById("newUserEmail"),
-    document.getElementById("newUsername"),
-    document.getElementById("newUserPassword"),
-  ];
+  const inputsToValidate = [document.getElementById("newUserEmail"), document.getElementById("newUsername"), document.getElementById("newUserPassword")];
 
   // Perform validation and trim whitespace
   const isFormValid = validateAndTrimForm(inputsToValidate);
@@ -100,9 +93,7 @@ const registerUser = async (e) => {
   if (newUserPassword.length < 8) {
     alert("Password must be at least 8 characters long");
   } else if (!newUserEmail.includes("@") || !newUserEmail.includes(".")) {
-    alert(
-      "Invalid email address. Please enter a valid email (e.g., 'email@example.com')."
-    );
+    alert("Invalid email address. Please enter a valid email (e.g., 'email@example.com').");
   } else {
     alert(`User registered successfully. Welcome ${username}!`);
 
@@ -144,15 +135,13 @@ const createNewUser = async (userPayload) => {
 
 // Sign in user functionality
 const signInUser = async (e) => {
+  localStorage.clear();
   e.preventDefault();
 
   const userEmail = document.getElementById("userEmail").value;
   const userPassword = document.getElementById("userPassword").value;
 
-  const inputsToValidate = [
-    document.getElementById("userEmail"),
-    document.getElementById("userPassword"),
-  ];
+  const inputsToValidate = [document.getElementById("userEmail"), document.getElementById("userPassword")];
 
   // Perform validation and trim whitespace
   const isFormValid = validateAndTrimForm(inputsToValidate);
@@ -165,22 +154,17 @@ const signInUser = async (e) => {
   const credentials = { email: userEmail, password: userPassword };
 
   const authenticatedUser = await authenticateUser(credentials);
+
   if (authenticatedUser) {
     try {
-      await changeUserLoggedInStatus(userEmail, true);
+      const updatedUser = await changeUserLoggedInStatus(authenticatedUser.user.email, true);
+      console.log(authenticatedUser);
+      localStorage.setItem("currentUser", JSON.stringify({ isLoggedIn: updatedUser.isLoggedIn, email: updatedUser.email }));
     } catch (error) {
       console.log(`Error changing ${userEmail} isLoggedIn status: ` + error);
     }
-    alert(
-      `You are now signed in. Welcome back ${authenticatedUser.user.userName}!`
-    );
-    localStorage.setItem(
-      "currentUser",
-      JSON.stringify({
-        isLoggedIn: authenticatedUser.user.isLoggedIn,
-        email: authenticatedUser.user.email,
-      })
-    );
+    alert(`You are now signed in. Welcome back ${authenticatedUser.user.userName}!`);
+
     window.location.replace("/clientSide/index.html");
   } else {
     console.error("Failed to log in the user");
@@ -189,16 +173,13 @@ const signInUser = async (e) => {
 };
 
 const authenticateUser = async (credentials) => {
-  const response = await fetch(
-    "http://localhost:3000/api/users/authentication",
-    {
-      method: "POST",
-      body: JSON.stringify(credentials),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  );
+  const response = await fetch("http://localhost:3000/api/users/authentication", {
+    method: "POST",
+    body: JSON.stringify(credentials),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
   return await response.json();
 };
 
