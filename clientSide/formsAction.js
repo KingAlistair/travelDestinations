@@ -1,4 +1,4 @@
-import { changeUserLoggedInStatus } from "./apiCalls/fetchUsers.js";
+import { createNewUser, changeUserLoggedInStatus } from "./apiCalls/fetchUsers.js";
 
 // Global variables used by both events
 const registerButton = document.getElementById("registerButton");
@@ -81,7 +81,6 @@ const registerUser = async (e) => {
     document.getElementById("newUserPassword"),
   ];
 
-  // Perform validation and trim whitespace
   const isFormValid = validateAndTrimForm(inputsToValidate);
 
   if (!isFormValid) {
@@ -89,8 +88,7 @@ const registerUser = async (e) => {
     return;
   }
 
-  // Check if username contains spaces
-  const usernameHasSpaces = /\s/.test(username); // regex to detect any whitespace
+  const usernameHasSpaces = /\s/.test(username);
 
   if (usernameHasSpaces) {
     alert("Username cannot contain spaces. Please enter a single word.");
@@ -99,47 +97,40 @@ const registerUser = async (e) => {
 
   if (newUserPassword.length < 8) {
     alert("Password must be at least 8 characters long");
-  } else if (!newUserEmail.includes("@") || !newUserEmail.includes(".")) {
-    alert(
-      "Invalid email address. Please enter a valid email (e.g., 'email@example.com')."
-    );
-  } else {
-    alert(`User registered successfully. Welcome ${username}!`);
-
-    const userPayload = {
-      userName: username,
-      hashedPassword: newUserPassword,
-      email: newUserEmail,
-      createdOn: currentDate,
-      isLoggedIn: true,
-    };
-
-    const registeredUser = await createNewUser(userPayload);
-    if (registeredUser) {
-      localStorage.setItem(
-        "currentUser",
-        JSON.stringify({
-          isLoggedIn: registeredUser.isLoggedIn,
-          email: registeredUser.email,
-        })
-      );
-      window.location.replace("/clientSide/index.html");
-    } else {
-      console.error("Failed to register user");
-      alert("Registration failed. Please try again.");
-    }
+    return;
   }
-};
 
-const createNewUser = async (userPayload) => {
-  const response = await fetch("http://localhost:3000/api/users", {
-    method: "POST",
-    body: JSON.stringify(userPayload),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  return await response.json();
+  if (!newUserEmail.includes("@") || !newUserEmail.includes(".")) {
+    alert("Invalid email address. Please enter a valid email (e.g., 'email@example.com').");
+    return;
+  }
+
+  const userPayload = {
+    userName: username,
+    hashedPassword: newUserPassword,
+    email: newUserEmail,
+    createdOn: new Date().toISOString(),
+    isLoggedIn: true,
+  };
+
+  try {
+    const registeredUser = await createNewUser(userPayload);
+    
+    alert(`Registration was a success! Welcome ${registeredUser.userName}!`);
+
+    localStorage.setItem(
+      "currentUser",
+      JSON.stringify({
+        isLoggedIn: registeredUser.isLoggedIn,
+        email: registeredUser.email,
+      })
+    );
+    window.location.replace("/clientSide/index.html");
+
+  } catch (error) {
+    alert(`Registration failed: ${error.message}`);
+    console.error("Failed to register user:", error);
+  }
 };
 
 // Sign in user functionality
