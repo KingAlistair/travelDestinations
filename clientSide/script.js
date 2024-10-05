@@ -1,7 +1,9 @@
 //import users and destinations
 import { populateCountryDropdown, getCountryFlagUrl } from "./countries/countries.js";
 import { changeUserLoggedInStatus, getUserByEmail, getUsers } from "./apiCalls/fetchUsers.js";
-import { getAllDestinations, createDestination } from "./apiCalls/fetchDestinations.js";
+import { getAllDestinations, createDestination, deleteDestination } from "./apiCalls/fetchDestinations.js";
+import { getCountryNameByCode } from "./countries/countries.js";
+
 
 const destinationsContainer = document.getElementById("destinationsContainer");
 const countryDropdown = document.getElementById("destinationCountryCode");
@@ -41,11 +43,16 @@ export const checkLoginStatus = async () => {
   return isLoggedIn;
 };
 
-const getUserFromLocalStorage = async () => {
+
+
+const getUserFromLocalStorage = () => {
   const currentUserObject = localStorage.getItem("currentUser");
   const currentUser = JSON.parse(currentUserObject);
+  console.log("In getcurrentUser: " + currentUser.email)
   return currentUser;
 };
+
+getUserFromLocalStorage()
 
 const loadUI = async () => {
   //gets current logged in user if any
@@ -97,11 +104,13 @@ const displayDestination = async (destination, destinationAuthor, currentUserSta
     let clone = template.content.cloneNode(true);
     //populate the template with data
     //adding fallback image if there is no image uploaded
-    clone.querySelector(".destination-image").src = destination?.image || "./photos/france.jpg";
+    clone.querySelector(".destination-image").src = `./destinationImages/${destination?.image}` || "./photos/france.jpg";
     clone.querySelector(".destination-image").alt = `Image for ${destination.title}`;
     clone.querySelector(".destination-title").textContent = destination.title;
     clone.querySelector(".user-name").textContent = destinationAuthor;
     clone.querySelector(".destination-description").textContent = destination.description;
+    // clone.querySelector(".destination-country").textContent = getCountryNameByCode(destination.countryCode);
+
     //adding hidden or visible for the link div depending if there is data for it
     const wikiLink = clone.querySelector(".wiki-link");
     if (destination?.link && destination?.link !== "") {
@@ -121,7 +130,32 @@ const displayDestination = async (destination, destinationAuthor, currentUserSta
 
       //NEED TO CONTINUE
       // clone.querySelector(".edit-btn").addEventListener("click", () => editDestination(destination));
-      // clone.querySelector(".delete-btn").addEventListener("click", () => deleteDestination(destination));
+
+
+      // Delete destination functionality
+      const deleteButton = clone.querySelector(".delete-btn");
+      deleteButton.addEventListener("click", async () => {
+        const confirmed = confirm(`Are you sure you want to delete the destination "${destination.title}"?`);
+        if (confirmed) {
+          const currentUserObject = localStorage.getItem("currentUser");
+          const currentUser = JSON.parse(currentUserObject);
+          try {
+            await deleteDestination(destination._id, currentUser.email);
+
+            // Find and remove the specific destination card from the DOM
+            const destinationCard = deleteButton.closest(".destination-card"); // Find the card to remove
+            if (destinationCard) {
+              destinationCard.remove();  // Remove the specific card
+            }
+
+          } catch (error) {
+            console.error(`Error deleting destination ${destination.title}: `, error);
+            alert("An error occurred while deleting the destination. Please try again.");
+          }
+        }
+      });
+
+
     } else {
       clone.querySelector(".action-buttons").style.display = "none";
       clone.querySelector(".login-button").style.display = "block";
@@ -202,7 +236,6 @@ const addDestination = async (e) => {
   return createdDestination;
 };
 
-//DELETE destination
 
 //UPDATE destination
 

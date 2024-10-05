@@ -102,7 +102,7 @@ export async function deleteDestination(email, destinationId) {
     }
     return console.log(`Destination successfully deleted by ${user}`);
   } catch (error) {
-    console.error("Failed to update destination:", error);
-    throw new Error("Failed to update destination. Make sure the user is logged in before attempting to update a destination");
+    console.error("Failed to delete destination:", error);
+    throw new Error("Failed to delete destination. Make sure the user is logged in before attempting to delete a destination");
   }
 }

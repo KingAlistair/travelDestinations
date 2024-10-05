@@ -22,6 +22,27 @@ export async function createNewUser(userPayload) {
 }
 
 
+// Authenticate user and handle error responses
+export async function authenticateUser(credentials) {
+  const response = await fetch(`${url}/authentication`, {
+    method: "POST",
+    body: JSON.stringify(credentials),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  // Check if response was successful
+  if (response.ok) {
+    return await response.json(); // Successful login, return user data
+  } else {
+    // Get error message from the response
+    const errorData = await response.json();
+    throw new Error(errorData.error || "Failed to authenticate user");
+  }
+}
+
+
 // Changes user status in db, returns updated user
 export async function changeUserLoggedInStatus(email, status) {
   try {
