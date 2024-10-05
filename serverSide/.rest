@@ -36,12 +36,11 @@ POST http://localhost:3000/api/users/
 Content-Type: application/json
 
 {
-    "userName": "Daniel2 Szabo",
-    "email": "daniel2.szabo@travel.com",
+    "userName": "Daniel24222 Szabo",
+    "email": "daniel23422.szabo@travel.com",
     "hashedPassword": "hash1",
     "isLoggedIn": false,
-    "createdOn": "2024-09-30T11:29:00.180Z",
-    "countryCode": "us"
+    "createdOn": "2024-09-30T11:29:00.180Z"
   }
 
 ###

@@ -62,10 +62,23 @@ export async function authenticateUser(credentials) {
 // Create a new user
 export async function createUser(user) {
   try {
+    // Check if the username already exists
+    const existingUserName = await User.findOne({ userName: user.userName });
+    if (existingUserName) {
+      throw new Error('Username already in use.');
+    }
+
+    // Check if the email already exists
+    const existingEmail = await User.findOne({ email: user.email });
+    if (existingEmail) {
+      throw new Error('Email already in use.');
+    }
+
+    // If not in use, create and return user
     const newUser = new User(user);
-    return newUser.save();
+    return await newUser.save();
   } catch (error) {
-    console.error("Error creating user:", error);
+    console.error('Error creating user:', error);
     throw error;
   }
 }

@@ -1,7 +1,7 @@
 import express from "express";
 const usersRouter = express.Router();
 
-import { getUsers, getUserById, getUserByEmail, changeUserLoggedInStatus, authenticateUser, createUser} from "../queries/userQueries.js";
+import { getUsers, getUserById, getUserByEmail, changeUserLoggedInStatus, authenticateUser, createUser } from "../queries/userQueries.js";
 
 // GET all users
 usersRouter.get("/", async (req, res) => {
@@ -43,18 +43,31 @@ usersRouter.get("/email/:email", async (req, res) => {
   }
 });
 
-// POST new user
+// POST new user - Register
 usersRouter.post("/", async (req, res) => {
   try {
     const newUser = req.body;
     console.log("Creating user with data:", newUser);
-    const userId = await createUser(newUser);
-    res.status(201).json({ ...newUser, id: userId });
+    
+    const user = await createUser(newUser); // Create user
+
+    // Send back user information on success.
+    return res.status(201).json({ id: user._id, userName: user.userName, email: user.email }); 
+    
   } catch (error) {
     console.error("Error creating user:", error);
-    res.status(500).json({ error: "Failed to create user" });
+
+    // If the error is validation-related, send a 400 status with the error message
+    if (error.message === 'Username already in use.' || error.message === 'Email already in use.') {
+      return res.status(400).send({ error: error.message});
+    } else {
+      // For all other errors, return a generic 500 error message
+      return res.status(500).send('Failed to create user.'); // Also return here
+    }
   }
 });
+
+
 
 // Change loggedIn status of a user by email, returns user
 usersRouter.patch("/:email/session/:status", async (req, res) => {
