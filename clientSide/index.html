@@ -16,17 +16,19 @@
   <header>
     <!-- Logo -->
     <div class="logo">
+      <a href="/clientSide/index.html">
       <img src="photos/logo.svg" alt="Logo">
+    </a>
     </div>
     <!-- Sign-in button (shown when user is not logged in) -->
-    <div class="auth-buttons" id="sign-in">
+    <div class="auth-buttons" id="signInHeader">
       <a href="formsPage.html">
         <button class="sign-in-btn">Sign In <i class="fa-solid fa-arrow-right" style="color: #ffffff;"></i></button>
       </a>
     </div>
     <!-- Username + Profile icon + sign-out button- shown when user is logged in -->
-    <div class="profile-menu hidden" id="profile-menu">
-      <h3>ExploringEthan</h3>
+    <div class="profile-menu" id="profileMenu">
+      <h3>Logged in userName</h3>
       <img src="photos/profile-photo.jpg" alt="Profile" class="profile-icon">
       <button class="sign-out-btn" id="signOutButton">Sign Out <i class="fa-solid fa-arrow-right"
           style="color: #ffffff;"></i></button>
@@ -39,10 +41,17 @@
         <h1>Wander the world, <br>one destination at a time</h1>
         <p>From hidden gems to world-famous landmarks, we bring you the places that inspire adventure, connection, and
           discovery.</p>
-        <button class="sign-up-btn"><i id="arrow-right" class="fa-solid fa-arrow-right" style="color: #ffffff;"></i>Sign
+        <button class="sign-up-btn" id="signUpButton"><i id="arrow-right" class="fa-solid fa-arrow-right" style="color: #ffffff;"></i>Sign
           Up</button>
       </div>
     </section>
+
+    <!-- When user is not logged in - showing CTA -->
+    <div id="destinationsForms">
+      <div id="addDestinationContainer">
+        <h2>CTA HERE to login to add destination</h2>
+      </div>
+    </div>
 
     <!-- ADD/EDIT destinations -->
     <div id="destinationsForms">
@@ -117,12 +126,31 @@
         </form>
       </div>
     </div>
-
+ <!-- Hidden HTML template for a destination card -->
+ <template id="destinationCardTemplate">
+  <div class="destination-card">
+    <img src="" alt="Destination Image" class="destination-image">
+    <h2 class="destination-title"></h2>
+    <div class="user-info">
+      <span class="user-name"></span>
+  </div>
+  <p class="destination-description"></p>
+  <div class="post-info">
+    <i class="fa-solid fa-location-dot" style="color: #333333;"></i>
+    <a href="" class="wiki-link">Open in Maps</a>
+  </div>
+  <div class="action-buttons">
+    <button class="edit-btn">Edit</button>
+    <button class="delete-btn">Delete</button>
+  </div>
+  <button class="login-button" >Add a destination</button>
+  </div>
+</template>
 
     <!-- Destinations grid with 'Add new destination' button -->
-    <section class="destinations">
+    <section id="destinations" class="destinations">
       <!-- Card1 -->
-      <div class="destination-card">
+      <!-- <div class="destination-card">
         <img src="photos/france.jpg" alt="Destination Image" class="destination-image">
         <h2 class="destination-title">The city of love</h2>
         <div class="user-info">
@@ -141,10 +169,10 @@
           <button class="edit-btn">Edit</button>
           <button class="delete-btn">Delete</button>
         </div>
-      </div>
+      </div> -->
 
       <!-- Card2 -->
-      <div class="destination-card">
+      <!-- <div class="destination-card">
         <img src="photos/france.jpg" alt="Destination Image" class="destination-image">
         <h2 class="destination-title">The city of love</h2>
         <div class="user-info">
@@ -163,10 +191,10 @@
           <button class="edit-btn">Edit</button>
           <button class="delete-btn">Delete</button>
         </div>
-      </div>
+      </div> -->
 
       <!-- Card3 -->
-      <div class="destination-card">
+      <!-- <div class="destination-card">
         <img src="photos/france.jpg" alt="Destination Image" class="destination-image">
         <h2 class="destination-title">The city of love</h2>
         <div class="user-info">
@@ -185,29 +213,8 @@
           <button class="edit-btn">Edit</button>
           <button class="delete-btn">Delete</button>
         </div>
-      </div>
+      </div> -->
     </section>
-
-    <!-- Hidden HTML template for a destination card -->
-    <template id="destinationCardTemplate">
-      <div class="destination-card">
-        <img src="" alt="Destination Image" id="destinationImage" class="destination-image">
-        <h2 class="destination-title" id="destinationTitle""></h2>
-                <div class=" user-info">
-          <span class="user-name" id="userName"></span>
-      </div>
-      <p class="destination-description" id="destinationDescription"></p>
-      <div class="post-info">
-        <i class="fa-solid fa-location-dot" style="color: #333333;"></i>
-        <a href="#" id="wikiLink">Open in Maps</a>
-      </div>
-      <div class="action-buttons">
-        <button class="edit-btn">Edit</button>
-        <button class="delete-btn">Delete</button>
-      </div>
-      </div>
-    </template>
-
 
   </main>
   <footer class="footer"></footer>
