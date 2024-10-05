@@ -48,7 +48,6 @@ export const checkLoginStatus = async () => {
 const getUserFromLocalStorage = () => {
   const currentUserObject = localStorage.getItem("currentUser");
   const currentUser = JSON.parse(currentUserObject);
-  console.log("In getcurrentUser: " + currentUser.email)
   return currentUser;
 };
 
