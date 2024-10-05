@@ -61,10 +61,14 @@ const loadUI = async () => {
     document.getElementById("profileMenu").style.display = "flex";
     document.querySelector("#profileMenu h3").textContent = currentUser.email;
     document.getElementById("signUpButton").style.display = "none";
+    document.getElementById("destinationsForms").style.display = "block";
+    document.getElementById("CTAContainerWrapper").style.display = "none";
   } else {
     document.getElementById("signInHeader").style.display = "flex";
     document.getElementById("profileMenu").style.display = "none";
     document.getElementById("signUpButton").style.display = "flex";
+    document.getElementById("destinationsForms").style.display = "none";
+    document.getElementById("CTAContainerWrapper").style.display = "block";
   }
   await displayDestinations(currentUserStatus);
 };
@@ -147,8 +151,6 @@ const logout = async () => {
       await loadUI();
       // localStorage.removeItem("currentUser");
       alert("You are now logged out");
-      // document.getElementById("signInHeader").style.display = "flex";
-      // document.getElementById("profileMenu").style.display = "none";
     } catch (error) {
       console.log(`Error changing ${userEmail} isLoggedIn status in database:` + error);
     }
@@ -187,6 +189,12 @@ const addDestination = async (e) => {
   const createdDestination = await createDestination(payload);
   //NEEDS TO BE ADJUSTED
   if (createdDestination) {
+    document.getElementById("destinations").innerHTML = "";
+    addDestinationForm.reset();
+    countryFlag.style.display = "none";
+    //update the UI
+    console.log("updating ui");
+    await loadUI();
     alert(`${createdDestination.title} has been added to the list of destinations!`);
   } else {
     console.log("not added");

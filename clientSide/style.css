@@ -193,7 +193,7 @@ header {
 #arrow-right:hover {
   background-color: var(--primary-color-dark);
 }
-/* Add7Edit destination*/
+/* Add/Edit destination*/
 .destinationsForms {
   width: 1066px;
   display: flex;
@@ -543,7 +543,8 @@ legend {
 /* destination form styling */
 
 #addDestinationContainer,
-#editDestinationContainer {
+#editDestinationContainer,
+#CTAContainer {
   border-radius: 14.68px;
   background-color: var(--text-color);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -553,7 +554,8 @@ legend {
   font-family: "Inter", sans-serif;
 }
 
-#destinationsForms {
+#destinationsForms,
+#CTAContainerWrapper {
   padding-top: 4rem;
   width: 1066px;
   margin: auto;

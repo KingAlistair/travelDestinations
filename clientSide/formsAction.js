@@ -65,7 +65,6 @@ const validateAndTrimForm = (formElements) => {
 
 // Register user functionality
 const registerUser = async (e) => {
-  localStorage.clear();
   e.preventDefault();
 
   const newUserEmail = document.getElementById("newUserEmail").value;
@@ -135,7 +134,6 @@ const createNewUser = async (userPayload) => {
 
 // Sign in user functionality
 const signInUser = async (e) => {
-  localStorage.clear();
   e.preventDefault();
 
   const userEmail = document.getElementById("userEmail").value;
