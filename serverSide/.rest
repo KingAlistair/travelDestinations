@@ -13,7 +13,7 @@ Content-Type: application/json
 ###
 
 // Get User by Email
-GET http://localhost:3000/api/users/email/daniel.szabo@travel.com
+GET http://localhost:3000/api/users/email/john.smith@example.com
 Content-Type: application/json
 
 ###
@@ -24,8 +24,8 @@ POST http://localhost:3000/api/users/authentication
 Content-Type: application/json
 
 {
-  "email": "daniel.sszabo@travel.com",
-  "password": "hash1s"
+  "email": "john.smith@example.com",
+  "password": "hash2"
 }
 
 
@@ -36,8 +36,8 @@ POST http://localhost:3000/api/users/
 Content-Type: application/json
 
 {
-    "userName": "Daniel24222 Szabo",
-    "email": "daniel23422.szabo@travel.com",
+    "userName": "Dan2iel242222314 Szabo",
+    "email": "dani2el234221242144.szabo@travel.com",
     "hashedPassword": "hash1",
     "isLoggedIn": false,
     "createdOn": "2024-09-30T11:29:00.180Z"
@@ -47,7 +47,7 @@ Content-Type: application/json
 
 
 // Change user loggedIn status by email returns user
-PATCH http://localhost:3000/api/users/daniel.szabo@travel.com/session/true
+PATCH http://localhost:3000/api/users/john.smith@example.com/session/true
 Content-Type: application/json
 
 ###
@@ -74,7 +74,7 @@ Content-Type: application/json
 ###
 
 // Create new destination for user by email
-POST http://localhost:3000/api/destinations/users/daniel.szabo@travel.com
+POST http://localhost:3000/api/destinations
 Content-Type: application/json
 
   {
@@ -102,7 +102,11 @@ Content-Type: application/json
 ###
 
 // DELETE destination by user email and destination id
-DELETE http://localhost:3000/api/destinations/66f1b8e6f0e5c43afb81aff7/users/daniel.szabo@travel.com
+DELETE http://localhost:3000/api/destinations/67013a696152cc78b994a684
 Content-Type: application/json
+
+  {
+  "email": "john.smith@example.com"
+  }
 
 ###

@@ -87,7 +87,7 @@ destinationsRouter.put("/:id", async (req, res) => {
 destinationsRouter.delete("/:id", async (req, res) => {
   try {
     const destinationId = req.params.id;
-    const userEmail = req.body.userEmail;
+    const userEmail = req.body.email;
     if (!userEmail) {
       return res.status(401).json({ error: "Unauthorized: User not logged in" });
     }

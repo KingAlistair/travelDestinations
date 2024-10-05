@@ -1,10 +1,14 @@
 const url = "http://127.0.0.1:3000/api/destinations";
 
 // Delete destination by id
-export async function deleteDestination(destinationId) {
+export async function deleteDestination(destinationId, email) {
   try {
     const response = await fetch(`${url}/${destinationId}`, {
       method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email }),  // Send the email in the request body
     });
 
     if (!response.ok) {

@@ -2,23 +2,33 @@ import mongoose from '../db/connect.js'
 import User from "../schemas/userSchema.js";
 
 
+// Helper function to remove password from users before return
+function removePassword(user) {
+  if (!user) return null; 
+  const userData = user.toObject();
+  delete userData.hashedPassword; // Remove password
+  return userData;
+}
+
+
 // GET
 
 // Get all users
 export async function getUsers() {
   try {
-    return await User.find();
+    const users = await User.find();
+    return users.map(removePassword);
   } catch (error) {
     console.error("Failed to get users:", error);
     throw new Error("Failed to get users");
   }
 }
 
-// // Get a user by id
+// Get a user by id
 export async function getUserById(id) {
   try {
-
-    return User.findById(id);
+    const user = await User.findById(id);
+    return removePassword(user);
   } catch (error) {
     console.error("Failed to get user by id:", error);
     throw new Error("Failed to get user by id");
@@ -28,34 +38,37 @@ export async function getUserById(id) {
 // // Get a user by email
 export async function getUserByEmail(email) {
   try {
-    return User.findOne({ email });
+    const user = await User.findOne({ email });
+    return removePassword(user);
   } catch (error) {
     console.error("Failed to get user by email:", error);
     throw new Error("Failed to get user by email");
   }
 }
 
-// Authentica user, gives back user object on success or null on fail
+// Authenticate user, gives back user object on success or null on fail
 export async function authenticateUser(credentials) {
   const { email, password } = credentials;
 
   try {
-    const user = await User.findOne(
-      { email })
-
+    const user = await User.findOne({ email });
     if (!user) {
-      return null;
+      throw new Error("Invalid email address or password");
     }
 
-    // Compare the "hashed" password
+    // Check if the password matches (basic comparison for now)
     if (user.hashedPassword !== password) {
-      return null;
+      throw new Error("Invalid email address or password");
     }
 
-    return user; // Return user if authentication is successful
+    // If authenticated, set isLoggedIn true
+    user.isLoggedIn = true;
+    await user.save();
+
+    return removePassword(user);
   } catch (error) {
     console.error("Failed to authenticate user:", error);
-    throw new Error("Failed to authenticate user");
+    throw error;
   }
 }
 
@@ -76,7 +89,10 @@ export async function createUser(user) {
 
     // If not in use, create and return user
     const newUser = new User(user);
-    return await newUser.save();
+    await newUser.save();
+
+    return removePassword(newUser);
+
   } catch (error) {
     console.error('Error creating user:', error);
     throw error;

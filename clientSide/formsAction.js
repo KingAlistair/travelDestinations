@@ -1,4 +1,4 @@
-import { createNewUser, changeUserLoggedInStatus } from "./apiCalls/fetchUsers.js";
+import { createNewUser, authenticateUser, changeUserLoggedInStatus } from "./apiCalls/fetchUsers.js";
 
 // Global variables used by both events
 const registerButton = document.getElementById("registerButton");
@@ -71,7 +71,11 @@ const registerUser = async (e) => {
   const username = document.getElementById("newUsername").value;
   const newUserPassword = document.getElementById("newUserPassword").value;
 
-  const inputsToValidate = [document.getElementById("newUserEmail"), document.getElementById("newUsername"), document.getElementById("newUserPassword")];
+  const inputsToValidate = [
+    document.getElementById("newUserEmail"),
+    document.getElementById("newUsername"),
+    document.getElementById("newUserPassword"),
+  ];
 
   const isFormValid = validateAndTrimForm(inputsToValidate);
 
@@ -89,6 +93,8 @@ const registerUser = async (e) => {
 
   if (newUserPassword.length < 8) {
     alert("Password must be at least 8 characters long");
+    return;
+  }
 
   if (!newUserEmail.includes("@") || !newUserEmail.includes(".")) {
     alert("Invalid email address. Please enter a valid email (e.g., 'email@example.com').");
@@ -100,25 +106,18 @@ const registerUser = async (e) => {
     hashedPassword: newUserPassword,
     email: newUserEmail,
     createdOn: new Date().toISOString(),
-    isLoggedIn: true,
+    isLoggedIn: false,
   };
 
   try {
-    const registeredUser = await createNewUser(userPayload);
+    const registeredUser = await createNewUser(userPayload); // Ensure this returns the JSON response
     
-    alert(`Registration was a success! Welcome ${registeredUser.userName}!`);
+    alert(`User registered successfully. Welcome ${registeredUser.userName}! Please login!`);
 
-    localStorage.setItem(
-      "currentUser",
-      JSON.stringify({
-        isLoggedIn: registeredUser.isLoggedIn,
-        email: registeredUser.email,
-      })
-    );
-    window.location.replace("/clientSide/index.html");
+    window.location.replace("/clientSide/formsPage.html");
 
   } catch (error) {
-    alert(`Registration failed: ${error.message}`);
+    alert(error.message);
     console.error("Failed to register user:", error);
   }
 };
@@ -127,10 +126,13 @@ const registerUser = async (e) => {
 const signInUser = async (e) => {
   e.preventDefault();
 
-  const userEmail = document.getElementById("userEmail").value;
-  const userPassword = document.getElementById("userPassword").value;
+  const userEmail = document.getElementById("userEmail").value.trim();
+  const userPassword = document.getElementById("userPassword").value.trim();
 
-  const inputsToValidate = [document.getElementById("userEmail"), document.getElementById("userPassword")];
+  const inputsToValidate = [
+    document.getElementById("userEmail"),
+    document.getElementById("userPassword")
+  ];
 
   // Perform validation and trim whitespace
   const isFormValid = validateAndTrimForm(inputsToValidate);
@@ -142,35 +144,37 @@ const signInUser = async (e) => {
 
   const credentials = { email: userEmail, password: userPassword };
 
-  const authenticatedUser = await authenticateUser(credentials);
+  try {
+    // Authenticate user
+    const authenticatedUser = await authenticateUser(credentials);
+    console.log('Auth: ' + authenticatedUser.email)
 
-  if (authenticatedUser) {
-    try {
-      const updatedUser = await changeUserLoggedInStatus(authenticatedUser.user.email, true);
-      console.log(authenticatedUser);
-      localStorage.setItem("currentUser", JSON.stringify({ isLoggedIn: updatedUser.isLoggedIn, email: updatedUser.email }));
-    } catch (error) {
-      console.log(`Error changing ${userEmail} isLoggedIn status: ` + error);
+    if (authenticatedUser) {
+      try {
+        // Store user info in localStorage
+        localStorage.setItem("currentUser", JSON.stringify({
+          isLoggedIn: authenticatedUser.isLoggedIn,
+          email: authenticatedUser.email,
+          id: authenticatedUser._id
+        }));
+
+        // Display success message and redirect to index
+        alert(`You are now signed in. Welcome back ${authenticatedUser.userName}!`);
+        window.location.replace("/clientSide/index.html");
+
+      } catch (error) {
+        console.error(`Error changing ${userEmail}'s isLoggedIn status: `, error);
+        alert("An error occurred while updating your login status. Please try again.");
+      }
     }
-    alert(`You are now signed in. Welcome back ${authenticatedUser.user.userName}!`);
 
-    window.location.replace("/clientSide/index.html");
-  } else {
-    console.error("Failed to log in the user");
-    alert("User login failed. Please try again.");
+  } catch (error) {
+    // Handle authentication errors
+    console.error("Failed to log in the user:", error.message);
+    alert(error.message || "User login failed. Please try again.");
   }
 };
 
-const authenticateUser = async (credentials) => {
-  const response = await fetch("http://localhost:3000/api/users/authentication", {
-    method: "POST",
-    body: JSON.stringify(credentials),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  return await response.json();
-};
 
 // Register form submit event
 registerForm.addEventListener("submit", (e) => registerUser(e));

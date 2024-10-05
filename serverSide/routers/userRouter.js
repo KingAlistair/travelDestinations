@@ -48,25 +48,24 @@ usersRouter.post("/", async (req, res) => {
   try {
     const newUser = req.body;
     console.log("Creating user with data:", newUser);
-    
+
     const user = await createUser(newUser); // Create user
 
     // Send back user information on success.
-    return res.status(201).json({ id: user._id, userName: user.userName, email: user.email }); 
-    
+    return res.status(201).json(user);
+
   } catch (error) {
     console.error("Error creating user:", error);
 
     // If the error is validation-related, send a 400 status with the error message
     if (error.message === 'Username already in use.' || error.message === 'Email already in use.') {
-      return res.status(400).send({ error: error.message});
+      return res.status(400).send({ error: error.message });
     } else {
       // For all other errors, return a generic 500 error message
-      return res.status(500).send('Failed to create user.'); // Also return here
+      return res.status(500).send('Failed to create user.');
     }
   }
 });
-
 
 
 // Change loggedIn status of a user by email, returns user
@@ -84,21 +83,33 @@ usersRouter.patch("/:email/session/:status", async (req, res) => {
   }
 });
 
-// Very basic user authentication returns user without destinations on success
+// Very basic user authentication returns user without password on success
 usersRouter.post("/authentication", async (req, res) => {
-  const credentials = req.body;
+  const { email, password } = req.body;
+
+  // Input validation
+  if (!email || !password) {
+    return res.status(400).json({ error: "Email and password are required" });
+  }
 
   try {
-    const user = await authenticateUser(credentials);
+    const user = await authenticateUser({ email, password });
 
+    // Check if user was found
     if (!user) {
-      return res.status(401).json({ error: "Invalid email or password" }); // Unauthorized if authentication fails
+      return res.status(401).json({ error: "Invalid email address or password" });
     }
 
-    res.status(200).json({ user }); // Respond with user object (without destinations)
+    res.status(200).json(user); // Respond with user object (without password)
+
   } catch (error) {
-    console.error("Failed to authenticate user:", error);
-    res.status(500).json({ error: "Failed to authenticate user" });
+    console.error("Authentication error:", error);
+
+    if (error.message === "Invalid email address or password") {
+      return res.status(401).json({ error: error.message });
+    } else {
+      return res.status(500).json({ error: "Failed to authenticate user" });
+    }
   }
 });
 

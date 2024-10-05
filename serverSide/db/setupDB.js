@@ -1,5 +1,6 @@
 import { MongoClient, ServerApiVersion } from "mongodb";
-import users from "./usersData.js"; // Import users from usersDb.js
+import users from "./usersData.js"; // Import users
+import destinations from "./destinationsData.js"; // Import destinations
 
 // DB uri
 const uri = "mongodb://127.0.0.1:27017/";
@@ -22,17 +23,25 @@ async function run() {
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
 
-    // Get the "travelDestinations" database and "users" collection
+    // Get the "travelDestinations" database and both "users" and "destinations" collections
     const myDB = client.db("travelDestinations");
-    const myColl = myDB.collection("users");
+    const usersCollection = myDB.collection("users");
+    const destinationsCollection = myDB.collection("destinations");
 
-    // Delete all existing documents in the "users" collection
-    const deleteResult = await myColl.deleteMany({});
-    console.log(`Deleted ${deleteResult.deletedCount} existing documents from the 'users' collection.`);
+    // Step 1: Delete all existing documents in both "users" and "destinations" collections
+    const deleteUsersResult = await usersCollection.deleteMany({});
+    const deleteDestinationsResult = await destinationsCollection.deleteMany({});
+    console.log(`Deleted ${deleteUsersResult.deletedCount} existing users from the 'users' collection.`);
+    console.log(`Deleted ${deleteDestinationsResult.deletedCount} existing destinations from the 'destinations' collection.`);
 
-    // Insert multiple users into the "users" collection
-    const result = await myColl.insertMany(users);
-    console.log(`${result.insertedCount} documents were inserted with the following _ids:`, result.insertedIds);
+    // Step 2: Insert multiple users into the "users" collection
+    const usersInsertResult = await usersCollection.insertMany(users);
+    console.log(`${usersInsertResult.insertedCount} users were inserted with the following _ids:`, usersInsertResult.insertedIds);
+
+    // Step 3: Insert multiple destinations into the "destinations" collection
+    const destinationsInsertResult = await destinationsCollection.insertMany(destinations);
+    console.log(`${destinationsInsertResult.insertedCount} destinations were inserted with the following _ids:`, destinationsInsertResult.insertedIds);
+
   } catch (err) {
     console.error("Error inserting data: ", err);
   } finally {
