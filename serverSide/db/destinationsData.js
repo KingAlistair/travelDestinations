@@ -52,7 +52,7 @@ const destinations = [
     description: "A famous multi-venue performing arts center in Australia.",
     image: "sydney_opera_house.jpg",
     link: "https://en.wikipedia.org/wiki/Sydney_Opera_House",
-    userId: new ObjectId("651a1e9f8f1b2c001d3b0a1a"), // Daniel Szabo
+    userId: new ObjectId("651a1e9f8f1b2c001d3b0a1e"),
     countryCode: "au",
   },
 ];
