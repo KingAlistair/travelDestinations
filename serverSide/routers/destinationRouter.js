@@ -104,16 +104,16 @@ destinationsRouter.post("/", upload.single('image'), async (req, res) => {
 destinationsRouter.put("/:id", async (req, res) => {
   try {
     const destinationId = req.params.id;
-    const userEmail = req.body.userEmail;
+    const userEmail = req.body.email;
     if (!userEmail) {
       return res.status(401).json({ error: "Unauthorized: User not logged in" });
     }
-    const updatedData = req.body;
+    const updatedData = req.body.destination;
 
     const updatedDestination = await updateDestination(userEmail, destinationId, updatedData);
 
     if (updatedDestination) {
-      res.json({ message: "Destination updated successfully" });
+      res.status(200).json(updatedDestination);
     } else {
       res.status(404).json({ error: "Destination not found or no changes made" });
     }

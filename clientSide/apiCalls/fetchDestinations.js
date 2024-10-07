@@ -8,7 +8,7 @@ export async function deleteDestination(destinationId, email) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email }),  // Send the email in the request body
+      body: JSON.stringify({ email }), // Send the email in the request body
     });
 
     if (!response.ok) {
@@ -38,3 +38,25 @@ export const createDestination = async (formData) => {
   console.log("createdDestination", createdDestination);
   return createdDestination;
 };
+
+//UPDATE destination
+export async function updateDestination(destinationId, updatedData) {
+  try {
+    const response = await fetch(`${url}/${destinationId}`, {
+      method: "PUT",
+      body: JSON.stringify(updatedData),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to update the destination. Status code: ${response.status}`);
+    }
+    const updatedDestination = await response.json();
+    console.log("updatedDestination", updatedDestination);
+    return updatedDestination;
+  } catch (error) {
+    console.error("Error:", error);
+  }
+}

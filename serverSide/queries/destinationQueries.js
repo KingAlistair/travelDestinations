@@ -74,6 +74,7 @@ export async function updateDestination(email, destinationId, updatedData) {
     if (!user) {
       throw new Error("User not found");
     }
+    console.log("Received Updated Data:", updatedData);
     // Update the destination document
     const updatedDestination = await Destination.findByIdAndUpdate(
       destinationId,
@@ -82,6 +83,8 @@ export async function updateDestination(email, destinationId, updatedData) {
     );
     if (!updatedDestination) {
       throw new Error("Destination not found and couldn't be updated");
+    } else {
+      console.log("Updated Data:", updatedDestination);
     }
     return updatedDestination;
   } catch (error) {
@@ -104,8 +107,9 @@ export async function deleteDestination(email, destinationId) {
       throw new Error("Destination not found");
     }
     
-    // Return the deleted document as a success indicator
+    // Return the deleted document
     return destinationToDelete;
+    
   } catch (error) {
     console.error("Error in deleteDestination:", error.message);
     throw error; // Pass the original error message up the call stack

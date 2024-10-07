@@ -20,25 +20,28 @@ export function getCountryFlagUrl(countryCode) {
   return api;
 }
 
-// Populate the country select with options
-export function populateCountryDropdown(dropdown) {
-  dropdown.innerHTML = "";
+export function populateCountryDropdown(dropdownId, flagId) {
+  const countrySelector = document.getElementById(dropdownId);
+  // const countryFlag = document.getElementById(flagId);
+
+  if (!countrySelector) return; // || !countryFlag Check if the elements exist
+
+  countrySelector.innerHTML = ""; // Clear previous options
 
   // Create default placeholder option
   const defaultOption = document.createElement("option");
   defaultOption.value = "";
   defaultOption.textContent = "Select a country";
-  dropdown.appendChild(defaultOption);
+  countrySelector.appendChild(defaultOption);
 
-  // Populate the dropdown with country names as options
+  // Populate dropdown with country options
   for (const code in countries) {
     const option = document.createElement("option");
-    option.value = code; // Set country code as the value
-    option.textContent = countries[code]; // Set country name as the display text
-    dropdown.appendChild(option);
+    option.value = code;
+    option.textContent = countries[code];
+    countrySelector.appendChild(option);
   }
 }
-
 export const countries = {
   ad: "Andorra",
   ae: "United Arab Emirates",

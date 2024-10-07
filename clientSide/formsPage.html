@@ -1,83 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign in</title>
+    <!-- <script src="./script.js" type="module" defer></script> -->
+    <script src="./formsAction.js" type="module" defer></script>
+    <link rel="stylesheet" href="style.css" />
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sign in</title>
-  <!-- <script src="./script.js" type="module" defer></script> -->
-  <script src="./formsAction.js" type="module" defer></script>
-  <link rel="stylesheet" href="style.css" />
-</head>
-
-<body>
-  <main id="loginContainer">
-    <!-- display when user is NOT signed in (logInStatus is false)-->
-    <div id="userAccessContainer" class="formContainer">
-      <a href="index.html">
-        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-arrow-left"
-          viewBox="0 0 20 20">
-          <path fill-rule="evenodd"
-            d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z" />
-        </svg>
-      </a>
-      <p id="messageToUser">*Please sign in to add a new destination</p>
-      <div id="signInContainer">
-        <h1>Login</h1>
-        <form id="signInForm">
-          <div class="input-container">
-            <label for="userEmail">Email</label>
-            <input type="email" id="userEmail" placeholder="Enter your email" required />
+  <body>
+    <main id="loginContainer">
+      <!-- display when user is NOT signed in (logInStatus is false)-->
+      <div id="userAccessContainer" class="formContainer">
+        <a href="index.html">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z" />
+          </svg>
+        </a>
+        <p id="messageToUser">*Please sign in to add a new destination</p>
+        <div id="signInContainer">
+          <h1>Login</h1>
+          <form id="signInForm">
+            <div class="input-container">
+              <label for="userEmail">Email</label>
+              <input type="email" id="userEmail" placeholder="Enter your email" required />
+            </div>
+            <div class="input-container">
+              <label for="userPassword">Password</label>
+              <input type="password" id="userPassword" placeholder="Enter your password" required />
+            </div>
+            <div>
+              <button class="login-button" type="submit" value="Sign in">Sign in</button>
+            </div>
+          </form>
+          <div class="loginRegisterNowContainer">
+            <p>Don't have an account?</p>
+            <button id="registerButton" name="register">Register now</button>
           </div>
-          <div class="input-container">
-            <label for="userPassword">Password</label>
-            <input type="password" id="userPassword" placeholder="Enter your password" required />
-          </div>
-          <div>
-            <button class="login-button" type="submit" value="Sign in">
-              Sign in
-            </button>
-          </div>
-        </form>
-        <div id="loginRegisterNowContainer">
-          <p>Don't have an account?</p>
-          <button id="registerButton" name="register">Register now</button>
         </div>
-
-      </div>
-      <div id="registerContainer" class="hidden">
-        <h1>Register</h1>
-        <form id="registerForm">
-          <div class="input-container">
-            <label for="newUsername">Username</label>
-            <input type="text" id="newUsername" name="username" placeholder="Enter your username" required />
+        <div id="registerContainer" class="hidden">
+          <h1>Register</h1>
+          <form id="registerForm">
+            <div class="input-container">
+              <label for="newUsername">Username</label>
+              <input type="text" id="newUsername" name="username" placeholder="Enter your username" required />
+            </div>
+            <div class="input-container">
+              <label for="newUserEmail">Email</label>
+              <input type="email" id="newUserEmail" name="email" placeholder="Enter your email" required />
+            </div>
+            <div class="input-container">
+              <label for="newUserPassword">Password</label>
+              <input type="password" id="newUserPassword" name="password" placeholder="Create a Password" required />
+            </div>
+            <div>
+              <button class="login-button" type="submit" value="Register">Register</button>
+            </div>
+          </form>
+          <div class="loginRegisterNowContainer">
+            <p>Already have an account?</p>
+            <button id="signInButton" name="signIn">Sign in</button>
           </div>
-          <div class="input-container">
-            <label for="newUserEmail">Email</label>
-            <input type="email" id="newUserEmail" name="email" placeholder="Enter your email" required />
-          </div>
-          <div class="input-container">
-            <label for="newUserPassword">Password</label>
-            <input type="password" id="newUserPassword" name="password" placeholder="Create a Password" required />
-          </div>
-          <div>
-            <button class="login-button" type="submit" value="Register">
-              Register
-            </button>
-          </div>
-        </form>
-        <div id="loginRegisterNowContainer">
-          <p>Already have an account?</p>
-          <button id="signInButton" name="signIn">Sign in</button>
         </div>
-
       </div>
-    </div>
-    <div id="imageSection">
-      <img id="login-picture" src="photos/login-pic.jpg" alt="demo-pic" />
-    </div>
-  </main>
-  <footer></footer>
-</body>
-
+      <div id="imageSection">
+        <img id="login-picture" src="photos/login-pic.jpg" alt="demo-pic" />
+      </div>
+    </main>
+    <footer></footer>
+  </body>
 </html>

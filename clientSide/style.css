@@ -16,6 +16,9 @@
   padding: 0;
   box-sizing: border-box;
 }
+html {
+  scroll-behavior: smooth;
+}
 
 .hidden {
   display: none;
@@ -155,6 +158,7 @@ header {
   max-width: 500px;
   max-height: 200px;
   display: flex;
+  gap: 0.5rem;
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
@@ -167,7 +171,7 @@ header {
 }
 
 .hero-content h1 {
-  font-family: "Libre Baskerville";
+  font-family: "Libre Baskerville", serif;
   font-size: 32px;
   margin-bottom: 10px;
 }
@@ -189,6 +193,7 @@ header {
   cursor: pointer;
   display: flex;
   align-items: center;
+  gap: 0.3rem;
 }
 
 /* Icon Styling */
@@ -310,6 +315,10 @@ form addDestinationForm {
   width: 100%;
   margin-bottom: 10px;
 }
+.action-buttons > a {
+  flex: 1;
+  margin: 0 5px;
+}
 .edit-btn {
   background-color: var(--primary-color);
   color: var(--white);
@@ -320,6 +329,7 @@ form addDestinationForm {
   font-family: "Inter", sans-serif;
   font-weight: 700;
   font-size: 12px;
+  width: 100%;
 }
 .edit-btn:hover {
   background-color: var(--primary-color-dark);
@@ -335,15 +345,11 @@ form addDestinationForm {
   font-family: "Inter", sans-serif;
   font-weight: 700;
   font-size: 12px;
+  flex: 1;
+  margin: 0 5px;
 }
 .delete-btn:hover {
   background-color: var(--hoverColor-greyButtons);
-}
-
-.edit-btn,
-.delete-btn {
-  flex: 1; /* Allows buttons to grow and take equal space */
-  margin: 0 5px; /* Optional: Add some margin for spacing */
 }
 
 /* Footer */
@@ -523,8 +529,9 @@ input::placeholder {
   background-color: #e8451f;
 }
 
-#loginRegisterNowContainer {
+.loginRegisterNowContainer {
   display: flex;
+  gap: 0.5rem;
 }
 
 #registerButton,
@@ -532,7 +539,6 @@ input::placeholder {
   padding: 0;
   border: 0;
   transition: none;
-  width: 7rem;
   font-size: 1rem;
   text-decoration: underline;
   background-color: white;
@@ -586,7 +592,8 @@ legend {
   gap: 2rem;
 }
 
-#destinationImageUrl {
+#destinationImageUrl,
+#editDestinationImageUrl {
   height: 100%;
 }
 
@@ -597,4 +604,11 @@ input.error {
 input.error:focus {
   outline: none;
   box-shadow: 0 0 5px red;
+}
+
+a {
+  text-decoration: none;
+}
+a:visited {
+  color: var(--text-color-dark);
 }
