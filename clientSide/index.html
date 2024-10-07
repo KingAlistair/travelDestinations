@@ -80,7 +80,7 @@
               <div class="input-container">
                 <label for="destinationCountryCode">Select a country</label>
                 <select id="destinationCountryCode" placeholder="Select a country" required></select>
-                <img id="countryFlag" class="countryFlag" alt="countryFlag" />
+                <!-- <img id="destinationCountryFlag" class="countryFlag" alt="countryFlag" /> -->
               </div>
               <div>
                 <button class="login-button" type="submit" value="Create now">Add destination</button>
@@ -103,11 +103,11 @@
               <div class="cardInformation"></div>
               <div class="input-container">
                 <label for="editDestinationTitle">Destination title</label>
-                <input type="text" id="editDestinationTitle" placeholder="Title" required />
+                <input type="text" id="editDestinationTitle" placeholder="Title"  />
               </div>
               <div class="input-container">
                 <label for="editDestinationDescription">Description</label>
-                <input type="text" id="editDestinationDescription" placeholder="Description" required />
+                <input type="text" id="editDestinationDescription" placeholder="Description"  />
               </div>
               <div class="input-container">
                 <label for="editDestinationWikiLink">Wikipedia Link</label>
@@ -115,8 +115,8 @@
               </div>
               <div class="input-container">
                 <label for="editDestinationCountryCode">Select a country</label>
-                <select id="editDestinationCountryCode" placeholder="Select a country" required></select>
-                <img id="editCountryFlag" class="countryFlag" alt="countryFlag" />
+                <select id="editDestinationCountryCode" placeholder="Select a country" ></select>
+                <!-- <img id="editDestinationCountryFlag" class="countryFlag" alt="countryFlag" /> -->
               </div>
               <div>
                 <button class="login-button" type="submit" value="Update now">Edit destination</button>
@@ -140,80 +140,16 @@
     <a href="" class="wiki-link">Open in Maps</a>
   </div>
   <div class="action-buttons">
-    <button class="edit-btn">Edit</button>
-    <button class="delete-btn">Delete</button>
+   <a href="#editDestinationContainer"><button class="edit-btn">Edit</button></a> 
+   <button class="delete-btn" >Delete</button>
   </div>
-  <button class="login-button" >Add a destination</button>
+ <a href="#addDestinationContainer"> <button class="login-button" >Add a destination</button> </a>
   </div>
 </template>
 
     <!-- Destinations grid with 'Add new destination' button -->
     <section id="destinations" class="destinations">
-      <!-- Card1 -->
-      <!-- <div class="destination-card">
-        <img src="photos/france.jpg" alt="Destination Image" class="destination-image">
-        <h2 class="destination-title">The city of love</h2>
-        <div class="user-info">
-          <img src="photos/profile-photo.jpg" alt="User Photo" class="profile-photo">
-          <span class="user-name">ExploringEthan</span>
-          <span class="user-location">Hamburg, Germany</span>
-        </div>
-        <p class="destination-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-          tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-          laboris nisi ut aliquip ex ea commodo consequat.</p>
-        <div class="post-info">
-          <i class="fa-solid fa-location-dot" style="color: #333333;"></i>
-          <a href="#">Open in Maps</a>
-        </div>
-        <div class="action-buttons">
-          <button class="edit-btn">Edit</button>
-          <button class="delete-btn">Delete</button>
-        </div>
-      </div> -->
 
-      <!-- Card2 -->
-      <!-- <div class="destination-card">
-        <img src="photos/france.jpg" alt="Destination Image" class="destination-image">
-        <h2 class="destination-title">The city of love</h2>
-        <div class="user-info">
-          <img src="photos/profile-photo.jpg" alt="User Photo" class="profile-photo">
-          <span class="user-name">ExploringEthan</span>
-          <span class="user-location">Hamburg, Germany</span>
-        </div>
-        <p class="destination-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-          tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-          laboris nisi ut aliquip ex ea commodo consequat.</p>
-        <div class="post-info">
-          <i class="fa-solid fa-location-dot" style="color: #333333;"></i>
-          <a href="#">Open in Maps</a>
-        </div>
-        <div class="action-buttons">
-          <button class="edit-btn">Edit</button>
-          <button class="delete-btn">Delete</button>
-        </div>
-      </div> -->
-
-      <!-- Card3 -->
-      <!-- <div class="destination-card">
-        <img src="photos/france.jpg" alt="Destination Image" class="destination-image">
-        <h2 class="destination-title">The city of love</h2>
-        <div class="user-info">
-          <img src="photos/profile-photo.jpg" alt="User Photo" class="profile-photo">
-          <span class="user-name">ExploringEthanr</span>
-          <span class="user-location">Hamburg, Germany</span>
-        </div>
-        <p class="destination-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-          tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-          laboris nisi ut aliquip ex ea commodo consequat.</p>
-        <div class="post-info">
-          <i class="fa-solid fa-location-dot" style="color: #333333;"></i>
-          <a href="#" id="linkToMaps">Open in Maps</a>
-        </div>
-        <div class="action-buttons">
-          <button class="edit-btn">Edit</button>
-          <button class="delete-btn">Delete</button>
-        </div>
-      </div> -->
     </section>
 
   </main>

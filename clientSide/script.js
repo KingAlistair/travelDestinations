@@ -1,15 +1,14 @@
 //import users and destinations
-import { populateCountryDropdown, getCountryFlagUrl } from "./countries/countries.js";
+import { populateCountryDropdown, getCountryFlagUrl, getCountryNameByCode } from "./countries/countries.js";
 import { changeUserLoggedInStatus, getUserByEmail, getUsers } from "./apiCalls/fetchUsers.js";
-import { getAllDestinations, createDestination, deleteDestination } from "./apiCalls/fetchDestinations.js";
-import { getCountryNameByCode } from "./countries/countries.js";
-
+import { getAllDestinations, createDestination, deleteDestination, updateDestination } from "./apiCalls/fetchDestinations.js";
 
 const destinationsContainer = document.getElementById("destinationsContainer");
-const countryDropdown = document.getElementById("destinationCountryCode");
-const countryFlag = document.getElementById("countryFlag");
 const addDestinationForm = document.getElementById("addDestinationForm");
+const editDestinationForm = document.getElementById("editDestinationForm");
 const addDestinationContainer = document.getElementById("addDestinationContainer");
+const editDestinationContainer = document.getElementById("editDestinationContainer");
+//const countryFlag = document.getElementById("countryFlag");
 
 //This function gets us the currentUser login status if there is one
 export const checkLoginStatus = async () => {
@@ -43,21 +42,23 @@ export const checkLoginStatus = async () => {
   return isLoggedIn;
 };
 
-
-
 const getUserFromLocalStorage = () => {
   const currentUserObject = localStorage.getItem("currentUser");
   const currentUser = JSON.parse(currentUserObject);
   return currentUser;
 };
 
-getUserFromLocalStorage()
+getUserFromLocalStorage();
 
 const loadUI = async () => {
   //gets current logged in user if any
   //displays destinations
   const currentUserStatus = (await checkLoginStatus()) || false;
   console.log("currentUserStatus", currentUserStatus);
+  await setupCountrySelector("destination");
+  await setupCountrySelector("editDestination");
+  editDestinationForm.reset();
+  addDestinationForm.reset();
   if (currentUserStatus) {
     //if user is loggedin
     //adjusting header with user details to show/hide buttons and user email
@@ -108,7 +109,6 @@ const displayDestination = async (destination, destinationAuthor, currentUserSta
     clone.querySelector(".destination-title").textContent = destination.title;
     clone.querySelector(".user-name").textContent = destinationAuthor;
     clone.querySelector(".destination-description").textContent = destination.description;
-    // clone.querySelector(".destination-country").textContent = getCountryNameByCode(destination.countryCode);
 
     //adding hidden or visible for the link div depending if there is data for it
     const wikiLink = clone.querySelector(".wiki-link");
@@ -128,8 +128,8 @@ const displayDestination = async (destination, destinationAuthor, currentUserSta
       //add event listeners for the buttons here
 
       //NEED TO CONTINUE
-      // clone.querySelector(".edit-btn").addEventListener("click", () => editDestination(destination));
-
+      const editButton = clone.querySelector(".edit-btn");
+      editButton.addEventListener("click", async () => loadEditForm(destination));
 
       // Delete destination functionality
       const deleteButton = clone.querySelector(".delete-btn");
@@ -144,17 +144,14 @@ const displayDestination = async (destination, destinationAuthor, currentUserSta
             // Find and remove the specific destination card from the DOM
             const destinationCard = deleteButton.closest(".destination-card"); // Find the card to remove
             if (destinationCard) {
-              destinationCard.remove();  // Remove the specific card
+              destinationCard.remove(); // Remove the specific card
             }
-
           } catch (error) {
             console.error(`Error deleting destination ${destination.title}: `, error);
             alert("An error occurred while deleting the destination. Please try again.");
           }
         }
       });
-
-
     } else {
       clone.querySelector(".action-buttons").style.display = "none";
       clone.querySelector(".login-button").style.display = "block";
@@ -165,6 +162,58 @@ const displayDestination = async (destination, destinationAuthor, currentUserSta
     console.log("No destinations to display");
     document.getElementById("destinations").textContent = "";
   }
+};
+
+//EDIT DESTINATION
+const loadEditForm = async (destination) => {
+  addDestinationContainer.style.display = "none";
+  editDestinationContainer.style.display = "flex";
+  //set form input fields placeholders to destination values
+  document.getElementById("editDestinationTitle").placeholder = destination.title;
+  document.getElementById("editDestinationDescription").placeholder = destination.description;
+  document.getElementById("editDestinationImageUrl").placeholder = `./destinationImages/${destination?.image}` || "./photos/france.jpg";
+  document.getElementById("editDestinationWikiLink").placeholder = destination?.wikiLink || "Wikipedia link";
+  document.getElementById("editDestinationCountryCode").value = destination.countryCode;
+
+  editDestinationForm.addEventListener("submit", async (e) => editDestination(e, destination));
+};
+
+const editDestination = async (e, destination) => {
+  e.preventDefault();
+  const currentUser = await getUserFromLocalStorage();
+  console.log(currentUser);
+
+  const newTitle = document.getElementById("editDestinationTitle").value;
+  const newDescription = document.getElementById("editDestinationDescription").value;
+  const newImageURL = document.getElementById("editDestinationImageUrl").value;
+  const newWikiLink = document.getElementById("editDestinationWikiLink").value;
+  const newCountryCode = document.getElementById("editDestinationCountryCode").value;
+
+  const updatedDestinationPayload = {
+    title: newTitle || destination.title,
+    description: newDescription || destination.description,
+    image: newImageURL || destination?.image,
+    link: newWikiLink || destination?.link,
+    countryCode: newCountryCode || destination.countryCode,
+  };
+
+  const updatedDataPayload = { destination: updatedDestinationPayload, email: currentUser.email };
+  console.log("updatedDataPayload", updatedDataPayload);
+  const updatedDestination = await updateDestination(destination._id, updatedDataPayload);
+  //NEEDS TO BE ADJUSTED
+  if (updatedDestination) {
+    document.getElementById("destinations").innerHTML = "";
+    editDestinationForm.reset();
+    //countryFlag.style.display = "none";
+    //update the UI
+    console.log("updating ui");
+    console.log("updatedDestination", updatedDestination);
+    await loadUI();
+    alert(`${updatedDestination.title} has been updated.`);
+  } else {
+    console.log("The destination could not be updated. Try again");
+  }
+  return updatedDestination;
 };
 
 //Sign-out functionality
@@ -224,7 +273,7 @@ const addDestination = async (e) => {
   if (createdDestination) {
     document.getElementById("destinations").innerHTML = "";
     addDestinationForm.reset();
-    countryFlag.style.display = "none";
+    // countryFlag.style.display = "none";
     //update the UI
     console.log("updating ui");
     await loadUI();
@@ -235,26 +284,31 @@ const addDestination = async (e) => {
   return createdDestination;
 };
 
+const setupCountrySelector = async (formType) => {
+  const countryDropdown = document.getElementById(`${formType}CountryCode`);
+  // const countryFlag = document.getElementById(`${formType}CountryFlag`);
 
-//UPDATE destination
+  if (!countryDropdown) return; // If the elements don't exist, exit || !countryFlag
 
-// Event listener to handle country selection and flag display
-if (countryDropdown) {
+  // Add event listener for country selection
   countryDropdown.addEventListener("change", function () {
     const selectedCode = this.value;
-    console.log("Selected country code:", selectedCode);
-    const flagUrl = getCountryFlagUrl(selectedCode);
-    // Update the flag image source and display it
-    if (selectedCode) {
-      countryFlag.src = flagUrl;
-      countryFlag.style.display = "block"; // Show the flag image
-    } else {
-      countryFlag.style.display = "none"; // Hide the flag image if no country is selected
-    }
+    // const flagUrl = getCountryFlagUrl(selectedCode);
+
+    // // Update the flag image
+    // if (selectedCode) {
+    //   countryFlag.src = flagUrl;
+    //   countryFlag.style.display = "block"; // Show flag
+    // } else {
+    //   countryFlag.style.display = "none"; // Hide flag
+    // }
   });
-  //Populate Country select with countries
-  populateCountryDropdown(countryDropdown);
-}
+
+  // Populate the country dropdown
+  populateCountryDropdown(`${formType}CountryCode`);
+  //`${formType}CountryFlag`
+};
+
 if (addDestinationForm) {
   //when the user clicks on create new destination
   addDestinationForm.addEventListener("submit", (e) => addDestination(e));

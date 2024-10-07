@@ -1,15 +1,13 @@
-import mongoose from '../db/connect.js'
+import mongoose from "../db/connect.js";
 import User from "../schemas/userSchema.js";
-
 
 // Helper function to remove password from users before return
 function removePassword(user) {
-  if (!user) return null; 
+  if (!user) return null;
   const userData = user.toObject();
   delete userData.hashedPassword; // Remove password
   return userData;
 }
-
 
 // GET
 
@@ -35,7 +33,7 @@ export async function getUserById(id) {
   }
 }
 
-// // Get a user by email
+// Get a user by email
 export async function getUserByEmail(email) {
   try {
     const user = await User.findOne({ email });
@@ -78,13 +76,13 @@ export async function createUser(user) {
     // Check if the username already exists
     const existingUserName = await User.findOne({ userName: user.userName });
     if (existingUserName) {
-      throw new Error('Username already in use.');
+      throw new Error("Username already in use.");
     }
 
     // Check if the email already exists
     const existingEmail = await User.findOne({ email: user.email });
     if (existingEmail) {
-      throw new Error('Email already in use.');
+      throw new Error("Email already in use.");
     }
 
     // If not in use, create and return user
@@ -92,9 +90,8 @@ export async function createUser(user) {
     await newUser.save();
 
     return removePassword(newUser);
-
   } catch (error) {
-    console.error('Error creating user:', error);
+    console.error("Error creating user:", error);
     throw error;
   }
 }
@@ -125,7 +122,7 @@ export async function changeUserLoggedInStatus(email, status) {
   const updatedUser = await user.save();
 
   return updatedUser;
-};
+}
 
 // // Delete a user by email - Work in progress
 // export async function deleteUserByEmail(email) {

@@ -16,6 +16,9 @@
   padding: 0;
   box-sizing: border-box;
 }
+html {
+  scroll-behavior: smooth;
+}
 
 .hidden {
   display: none;
@@ -301,6 +304,10 @@ form addDestinationForm {
   width: 100%;
   margin-bottom: 10px;
 }
+.action-buttons > a {
+  flex: 1;
+  margin: 0 5px;
+}
 .edit-btn {
   background-color: var(--primary-color);
   color: var(--white);
@@ -311,6 +318,7 @@ form addDestinationForm {
   font-family: "Inter", sans-serif;
   font-weight: 700;
   font-size: 12px;
+  width: 100%;
 }
 .edit-btn:hover {
   background-color: var(--primary-color-dark);
@@ -326,15 +334,11 @@ form addDestinationForm {
   font-family: "Inter", sans-serif;
   font-weight: 700;
   font-size: 12px;
+  flex: 1;
+  margin: 0 5px;
 }
 .delete-btn:hover {
   background-color: var(--hoverColor-greyButtons);
-}
-
-.edit-btn,
-.delete-btn {
-  flex: 1; /* Allows buttons to grow and take equal space */
-  margin: 0 5px; /* Optional: Add some margin for spacing */
 }
 
 /* Footer */
@@ -567,7 +571,8 @@ legend {
   gap: 2rem;
 }
 
-#destinationImageUrl {
+#destinationImageUrl,
+#editDestinationImageUrl {
   height: 100%;
 }
 
@@ -578,4 +583,8 @@ input.error {
 input.error:focus {
   outline: none;
   box-shadow: 0 0 5px red;
+}
+
+a {
+  text-decoration: none;
 }

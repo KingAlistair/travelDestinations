@@ -64,9 +64,10 @@ export async function createDestination(email, destination) {
 }
 
 // Update a specific destination for a user
-export async function updateDestination(email, destinationId, updatedData) {
+export async function updateDestination(destinationId, updatedData) {
   try {
     //user has to be logged in to update a destination - will have to change this later for authentication
+    const { destination, email } = updatedData;
     const user = await getUserByEmail(email);
     if (!user) {
       throw new Error("User not found");
@@ -74,7 +75,7 @@ export async function updateDestination(email, destinationId, updatedData) {
     // Update the destination document
     const updatedDestination = await Destination.findByIdAndUpdate(
       destinationId,
-      updatedData,
+      { userId: user._id, ...destination },
       { new: true } // This returns the updated document based on mongoose docs
     );
     if (!updatedDestination) {
@@ -100,7 +101,7 @@ export async function deleteDestination(email, destinationId) {
     if (!destinationToDelete) {
       throw new Error("Destination not found and couldn't be deleted");
     }
-    return console.log(`Destination successfully deleted by ${user}`);
+    return console.log(`Destination successfully deleted by ${user.userName}`);
   } catch (error) {
     console.error("Failed to delete destination:", error);
     throw new Error("Failed to delete destination. Make sure the user is logged in before attempting to delete a destination");
