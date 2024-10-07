@@ -1,6 +1,5 @@
 const url = "http://127.0.0.1:3000/api/users";
 
-
 // Register user
 export async function createNewUser(userPayload) {
   const response = await fetch(url, {
@@ -14,13 +13,12 @@ export async function createNewUser(userPayload) {
   // Check if the response is not ok
   if (!response.ok) {
     const errorData = await response.json(); // Get error data from response
-    throw new Error(errorData.error || 'Registration failed'); // Throw an error with the message
+    throw new Error(errorData.error || "Registration failed"); // Throw an error with the message
   }
 
   // If status is ok, return the response as JSON
   return await response.json();
 }
-
 
 // Authenticate user and handle error responses
 export async function authenticateUser(credentials) {
@@ -41,7 +39,6 @@ export async function authenticateUser(credentials) {
     throw new Error(errorData.error || "Failed to authenticate user");
   }
 }
-
 
 // Changes user status in db, returns updated user
 export async function changeUserLoggedInStatus(email, status) {
@@ -66,7 +63,7 @@ export async function changeUserLoggedInStatus(email, status) {
 
 //GET user by email
 export const getUserByEmail = async (email) => {
-  const response = await fetch(`${url}/${email}`);
+  const response = await fetch(`${url}/email/${email}`);
   const user = await response.json();
   return user;
 };

@@ -55,6 +55,7 @@ const loadUI = async () => {
   //displays destinations
   const currentUserStatus = (await checkLoginStatus()) || false;
   console.log("currentUserStatus", currentUserStatus);
+
   await setupCountrySelector("destination");
   await setupCountrySelector("editDestination");
   editDestinationForm.reset();
@@ -63,19 +64,29 @@ const loadUI = async () => {
     //if user is loggedin
     //adjusting header with user details to show/hide buttons and user email
     const currentUser = await getUserFromLocalStorage();
+    const email = currentUser.email;
+    const user = await getUserByEmail(email);
+    console.log("user", user);
+    // console.log(email);
 
     document.getElementById("signInHeader").style.display = "none";
     document.getElementById("profileMenu").style.display = "flex";
-    document.querySelector("#profileMenu h3").textContent = currentUser.email;
+    document.querySelector("#profileMenu h3").textContent = user.userName;
     document.getElementById("signUpButton").style.display = "none";
     document.getElementById("destinationsForms").style.display = "block";
     document.getElementById("CTAContainerWrapper").style.display = "none";
+    // if (user && user.userName) {
+    //   document.getElementById("heroHeader").textContent = `Welcome back ${user.userName}!`;
+    //   document.getElementById("heroMessage").textContent = "Here you can keep a log of your travels and destinations. Scroll below to start!";
+    // }
   } else {
     document.getElementById("signInHeader").style.display = "flex";
     document.getElementById("profileMenu").style.display = "none";
     document.getElementById("signUpButton").style.display = "flex";
     document.getElementById("destinationsForms").style.display = "none";
     document.getElementById("CTAContainerWrapper").style.display = "block";
+    // document.getElementById("heroHeader").textContent = inherit;
+    // document.getElementById("heroMessage").textContent = inherit;
   }
   await displayDestinations(currentUserStatus);
 };
@@ -94,7 +105,7 @@ const displayDestinations = async (currentUserStatus) => {
     });
   } else {
     console.log("No destinations to display");
-    await displayDestination(destination, destinationAuthor, currentUserStatus);
+    // await displayDestination(destination, destinationAuthor, currentUserStatus);
   }
 };
 
@@ -155,7 +166,9 @@ const displayDestination = async (destination, destinationAuthor, currentUserSta
     } else {
       clone.querySelector(".action-buttons").style.display = "none";
       clone.querySelector(".login-button").style.display = "block";
-      //event listener for add destination button here ? or just scroll to the top
+      clone.querySelector(".login-button").addEventListener("click", () => {
+        alert("Please log in or register to access this feature");
+      });
     }
     document.getElementById("destinations").appendChild(clone);
   } else {
@@ -242,10 +255,9 @@ const logout = async () => {
       // Clear destination cards from the DOM
       document.getElementById("destinations").innerHTML = "";
       //update the UI
-      console.log("updating ui");
       await loadUI();
       // localStorage.removeItem("currentUser");
-      alert("You are now logged out");
+      alert("The user is now logged out");
     } catch (error) {
       console.log(`Error changing ${userEmail} isLoggedIn status in database:` + error);
     }

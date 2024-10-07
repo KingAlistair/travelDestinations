@@ -10,24 +10,24 @@ const registerContainer = document.getElementById("registerContainer");
 const messageToUser = document.getElementById("messageToUser");
 
 // Current date
-const currentDate = new Date().toLocaleString([], {
-  year: "numeric",
-  month: "2-digit",
-  day: "2-digit",
-  hour: "2-digit",
-  minute: "2-digit",
-});
+// const currentDate = new Date().toLocaleString([], {
+//   year: "numeric",
+//   month: "2-digit",
+//   day: "2-digit",
+//   hour: "2-digit",
+//   minute: "2-digit",
+// });
 
 // Display the correct form (sign-in or register) based on which button is clicked
 const displayForm = (buttonName) => {
   if (buttonName === "signIn") {
     signInContainer.classList.remove("hidden");
     registerContainer.classList.add("hidden");
-    messageToUser.textContent = "Please sign in to add a new destination";
+    messageToUser.textContent = "*Please sign in to add a new destination";
   } else if (buttonName === "register") {
     registerContainer.classList.remove("hidden");
     signInContainer.classList.add("hidden");
-    messageToUser.textContent = "Please register to add a new destination";
+    messageToUser.textContent = "*Please register to add a new destination";
   }
 };
 
@@ -71,11 +71,7 @@ const registerUser = async (e) => {
   const username = document.getElementById("newUsername").value;
   const newUserPassword = document.getElementById("newUserPassword").value;
 
-  const inputsToValidate = [
-    document.getElementById("newUserEmail"),
-    document.getElementById("newUsername"),
-    document.getElementById("newUserPassword"),
-  ];
+  const inputsToValidate = [document.getElementById("newUserEmail"), document.getElementById("newUsername"), document.getElementById("newUserPassword")];
 
   const isFormValid = validateAndTrimForm(inputsToValidate);
 
@@ -111,11 +107,10 @@ const registerUser = async (e) => {
 
   try {
     const registeredUser = await createNewUser(userPayload); // Ensure this returns the JSON response
-    
+
     alert(`User registered successfully. Welcome ${registeredUser.userName}! Please login!`);
 
     window.location.replace("/clientSide/formsPage.html");
-
   } catch (error) {
     alert(error.message);
     console.error("Failed to register user:", error);
@@ -129,10 +124,7 @@ const signInUser = async (e) => {
   const userEmail = document.getElementById("userEmail").value.trim();
   const userPassword = document.getElementById("userPassword").value.trim();
 
-  const inputsToValidate = [
-    document.getElementById("userEmail"),
-    document.getElementById("userPassword")
-  ];
+  const inputsToValidate = [document.getElementById("userEmail"), document.getElementById("userPassword")];
 
   // Perform validation and trim whitespace
   const isFormValid = validateAndTrimForm(inputsToValidate);
@@ -147,27 +139,28 @@ const signInUser = async (e) => {
   try {
     // Authenticate user
     const authenticatedUser = await authenticateUser(credentials);
-    console.log('Auth: ' + authenticatedUser.email)
+    console.log("Auth: " + authenticatedUser.email);
 
     if (authenticatedUser) {
       try {
         // Store user info in localStorage
-        localStorage.setItem("currentUser", JSON.stringify({
-          isLoggedIn: authenticatedUser.isLoggedIn,
-          email: authenticatedUser.email,
-          id: authenticatedUser._id
-        }));
+        localStorage.setItem(
+          "currentUser",
+          JSON.stringify({
+            isLoggedIn: authenticatedUser.isLoggedIn,
+            email: authenticatedUser.email,
+            id: authenticatedUser._id,
+          })
+        );
 
         // Display success message and redirect to index
         alert(`You are now signed in. Welcome back ${authenticatedUser.userName}!`);
         window.location.replace("/clientSide/index.html");
-
       } catch (error) {
         console.error(`Error changing ${userEmail}'s isLoggedIn status: `, error);
         alert("An error occurred while updating your login status. Please try again.");
       }
     }
-
   } catch (error) {
     // Handle authentication errors
     console.error("Failed to log in the user:", error.message);
@@ -175,9 +168,10 @@ const signInUser = async (e) => {
   }
 };
 
-
 // Register form submit event
 registerForm.addEventListener("submit", (e) => registerUser(e));
 
 // Sign-in form submit event
 signInForm.addEventListener("submit", (e) => signInUser(e));
+
+document.addEventListener("load", displayForm(buttonName));
