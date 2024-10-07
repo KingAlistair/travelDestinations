@@ -40,17 +40,15 @@ export const createDestination = async (formData) => {
 };
 
 //UPDATE destination
-export async function updateDestination(destinationId, updatedData) {
+export async function updateDestination(destinationId, formData) {
   try {
     const response = await fetch(`${url}/${destinationId}`, {
       method: "PUT",
-      body: JSON.stringify(updatedData),
-      headers: {
-        "Content-Type": "application/json",
-      },
+      body: formData, // Send the FormData directly - not application/json
     });
 
     if (!response.ok) {
+      console.log("Erron in fetch: " + response.status)
       throw new Error(`Failed to update the destination. Status code: ${response.status}`);
     }
     const updatedDestination = await response.json();

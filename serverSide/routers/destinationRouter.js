@@ -101,25 +101,36 @@ destinationsRouter.post("/", upload.single('image'), async (req, res) => {
 
 
 // Update destination by id and email
-destinationsRouter.put("/:id", async (req, res) => {
+destinationsRouter.put("/:id", upload.single("image"), async (req, res) => {
   try {
     const destinationId = req.params.id;
-    const userEmail = req.body.email;
+    const userEmail = req.body.userEmail;
+
     if (!userEmail) {
       return res.status(401).json({ error: "Unauthorized: User not logged in" });
     }
-    const updatedData = req.body.destination;
+
+    // Retrieve current destination to keep the existing image if none is uploaded
+    const existingDestination = await getDestinationByDestinationId(destinationId);
+
+    const updatedData = {
+      title: req.body.title,
+      description: req.body.description,
+      link: req.body.link,
+      countryCode: req.body.countryCode,
+      image: req.file ? req.file.filename : existingDestination.image, // Use new file or existing image
+    };
 
     const updatedDestination = await updateDestination(userEmail, destinationId, updatedData);
 
     if (updatedDestination) {
-      res.status(200).json(updatedDestination);
+      return res.status(200).json(updatedDestination);
     } else {
-      res.status(404).json({ error: "Destination not found or no changes made" });
+      return res.status(404).json({ error: "Destination not found or no changes made" });
     }
   } catch (error) {
     console.error("Error updating destination:", error);
-    res.status(500).json({ error: "Failed to update destination" });
+    return res.status(500).json({ error: "Failed to update destination" });
   }
 });
 
@@ -169,7 +180,7 @@ destinationsRouter.delete("/:id", async (req, res) => {
       return res.status(404).json({ error: "Destination not found" });
     } else {
       console.error("Unexpected error:", error);
-      res.status(500).json({ error: "Failed to delete destination" });
+       res.status(500).json({ error: "Failed to delete destination" });
     }
   }
 });
