@@ -4,7 +4,6 @@ import { changeUserLoggedInStatus, getUserByEmail, getUsers } from "./apiCalls/f
 import { getAllDestinations, createDestination, deleteDestination } from "./apiCalls/fetchDestinations.js";
 import { getCountryNameByCode } from "./countries/countries.js";
 
-
 const destinationsContainer = document.getElementById("destinationsContainer");
 const countryDropdown = document.getElementById("destinationCountryCode");
 const countryFlag = document.getElementById("countryFlag");
@@ -200,41 +199,56 @@ if (signOutButton) {
 //ADD destination
 const addDestination = async (e) => {
   e.preventDefault();
+
+  // Retrieve current user data
   const currentUserObject = localStorage.getItem("currentUser");
   const currentUser = JSON.parse(currentUserObject);
   console.log(currentUser);
+
+  // Create form data
+  const formData = new FormData();
+
+  // Get form values
   const title = document.getElementById("destinationTitle").value;
   const description = document.getElementById("destinationDescription").value;
-  const imageURL = document.getElementById("destinationImageUrl").value;
+  const imageFile = document.getElementById("destinationImageUrl").files[0];
   const wikiLink = document.getElementById("destinationWikiLink").value;
   const countryCode = document.getElementById("destinationCountryCode").value;
 
-  const destinationPayload = {
-    title: title,
-    description: description,
-    image: imageURL,
-    link: wikiLink,
-    countryCode: countryCode,
-  };
+  // Append form fields to formData
+  formData.append("title", title);
+  formData.append("description", description);
+  formData.append("image", imageFile); // Append imageFile
+  formData.append("link", wikiLink);
+  formData.append("countryCode", countryCode);
+  formData.append("userEmail", currentUser.email); // Add email to formData for backend validation
 
-  const payload = { destination: destinationPayload, userEmail: currentUser.email };
-  console.log("payload", payload);
-  const createdDestination = await createDestination(payload);
-  //NEEDS TO BE ADJUSTED
-  if (createdDestination) {
-    document.getElementById("destinations").innerHTML = "";
-    addDestinationForm.reset();
-    countryFlag.style.display = "none";
-    //update the UI
-    console.log("updating ui");
-    await loadUI();
-    alert(`${createdDestination.title} has been added to the list of destinations!`);
-  } else {
-    console.log("not added");
+  try {
+    // Post new destination with formData
+    const response = await createDestination(formData)
+
+    const data = await response.json();
+
+    if (response.ok) {
+      alert(`${data.destination.title} has been added to the destinations!`);
+      document.getElementById("destinations").innerHTML = "";
+      document.getElementById("addDestinationForm").reset();
+      document.getElementById("countryFlag").style.display = "none";
+
+      // Update the UI
+      console.log("Updating UI");
+
+      // Clear the saved image from localStorage after submission
+      localStorage.removeItem("uploadedImage");
+
+      await loadUI();
+    } else {
+      console.log("Error:", data.message);
+    }
+  } catch (error) {
+    console.error("An error occurred:", error);
   }
-  return createdDestination;
 };
-
 
 //UPDATE destination
 
@@ -261,3 +275,25 @@ if (addDestinationForm) {
 }
 //ONLOAD call function to fetch user status
 window.addEventListener("load", loadUI);
+
+
+// Add image to input field as background
+document.getElementById("destinationImageUrl").addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  const reader = new FileReader();
+  reader.onload = function (evt) {
+    const img = new Image();
+    img.onload = (e) => {
+      const inputField = document.getElementById("destinationImageUrl");
+      inputField.style.backgroundImage = `url(${img.src})`;
+
+      // Add styling for the background image to fit
+      inputField.style.backgroundSize = "cover";  
+      inputField.style.backgroundPosition = "center";
+      inputField.style.backgroundRepeat = "no-repeat";
+
+    };
+    img.src = evt.target.result;
+  };
+  reader.readAsDataURL(file);
+});
