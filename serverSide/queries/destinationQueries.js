@@ -64,22 +64,24 @@ export async function createDestination(email, destination) {
 }
 
 // Update a specific destination for a user
-export async function updateDestination(destinationId, updatedData) {
+export async function updateDestination(email, destinationId, updatedData) {
   try {
     //user has to be logged in to update a destination - will have to change this later for authentication
-    const { destination, email } = updatedData;
     const user = await getUserByEmail(email);
     if (!user) {
       throw new Error("User not found");
     }
+    console.log("Received Updated Data:", updatedData);
     // Update the destination document
     const updatedDestination = await Destination.findByIdAndUpdate(
       destinationId,
-      { userId: user._id, ...destination },
+      updatedData,
       { new: true } // This returns the updated document based on mongoose docs
     );
     if (!updatedDestination) {
       throw new Error("Destination not found and couldn't be updated");
+    } else {
+      console.log("Updated Data:", updatedDestination);
     }
     return updatedDestination;
   } catch (error) {

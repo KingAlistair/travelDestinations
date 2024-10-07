@@ -15,7 +15,7 @@ export const checkLoginStatus = async () => {
   let isLoggedIn;
   //check if there is a currentUser stored
   const currentUserObject = localStorage.getItem("currentUser");
-  console.log(currentUserObject);
+
   if (currentUserObject) {
     //if there is, retrieve the status from local storage
     const currentUser = JSON.parse(currentUserObject);
@@ -164,24 +164,9 @@ const displayDestination = async (destination, destinationAuthor, currentUserSta
   }
 };
 
-//EDIT DESTINATION
-const loadEditForm = async (destination) => {
-  addDestinationContainer.style.display = "none";
-  editDestinationContainer.style.display = "flex";
-  //set form input fields placeholders to destination values
-  document.getElementById("editDestinationTitle").placeholder = destination.title;
-  document.getElementById("editDestinationDescription").placeholder = destination.description;
-  document.getElementById("editDestinationImageUrl").placeholder = `./destinationImages/${destination?.image}` || "./photos/france.jpg";
-  document.getElementById("editDestinationWikiLink").placeholder = destination?.wikiLink || "Wikipedia link";
-  document.getElementById("editDestinationCountryCode").value = destination.countryCode;
-
-  editDestinationForm.addEventListener("submit", async (e) => editDestination(e, destination));
-};
-
 const editDestination = async (e, destination) => {
   e.preventDefault();
   const currentUser = await getUserFromLocalStorage();
-  console.log(currentUser);
 
   const newTitle = document.getElementById("editDestinationTitle").value;
   const newDescription = document.getElementById("editDestinationDescription").value;
@@ -189,31 +174,59 @@ const editDestination = async (e, destination) => {
   const newWikiLink = document.getElementById("editDestinationWikiLink").value;
   const newCountryCode = document.getElementById("editDestinationCountryCode").value;
 
+  console.log("newTitle", newTitle);
+
   const updatedDestinationPayload = {
-    title: newTitle || destination.title,
-    description: newDescription || destination.description,
-    image: newImageURL || destination?.image,
-    link: newWikiLink || destination?.link,
-    countryCode: newCountryCode || destination.countryCode,
+    title: newTitle !== "" ? newTitle : destination.title,
+    description: newDescription !== "" ? newDescription : destination.description,
+    image: newImageURL !== "" ? newImageURL : destination?.image,
+    link: newWikiLink !== "" ? newWikiLink : destination?.link,
+    countryCode: newCountryCode !== "" ? newCountryCode : destination.countryCode,
   };
 
   const updatedDataPayload = { destination: updatedDestinationPayload, email: currentUser.email };
   console.log("updatedDataPayload", updatedDataPayload);
   const updatedDestination = await updateDestination(destination._id, updatedDataPayload);
-  //NEEDS TO BE ADJUSTED
+
   if (updatedDestination) {
     document.getElementById("destinations").innerHTML = "";
     editDestinationForm.reset();
+    editDestinationContainer.style.display = "none";
+    addDestinationContainer.style.display = "flex";
     //countryFlag.style.display = "none";
     //update the UI
-    console.log("updating ui");
     console.log("updatedDestination", updatedDestination);
     await loadUI();
-    alert(`${updatedDestination.title} has been updated.`);
+    alert(`The destination "${updatedDestination.title}" has been updated.`);
   } else {
     console.log("The destination could not be updated. Try again");
   }
   return updatedDestination;
+};
+
+//EDIT DESTINATION
+const loadEditForm = async (destination) => {
+  editDestinationForm.removeEventListener("submit", editDestination);
+  addDestinationContainer.style.display = "none";
+  editDestinationContainer.style.display = "flex";
+  //set form input fields placeholders to destination values
+  const newTitle = document.getElementById("editDestinationTitle");
+  const newDescription = document.getElementById("editDestinationDescription");
+  const newImageURL = document.getElementById("editDestinationImageUrl");
+  const newWikiLink = document.getElementById("editDestinationWikiLink");
+  const newCountryCode = document.getElementById("editDestinationCountryCode");
+
+  newTitle.placeholder = destination.title;
+  newTitle.value = destination.title;
+  newDescription.placeholder = destination.description;
+  newDescription.value = destination.description;
+  newImageURL.placeholder = destination.image ? `./destinationImages/${destination?.image}` : "./photos/france.jpg";
+  newImageURL.value = destination.image ? `./destinationImages/${destination?.image}` : "";
+  newWikiLink.placeholder = destination?.link || "Wikipedia link";
+  newWikiLink.value = destination?.link || "";
+  newCountryCode.value = destination.countryCode;
+
+  editDestinationForm.addEventListener("submit", async (e) => editDestination(e, destination));
 };
 
 //Sign-out functionality
@@ -275,7 +288,6 @@ const addDestination = async (e) => {
     addDestinationForm.reset();
     // countryFlag.style.display = "none";
     //update the UI
-    console.log("updating ui");
     await loadUI();
     alert(`${createdDestination.title} has been added to the list of destinations!`);
   } else {

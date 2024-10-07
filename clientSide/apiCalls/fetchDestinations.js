@@ -56,6 +56,7 @@ export async function updateDestination(destinationId, updatedData) {
       throw new Error(`Failed to update the destination. Status code: ${response.status}`);
     }
     const updatedDestination = await response.json();
+    console.log("updatedDestination", updatedDestination);
     return updatedDestination;
   } catch (error) {
     console.error("Error:", error);
