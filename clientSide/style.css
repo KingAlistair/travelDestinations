@@ -35,12 +35,17 @@ h1 {
   font-family: "Libre Baskerville", serif;
 }
 
+a {
+  text-decoration: none;
+}
+
 input {
   border: 0;
   outline: 0;
   color: rgb(60, 66, 87);
   background-color: rgb(255, 255, 255);
-  box-shadow: rgb(0 0 0 / 0%) 0px 0px 0px 0px, rgb(60 66 87 / 16%) 0px 0px 0px 1px;
+  box-shadow: rgb(0 0 0 / 0%) 0px 0px 0px 0px,
+    rgb(60 66 87 / 16%) 0px 0px 0px 1px;
   border-radius: 8px;
   font-size: 14px;
   padding: 8px 12px;
@@ -54,7 +59,8 @@ select {
   outline: 0;
   color: rgb(60, 66, 87);
   background-color: rgb(255, 255, 255);
-  box-shadow: rgb(0 0 0 / 0%) 0px 0px 0px 0px, rgb(60 66 87 / 16%) 0px 0px 0px 1px;
+  box-shadow: rgb(0 0 0 / 0%) 0px 0px 0px 0px,
+    rgb(60 66 87 / 16%) 0px 0px 0px 1px;
   border-radius: 8px;
   font-size: 12px;
   padding: 8px 12px;
@@ -158,8 +164,10 @@ header {
   align-items: flex-start;
   padding: 20px;
   top: 60%;
-  left: 60%;
-  transform: translateX(-50%); /* Adjust to truly center it based on its width */
+  left: 55%;
+  transform: translateX(
+    -50%
+  ); /* Adjust to truly center it based on its width */
 }
 
 .hero-content h1 {
@@ -211,6 +219,7 @@ form addDestinationForm {
 }
 
 /* Destinations Section */
+
 .destinations {
   display: grid;
   grid-template-columns: repeat(3, 1fr); /* 3 columns */
@@ -357,6 +366,7 @@ form addDestinationForm {
   justify-content: space-between;
   align-items: center;
   width: 1066px;
+  padding: 2rem;
 }
 
 .footer-logo img {
@@ -549,13 +559,22 @@ legend {
 /* destination form styling */
 
 #addDestinationContainer,
-#editDestinationContainer,
-#CTAContainer {
+#editDestinationContainer {
   border-radius: 14.68px;
   background-color: var(--text-color);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
+  padding: 25px;
+  font-family: "Inter", sans-serif;
+}
+
+#CTAContainer {
+  border-radius: 14.68px;
+  background-color: var(--text-color);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
   padding: 25px;
   font-family: "Inter", sans-serif;
 }

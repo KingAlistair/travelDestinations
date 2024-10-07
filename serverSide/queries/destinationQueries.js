@@ -37,10 +37,13 @@ export async function getDestinationByDestinationId(destinationId) {
     if (!destinationId) {
       throw new Error("Destination ID is required");
     }
-    const destination = await Destination.findOne({ _id: destinationId });
+
+    // Use findById to fetch by _id
+    const destination = await Destination.findById(destinationId);
     if (!destination) {
       throw new Error("Destination not found");
     }
+
     return destination;
   } catch (error) {
     console.error("Failed to fetch destination:", error);
@@ -90,22 +93,25 @@ export async function updateDestination(email, destinationId, updatedData) {
   }
 }
 
-// Delete a specific destination for a user identified by email and destination ID
+// Delete a specific destination by user email and destination ID
 export async function deleteDestination(email, destinationId) {
   try {
-    //user has to be logged in to delete a destination - will have to change this later for authentication
     const user = await getUserByEmail(email);
     if (!user) {
       throw new Error("User not found");
     }
-    //delete the destination
+    
+    // Try to delete the destination by ID
     const destinationToDelete = await Destination.findByIdAndDelete(destinationId);
     if (!destinationToDelete) {
-      throw new Error("Destination not found and couldn't be deleted");
+      throw new Error("Destination not found");
     }
-    return console.log(`Destination successfully deleted by ${user.userName}`);
+    
+    // Return the deleted document
+    return destinationToDelete;
+    
   } catch (error) {
-    console.error("Failed to delete destination:", error);
-    throw new Error("Failed to delete destination. Make sure the user is logged in before attempting to delete a destination");
+    console.error("Error in deleteDestination:", error.message);
+    throw error; // Pass the original error message up the call stack
   }
 }

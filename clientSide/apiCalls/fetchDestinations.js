@@ -27,14 +27,12 @@ export const getAllDestinations = async () => {
   return await response.json();
 };
 
+
 //CREATE destination
-export const createDestination = async (payload) => {
+export const createDestination = async (formData) => {
   const response = await fetch(url, {
     method: "POST",
-    body: JSON.stringify(payload),
-    headers: {
-      "Content-Type": "application/json",
-    },
+    body: formData, // Send the FormData directly - not application/json
   });
   const createdDestination = await response.json();
   console.log("createdDestination", createdDestination);
