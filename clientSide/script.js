@@ -92,6 +92,7 @@ const loadUI = async () => {
 };
 
 const displayDestinations = async (currentUserStatus) => {
+
   const allDestinations = await getAllDestinations();
   console.log("allDestinations", allDestinations);
   //also fetch users
@@ -177,68 +178,77 @@ const displayDestination = async (destination, destinationAuthor, currentUserSta
   }
 };
 
+// Edit a destination
 const editDestination = async (e, destination) => {
   e.preventDefault();
-  const currentUser = await getUserFromLocalStorage();
 
-  const newTitle = document.getElementById("editDestinationTitle").value;
-  const newDescription = document.getElementById("editDestinationDescription").value;
-  const newImageURL = document.getElementById("editDestinationImageUrl").value;
-  const newWikiLink = document.getElementById("editDestinationWikiLink").value;
-  const newCountryCode = document.getElementById("editDestinationCountryCode").value;
+  // Retrieve current user data
+  const currentUserObject = localStorage.getItem("currentUser");
+  const currentUser = JSON.parse(currentUserObject);
 
-  console.log("newTitle", newTitle);
+  // Use FormData to handle all fields
+  const formData = new FormData();
+  const imageInput = document.getElementById("editDestinationImageUrl");
+  const imageFile = imageInput.files[0];
 
-  const updatedDestinationPayload = {
-    title: newTitle !== "" ? newTitle : destination.title,
-    description: newDescription !== "" ? newDescription : destination.description,
-    image: newImageURL !== "" ? newImageURL : destination?.image,
-    link: newWikiLink !== "" ? newWikiLink : destination?.link,
-    countryCode: newCountryCode !== "" ? newCountryCode : destination.countryCode,
-  };
-
-  const updatedDataPayload = { destination: updatedDestinationPayload, email: currentUser.email };
-  console.log("updatedDataPayload", updatedDataPayload);
-  const updatedDestination = await updateDestination(destination._id, updatedDataPayload);
-
-  if (updatedDestination) {
-    document.getElementById("destinations").innerHTML = "";
-    editDestinationForm.reset();
-    editDestinationContainer.style.display = "none";
-    addDestinationContainer.style.display = "flex";
-    //countryFlag.style.display = "none";
-    //update the UI
-    console.log("updatedDestination", updatedDestination);
-    await loadUI();
-    alert(`The destination "${updatedDestination.title}" has been updated.`);
+  // Append either the new file or the existing image path as a string
+  if (imageFile) {
+    formData.append("image", imageFile); // New image file
   } else {
-    console.log("The destination could not be updated. Try again");
+    formData.append("image", destination.image); // Existing image path as a string
   }
-  return updatedDestination;
+
+  // Append other form fields
+  formData.append("title", document.getElementById("editDestinationTitle").value || destination.title);
+  formData.append("description", document.getElementById("editDestinationDescription").value || destination.description);
+  formData.append("link", document.getElementById("editDestinationWikiLink").value || destination.link);
+  formData.append("countryCode", document.getElementById("editDestinationCountryCode").value || destination.countryCode);
+  formData.append("userEmail", currentUser.email);
+
+  try {
+    const response = await updateDestination(destination._id, formData);
+    if (response.ok) {
+      const updatedDestination = await response.json();
+      console.log("updatedDestination", updatedDestination);
+      alert(`The destination "${updatedDestination.title}" has been updated.`);
+
+      // Reset the form and update the UI
+      editDestinationForm.reset();
+      editDestinationContainer.style.display = "none";
+      addDestinationContainer.style.display = "flex";
+      await loadUI();
+     } else {
+        console.log("Something is strange, but it works, kinda :/");
+        window.location.reload(); // Yeah not the best, but if you don't change the image on edit it's buggy
+      }
+
+  } catch (error) {
+    console.error("Failed to update destination:", error);
+  }
 };
 
-//EDIT DESTINATION
+// Load the edit form with destination data
 const loadEditForm = async (destination) => {
   editDestinationForm.removeEventListener("submit", editDestination);
   addDestinationContainer.style.display = "none";
   editDestinationContainer.style.display = "flex";
-  //set form input fields placeholders to destination values
-  const newTitle = document.getElementById("editDestinationTitle");
-  const newDescription = document.getElementById("editDestinationDescription");
-  const newImageURL = document.getElementById("editDestinationImageUrl");
-  const newWikiLink = document.getElementById("editDestinationWikiLink");
-  const newCountryCode = document.getElementById("editDestinationCountryCode");
 
-  newTitle.placeholder = destination.title;
-  newTitle.value = destination.title;
-  newDescription.placeholder = destination.description;
-  newDescription.value = destination.description;
-  newImageURL.placeholder = destination.image ? `./destinationImages/${destination?.image}` : "./photos/france.jpg";
-  newImageURL.value = destination.image ? `./destinationImages/${destination?.image}` : "";
-  newWikiLink.placeholder = destination?.link || "Wikipedia link";
-  newWikiLink.value = destination?.link || "";
-  newCountryCode.value = destination.countryCode;
+  // Populate form fields with the existing destination data
+  document.getElementById("editDestinationTitle").value = destination.title;
+  document.getElementById("editDestinationDescription").value = destination.description;
+  const imageInput = document.getElementById("editDestinationImageUrl");
+  const imageUrl = destination.image ? `./destinationImages/${destination.image}` : "./photos/france.jpg";
+  imageInput.placeholder = imageUrl;
+  document.getElementById("editDestinationWikiLink").value = destination.link || "";
+  document.getElementById("editDestinationCountryCode").value = destination.countryCode;
 
+  // Show the existing image as background
+  imageInput.style.backgroundImage = `url(${imageUrl})`;
+  imageInput.style.backgroundSize = "cover";
+  imageInput.style.backgroundPosition = "center";
+  imageInput.style.backgroundRepeat = "no-repeat";
+
+  // Add submit event listener to handle the edit submission
   editDestinationForm.addEventListener("submit", async (e) => editDestination(e, destination));
 };
 
@@ -298,21 +308,33 @@ const addDestination = async (e) => {
   formData.append("countryCode", countryCode);
   formData.append("userEmail", currentUser.email); // Add email to formData for backend validation
 
-  const payload = { destination: destinationPayload, userEmail: currentUser.email };
-  console.log("payload", payload);
-  const createdDestination = await createDestination(payload);
-  //NEEDS TO BE ADJUSTED
-  if (createdDestination) {
-    document.getElementById("destinations").innerHTML = "";
-    addDestinationForm.reset();
-    // countryFlag.style.display = "none";
-    //update the UI
-    await loadUI();
-    alert(`${createdDestination.title} has been added to the list of destinations!`);
-  } else {
-    console.log("not added");
+  try {
+    // Post new destination with formData
+    const response = await createDestination(formData)
+
+    const data = await response.json();
+
+    if (response.ok) {
+      alert(`${data.destination.title} has been added to the destinations!`);
+      document.getElementById("destinations").innerHTML = "";
+      document.getElementById("addDestinationForm").reset();
+      document.getElementById("countryFlag").style.display = "none";
+
+      // Update the UI
+      console.log("Updating UI");
+
+      // Clear the saved image from localStorage after submission
+      localStorage.removeItem("uploadedImage");
+
+      await loadUI();
+    } else {
+      console.log("Error:", data.message);
+    }
+  } catch (error) {
+    console.error("An error occurred:", error);
   }
 };
+
 
 const setupCountrySelector = async (formType) => {
   const countryDropdown = document.getElementById(`${formType}CountryCode`);
@@ -348,7 +370,7 @@ if (addDestinationForm) {
 window.addEventListener("load", loadUI);
 
 
-// Add image to input field as background
+// Add image to add input field as background
 document.getElementById("destinationImageUrl").addEventListener('change', (e) => {
   const file = e.target.files[0];
   const reader = new FileReader();
@@ -359,7 +381,7 @@ document.getElementById("destinationImageUrl").addEventListener('change', (e) =>
       inputField.style.backgroundImage = `url(${img.src})`;
 
       // Add styling for the background image to fit
-      inputField.style.backgroundSize = "cover";  
+      inputField.style.backgroundSize = "cover";
       inputField.style.backgroundPosition = "center";
       inputField.style.backgroundRepeat = "no-repeat";
 
@@ -368,3 +390,22 @@ document.getElementById("destinationImageUrl").addEventListener('change', (e) =>
   };
   reader.readAsDataURL(file);
 });
+
+// Add image to edit destinaiton input field as background
+document.getElementById("editDestinationImageUrl").addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  const reader = new FileReader();
+  reader.onload = function (evt) {
+    const img = new Image();
+    img.onload = () => {
+      const inputField = document.getElementById("editDestinationImageUrl");
+      inputField.style.backgroundImage = `url(${img.src})`;
+      inputField.style.backgroundSize = "cover";
+      inputField.style.backgroundPosition = "center";
+      inputField.style.backgroundRepeat = "no-repeat";
+    };
+    img.src = evt.target.result;
+  };
+  reader.readAsDataURL(file);
+});
+

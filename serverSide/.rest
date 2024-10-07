@@ -68,7 +68,7 @@ Content-Type: application/json
 ###
 
 // Get specific destinations by id
-GET http://localhost:3000/api/destinations/652a1f9f8f1b2c001d3b0b1b
+GET http://localhost:3000/api/destinations/6704395c71aedd7d9f8ef2eb
 Content-Type: application/json
 
 ###
@@ -89,15 +89,16 @@ Content-Type: application/json
 ###
 
 // Update destination by user email and destination id
-PUT http://localhost:3000/api/destinations/66f1b8e6f0e5c43afb81aff7/users/daniel.szabo@travel.com
+PUT http://localhost:3000/api/destinations/6704395c71aedd7d9f8ef2eb
 Content-Type: application/json
 
-  {
-    "title": "Summer in Nepal 4",
+  { 
+    "title": "Summer in Nepal 51",
     "description": "It was fun there",
     "image": "path/to/image",
     "link": "https://en.wikipedia.org/wiki/Nepal",
-    "tag": "Nepal"
+    "tag": "Nepal",
+ "userEmail": "daniel.szabo@travel.com"
   }
 
 ###
