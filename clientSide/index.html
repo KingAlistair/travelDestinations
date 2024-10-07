@@ -17,8 +17,8 @@
     <!-- Logo -->
     <div class="logo">
       <a href="/clientSide/index.html">
-      <img src="photos/logo.svg" alt="Logo">
-    </a>
+        <img src="photos/logo.svg" alt="Logo">
+      </a>
     </div>
     <!-- Sign-in button (shown when user is not logged in) -->
     <div class="auth-buttons" id="signInHeader">
@@ -41,7 +41,8 @@
         <h1>Wander the world, <br>one destination at a time</h1>
         <p>From hidden gems to world-famous landmarks, we bring you the places that inspire adventure, connection, and
           discovery.</p>
-        <button class="sign-up-btn" id="signUpButton"><i id="arrow-right" class="fa-solid fa-arrow-right" style="color: #ffffff;"></i>Sign
+        <button class="sign-up-btn" id="signUpButton"><i id="arrow-right" class="fa-solid fa-arrow-right"
+            style="color: #ffffff;"></i>Sign
           Up</button>
       </div>
     </section>
@@ -49,7 +50,12 @@
     <!-- When user is not logged in - showing CTA -->
     <div id="CTAContainerWrapper">
       <div id="CTAContainer">
-        <h2>CTA HERE to login to add destination</h2>
+        <h2>Log in to add a new travel destination</h2>
+        <div class="auth-buttons" id="signInHeader">
+          <a href="formsPage.html">
+            <button class="sign-in-btn">Sign In <i class="fa-solid fa-arrow-right" style="color: #ffffff;"></i></button>
+          </a>
+        </div>
       </div>
     </div>
 
@@ -126,26 +132,26 @@
         </form>
       </div>
     </div>
- <!-- Hidden HTML template for a destination card -->
- <template id="destinationCardTemplate">
-  <div class="destination-card">
-    <img src="" alt="Destination Image" class="destination-image">
-    <h2 class="destination-title"></h2>
-    <div class="user-info">
-      <span class="user-name"></span>
-  </div>
-  <p class="destination-description"></p>
-  <div class="post-info">
-    <i class="fa-solid fa-location-dot" style="color: #333333;"></i>
-    <a href="" class="wiki-link">Open in Maps</a>
-  </div>
-  <div class="action-buttons">
-    <button class="edit-btn">Edit</button>
-    <button class="delete-btn">Delete</button>
-  </div>
-  <button class="login-button" >Add a destination</button>
-  </div>
-</template>
+    <!-- Hidden HTML template for a destination card -->
+    <template id="destinationCardTemplate">
+      <div class="destination-card">
+        <img src="" alt="Destination Image" class="destination-image">
+        <h2 class="destination-title"></h2>
+        <div class="user-info">
+          <span class="user-name"></span>
+        </div>
+        <p class="destination-description"></p>
+        <div class="post-info">
+          <i class="fa-solid fa-location-dot" style="color: #333333;"></i>
+          <a href="" class="wiki-link">Open in Maps</a>
+        </div>
+        <div class="action-buttons">
+          <button class="edit-btn">Edit</button>
+          <button class="delete-btn">Delete</button>
+        </div>
+        <button class="login-button">Add a destination</button>
+      </div>
+    </template>
 
     <!-- Destinations grid with 'Add new destination' button -->
     <section id="destinations" class="destinations">
