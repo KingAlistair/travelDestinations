@@ -1,10 +1,19 @@
 import express from "express";
 const usersRouter = express.Router();
+import jwt from 'jsonwebtoken';
+import passport from 'passport';
+import passportConfig from '../passport.js';
+passportConfig(passport);
 
 import { getUsers, getUserById, getUserByEmail, changeUserLoggedInStatus, authenticateUser, createUser } from "../queries/userQueries.js";
 
+// Middleware to authenticate using Passport JWT
+usersRouter.use(passport.initialize()); 
+
+
 // GET all users
-usersRouter.get("/", async (req, res) => {
+//An example of using passport.authenticate('jwt', { session: false }) on a route that should only be accessible with a valid token.
+usersRouter.get("/", passport.authenticate('jwt', { session: false }), async (req, res) => {
   try {
     const users = await getUsers();
     res.json(users);
@@ -83,25 +92,20 @@ usersRouter.patch("/:email/session/:status", async (req, res) => {
   }
 });
 
-// Very basic user authentication returns user without password on success
+// POST /authentication - Log in a user and return a JWT token
 usersRouter.post("/authentication", async (req, res) => {
   const { email, password } = req.body;
 
-  // Input validation
   if (!email || !password) {
     return res.status(400).json({ error: "Email and password are required" });
   }
 
   try {
-    const user = await authenticateUser({ email, password });
+    // Call the authenticateUser function to validate the user and generate the token
+    const { user, token } = await authenticateUser({ email, password });
 
-    // Check if user was found
-    if (!user) {
-      return res.status(401).json({ error: "Invalid email address or password" });
-    }
-
-    res.status(200).json(user); // Respond with user object (without password)
-
+    // Send back the user data (excluding the password) and the JWT token
+    res.status(200).json({ user, token });
   } catch (error) {
     console.error("Authentication error:", error);
 

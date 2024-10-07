@@ -1,5 +1,7 @@
 import mongoose from '../db/connect.js'
 import User from "../schemas/userSchema.js";
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 
 // Helper function to remove password from users before return
@@ -56,21 +58,30 @@ export async function authenticateUser(credentials) {
       throw new Error("Invalid email address or password");
     }
 
-    // Check if the password matches (basic comparison for now)
-    if (user.hashedPassword !== password) {
+    //isValidPassword method to compare passwords
+    const isMatch = await user.isValidPassword(password);
+    if (!isMatch) {
       throw new Error("Invalid email address or password");
     }
 
-    // If authenticated, set isLoggedIn true
-    user.isLoggedIn = true;
-    await user.save();
+    // Generate a JWT token if authentication is successful
+    const token = jwt.sign(
+      { _id: user._id, email: user.email }, 
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' } 
+    );
 
-    return removePassword(user);
+    // Return the token and the user data without the password
+    return {
+      user: removePassword(user),
+      token,
+    };
   } catch (error) {
     console.error("Failed to authenticate user:", error);
     throw error;
   }
 }
+
 
 // Create a new user
 export async function createUser(user) {
@@ -86,6 +97,10 @@ export async function createUser(user) {
     if (existingEmail) {
       throw new Error('Email already in use.');
     }
+
+    // Hash the password before saving
+    const salt = await bcrypt.genSalt(10);
+    user.hashedPassword = await bcrypt.hash(user.hashedPassword, salt);
 
     // If not in use, create and return user
     const newUser = new User(user);
