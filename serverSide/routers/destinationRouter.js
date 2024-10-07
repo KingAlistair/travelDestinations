@@ -1,7 +1,28 @@
 import express from "express";
+import multer from "multer";
+import { v4 as uuidv4 } from "uuid";
+import path from "path";
+import fs from "fs";
+
+import { getDestinations, getDestinationsByUserId, getDestinationByDestinationId, createDestination, updateDestination, deleteDestination } from "../queries/destinationQueries.js";
+
 const destinationsRouter = express.Router();
 
-import { getDestinations, getDestinationsByUserId, createDestination, updateDestination, deleteDestination } from "../queries/destinationQueries.js";
+const imageFolderPath = "clientSide/destinationImages/"
+
+// Configure multer storage - use ut as middleware
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, imageFolderPath); // specify destination folder
+  },
+  filename: (req, file, cb) => {
+    const uniqueName = `${uuidv4()}${path.extname(file.originalname)}`; // generate unique file name
+    cb(null, uniqueName);
+  }
+});
+
+const upload = multer({ storage: storage });
+
 
 // GET all destinations
 destinationsRouter.get("/", async (req, res) => {
@@ -39,14 +60,32 @@ destinationsRouter.get("/users/:email", async (req, res) => {
   }
 });
 
-// POST new destination
-destinationsRouter.post("/", async (req, res) => {
+
+// POST new destination save image into destinationImages folder
+destinationsRouter.post("/", upload.single('image'), async (req, res) => {
   try {
-    const destination = req.body.destination;
+    const { title, description, link, countryCode } = req.body;
     const userEmail = req.body.userEmail;
+
     if (!userEmail) {
-      return res.status(401).json({ error: "Unauthorized: User not logged in!" });
+      return res.status(401).json({ error: "Unauthorized: User not logged in" });
     }
+
+    // Check if a file was uploaded and generate a filename for it
+    let imageFilename = null;
+    if (req.file) {
+      imageFilename = req.file.filename; // Use the generated filename
+    }
+
+    // Create the destination object to save in the database
+    const destination = {
+      title,
+      description,
+      image: imageFilename,
+      link,
+      countryCode
+    };
+
     const newDestination = await createDestination(userEmail, destination);
 
     if (newDestination) {
@@ -59,6 +98,7 @@ destinationsRouter.post("/", async (req, res) => {
     res.status(500).json({ error: "Failed to create destination" });
   }
 });
+
 
 // Update destination by id and email
 destinationsRouter.put("/:id", async (req, res) => {
@@ -88,18 +128,51 @@ destinationsRouter.delete("/:id", async (req, res) => {
   try {
     const destinationId = req.params.id;
     const userEmail = req.body.email;
+
+    // validate user email
     if (!userEmail) {
       return res.status(401).json({ error: "Unauthorized: User not logged in" });
     }
+
+    // Retrieve the destination to get the image filename
+    const destination = await getDestinationByDestinationId(destinationId);
+    console.log(destination)
+    if (!destination) {
+      return res.status(404).json({ error: "Destination not found" });
+    }
+
+    if (destination.image) {
+      const deleteImagePath = path.join(imageFolderPath, destination.image);
+
+      fs.unlink(deleteImagePath, (error) => {
+        if (error) {
+          console.error("Failed to delete image file:", error);
+          // Here, we log the error but do not prevent the destination deletion
+        } else {
+          console.log("Image file deleted successfully");
+        }
+      });
+    } else {
+      console.log("No image file associated with this destination");
+    }
+
     const deleted = await deleteDestination(userEmail, destinationId);
+
     if (deleted) {
       res.json({ message: "Destination deleted successfully" });
-    } else {
-      res.status(404).json({ error: "Destination not found" });
     }
   } catch (error) {
-    res.status(500).json({ error: "Failed to delete destination" });
+    // Check for specific error messages to determine the response
+    if (error.message === "User not found") {
+      return res.status(404).json({ error: "User not found" });
+    } else if (error.message === "Destination not found") {
+      return res.status(404).json({ error: "Destination not found" });
+    } else {
+      console.error("Unexpected error:", error);
+      res.status(500).json({ error: "Failed to delete destination" });
+    }
   }
 });
+
 
 export default destinationsRouter;
