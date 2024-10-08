@@ -1,7 +1,20 @@
 import express from "express";
+import jwt from "jsonwebtoken";
+import passport from "../db/passport.js";
+import dotenv from "dotenv";
+
+dotenv.config(); // Add this line
+
 const usersRouter = express.Router();
 
-import { getUsers, getUserById, getUserByEmail, changeUserLoggedInStatus, authenticateUser, createUser } from "../queries/userQueries.js";
+import {
+  getUsers,
+  getUserById,
+  getUserByEmail,
+  changeUserLoggedInStatus,
+  authenticateUser,
+  createUser,
+} from "../queries/userQueries.js";
 
 // GET all users
 usersRouter.get("/", async (req, res) => {
@@ -53,26 +66,27 @@ usersRouter.post("/", async (req, res) => {
 
     // Send back user information on success.
     return res.status(201).json(user);
-
   } catch (error) {
     console.error("Error creating user:", error);
 
     // If the error is validation-related, send a 400 status with the error message
-    if (error.message === 'Username already in use.' || error.message === 'Email already in use.') {
+    if (
+      error.message === "Username already in use." ||
+      error.message === "Email already in use."
+    ) {
       return res.status(400).send({ error: error.message });
     } else {
       // For all other errors, return a generic 500 error message
-      return res.status(500).send('Failed to create user.');
+      return res.status(500).send("Failed to create user.");
     }
   }
 });
-
 
 // Change loggedIn status of a user by email, returns user
 usersRouter.patch("/:email/session/:status", async (req, res) => {
   try {
     const email = req.params.email;
-    const status = req.params.status.toLowerCase() === 'true'; // Convert 'true' or 'false' string to boolean
+    const status = req.params.status.toLowerCase() === "true"; // Convert 'true' or 'false' string to boolean
 
     const user = await changeUserLoggedInStatus(email, status);
 
@@ -95,13 +109,18 @@ usersRouter.post("/authentication", async (req, res) => {
   try {
     const user = await authenticateUser({ email, password });
 
+    // Generate JWT token
+    const payload = {
+      id: user._id,
+      email: user.email,
+    };
+
     // Check if user was found
-    if (!user) {
-      return res.status(401).json({ error: "Invalid email address or password" });
-    }
+    const token = jwt.sign(payload, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
 
-    res.status(200).json(user); // Respond with user object (without password)
-
+    res.status(200).json({ user, token }); // Respond with user object (without password)
   } catch (error) {
     console.error("Authentication error:", error);
 
@@ -112,5 +131,14 @@ usersRouter.post("/authentication", async (req, res) => {
     }
   }
 });
+
+// Protected route example
+usersRouter.get(
+  "/protected",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    res.json({ message: "You are authenticated", user: req.user });
+  }
+);
 
 export default usersRouter;

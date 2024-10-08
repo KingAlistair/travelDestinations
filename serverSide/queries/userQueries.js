@@ -1,15 +1,14 @@
-import mongoose from '../db/connect.js'
+import mongoose from "../db/connect.js";
 import User from "../schemas/userSchema.js";
-
+import bcrypt from "bcryptjs";
 
 // Helper function to remove password from users before return
 function removePassword(user) {
-  if (!user) return null; 
+  if (!user) return null;
   const userData = user.toObject();
   delete userData.hashedPassword; // Remove password
   return userData;
 }
-
 
 // GET
 
@@ -47,25 +46,22 @@ export async function getUserByEmail(email) {
 }
 
 // Authenticate user, gives back user object on success or null on fail
-export async function authenticateUser(credentials) {
-  const { email, password } = credentials;
-
+export async function authenticateUser({ email, password }) {
   try {
     const user = await User.findOne({ email });
     if (!user) {
       throw new Error("Invalid email address or password");
     }
 
-    // Check if the password matches (basic comparison for now)
-    if (user.hashedPassword !== password) {
+    const isMatch = await bcrypt.compare(password, user.hashedPassword);
+    if (!isMatch) {
       throw new Error("Invalid email address or password");
     }
 
-    // If authenticated, set isLoggedIn true
     user.isLoggedIn = true;
     await user.save();
 
-    return removePassword(user);
+    return user;
   } catch (error) {
     console.error("Failed to authenticate user:", error);
     throw error;
@@ -73,28 +69,26 @@ export async function authenticateUser(credentials) {
 }
 
 // Create a new user
-export async function createUser(user) {
+export async function createUser(userData) {
   try {
-    // Check if the username already exists
-    const existingUserName = await User.findOne({ userName: user.userName });
+    const existingUserName = await User.findOne({
+      userName: userData.userName,
+    });
     if (existingUserName) {
-      throw new Error('Username already in use.');
+      throw new Error("Username already in use.");
     }
 
-    // Check if the email already exists
-    const existingEmail = await User.findOne({ email: user.email });
+    const existingEmail = await User.findOne({ email: userData.email });
     if (existingEmail) {
-      throw new Error('Email already in use.');
+      throw new Error("Email already in use.");
     }
 
-    // If not in use, create and return user
-    const newUser = new User(user);
+    const newUser = new User(userData);
     await newUser.save();
 
-    return removePassword(newUser);
-
+    return newUser;
   } catch (error) {
-    console.error('Error creating user:', error);
+    console.error("Error creating user:", error);
     throw error;
   }
 }
@@ -125,7 +119,7 @@ export async function changeUserLoggedInStatus(email, status) {
   const updatedUser = await user.save();
 
   return updatedUser;
-};
+}
 
 // // Delete a user by email - Work in progress
 // export async function deleteUserByEmail(email) {
