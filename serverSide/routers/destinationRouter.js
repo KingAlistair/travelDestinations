@@ -8,8 +8,12 @@ import { getDestinations, getDestinationsByUserId, getDestinationByDestinationId
 
 const destinationsRouter = express.Router();
 
-const imageFolderPath = "clientSide/destinationImages/"
+const imageFolderPath = ".././destinationImages";
+// Ensure the destination folder exists
 
+if (!fs.existsSync(imageFolderPath)) {
+  fs.mkdirSync(imageFolderPath, { recursive: true }); // Create folder if it doesn't exist
+}
 // Configure multer storage - use ut as middleware
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -18,11 +22,10 @@ const storage = multer.diskStorage({
   filename: (req, file, cb) => {
     const uniqueName = `${uuidv4()}${path.extname(file.originalname)}`; // generate unique file name
     cb(null, uniqueName);
-  }
+  },
 });
 
 const upload = multer({ storage: storage });
-
 
 // GET all destinations
 destinationsRouter.get("/", async (req, res) => {
@@ -60,9 +63,8 @@ destinationsRouter.get("/users/:email", async (req, res) => {
   }
 });
 
-
 // POST new destination save image into destinationImages folder
-destinationsRouter.post("/", upload.single('image'), async (req, res) => {
+destinationsRouter.post("/", upload.single("image"), async (req, res) => {
   try {
     const { title, description, link, countryCode } = req.body;
     const userEmail = req.body.userEmail;
@@ -83,7 +85,7 @@ destinationsRouter.post("/", upload.single('image'), async (req, res) => {
       description,
       image: imageFilename,
       link,
-      countryCode
+      countryCode,
     };
 
     const newDestination = await createDestination(userEmail, destination);
@@ -98,7 +100,6 @@ destinationsRouter.post("/", upload.single('image'), async (req, res) => {
     res.status(500).json({ error: "Failed to create destination" });
   }
 });
-
 
 // Update destination by id and email
 destinationsRouter.put("/:id", upload.single("image"), async (req, res) => {
@@ -147,7 +148,7 @@ destinationsRouter.delete("/:id", async (req, res) => {
 
     // Retrieve the destination to get the image filename
     const destination = await getDestinationByDestinationId(destinationId);
-    console.log(destination)
+    console.log(destination);
     if (!destination) {
       return res.status(404).json({ error: "Destination not found" });
     }
@@ -155,7 +156,7 @@ destinationsRouter.delete("/:id", async (req, res) => {
     if (destination.image) {
       const deleteImagePath = path.join(imageFolderPath, destination.image);
 
-      fs.unlink(deleteImagePath, (error) => {
+      fs.unlinkSync(deleteImagePath, (error) => {
         if (error) {
           console.error("Failed to delete image file:", error);
           // Here, we log the error but do not prevent the destination deletion
@@ -180,10 +181,9 @@ destinationsRouter.delete("/:id", async (req, res) => {
       return res.status(404).json({ error: "Destination not found" });
     } else {
       console.error("Unexpected error:", error);
-       res.status(500).json({ error: "Failed to delete destination" });
+      res.status(500).json({ error: "Failed to delete destination" });
     }
   }
 });
-
 
 export default destinationsRouter;

@@ -44,8 +44,7 @@ input {
   outline: 0;
   color: rgb(60, 66, 87);
   background-color: rgb(255, 255, 255);
-  box-shadow: rgb(0 0 0 / 0%) 0px 0px 0px 0px,
-    rgb(60 66 87 / 16%) 0px 0px 0px 1px;
+  box-shadow: rgb(0 0 0 / 0%) 0px 0px 0px 0px, rgb(60 66 87 / 16%) 0px 0px 0px 1px;
   border-radius: 8px;
   font-size: 14px;
   padding: 8px 12px;
@@ -59,8 +58,7 @@ select {
   outline: 0;
   color: rgb(60, 66, 87);
   background-color: rgb(255, 255, 255);
-  box-shadow: rgb(0 0 0 / 0%) 0px 0px 0px 0px,
-    rgb(60 66 87 / 16%) 0px 0px 0px 1px;
+  box-shadow: rgb(0 0 0 / 0%) 0px 0px 0px 0px, rgb(60 66 87 / 16%) 0px 0px 0px 1px;
   border-radius: 8px;
   font-size: 12px;
   padding: 8px 12px;
@@ -118,15 +116,6 @@ header {
   align-items: center;
 }
 
-.profile-icon {
-  width: 50px;
-  height: 50px;
-  border-radius: 8px;
-  margin-right: 10px;
-  object-fit: cover;
-  border: 1px solid var(--white);
-}
-
 .profile-menu h3 {
   font-family: "Inter", sans-serif;
   font-weight: 600;
@@ -164,10 +153,8 @@ header {
   align-items: flex-start;
   padding: 20px;
   top: 60%;
-  left: 55%;
-  transform: translateX(
-    -50%
-  ); /* Adjust to truly center it based on its width */
+  left: 60%;
+  transform: translateX(-50%); /* Adjust to truly center it based on its width */
 }
 
 .hero-content h1 {
@@ -265,13 +252,24 @@ form addDestinationForm {
   align-items: center;
   margin-bottom: 10px;
 }
-.profile-photo {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
+.profile-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
   margin-right: 10px;
   object-fit: cover;
+  border: 1.5px solid var(--white);
 }
+
+/* .profile-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 8px;
+  margin-right: 10px;
+  object-fit: cover;
+  border: 1px solid var(--white);
+} */
+
 .user-name {
   font-size: 14px;
   font-weight: 600;
