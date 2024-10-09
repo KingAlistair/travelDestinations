@@ -157,7 +157,7 @@ const displayDestination = async (
     //adding hidden or visible for the link div depending if there is data for it
     const wikiLink = clone.querySelector(".wiki-link");
     if (destination?.link && destination?.link !== "") {
-      wikiLink.textContent = "CHECK OUT LINK";
+      wikiLink.textContent = "WIKIPEDIA LINK";
       let link = destination.link;
 
       // Check if link starts with 'http://' or 'https://'
