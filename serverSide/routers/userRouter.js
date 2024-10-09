@@ -1,7 +1,9 @@
 import express from "express";
-const usersRouter = express.Router();
-
+import passport from '../auth/passportConfig.js';
+import { generateJwt } from "../auth/passportConfig.js";
 import { getUsers, getUserById, getUserByEmail, changeUserLoggedInStatus, authenticateUser, createUser } from "../queries/userQueries.js";
+
+const usersRouter = express.Router();
 
 // GET all users
 usersRouter.get("/", async (req, res) => {
@@ -112,5 +114,37 @@ usersRouter.post("/authentication", async (req, res) => {
     }
   }
 });
+
+// Login with passport jwt endpoint
+usersRouter.post('/login', async (req, res) => {
+  const { email, password } = req.body;
+  try {
+
+    //Check if user is valid get back user without password
+    const userData = await authenticateUser({ email, password });
+    if (!userData) {
+      return res.status(401).json({ error: 'Invalid email or password' });
+    }
+
+    // Create jwt token for user
+    const token = generateJwt(userData);
+
+
+
+    res.json({ message: 'Logged in successfully', token, user: userData });
+
+
+  } catch (error) {
+    console.error("Authentication error:", error);
+
+    if (error.message === "Invalid email address or password") {
+      return res.status(401).json({ error: error.message });
+    } else {
+      return res.status(500).json({ error: "Failed to authenticate user" });
+    }
+  }
+});
+
+
 
 export default usersRouter;

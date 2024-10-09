@@ -139,7 +139,7 @@ const signInUser = async (e) => {
   try {
     // Authenticate user
     const authenticatedUser = await authenticateUser(credentials);
-    console.log("Auth: " + authenticatedUser.email);
+    console.log("Auth: " + authenticatedUser.user.email);
 
     if (authenticatedUser) {
       try {
@@ -147,14 +147,14 @@ const signInUser = async (e) => {
         localStorage.setItem(
           "currentUser",
           JSON.stringify({
-            isLoggedIn: authenticatedUser.isLoggedIn,
-            email: authenticatedUser.email,
-            id: authenticatedUser._id,
+            isLoggedIn: authenticatedUser.user.isLoggedIn,
+            email: authenticatedUser.user.email,
+            id: authenticatedUser.user._id,
           })
         );
 
         // Display success message and redirect to index
-        alert(`You are now signed in. Welcome back ${authenticatedUser.userName}!`);
+        alert(`You are now signed in. Welcome back ${authenticatedUser.user.userName}!`);
         window.location.replace("/clientSide/index.html");
       } catch (error) {
         console.error(`Error changing ${userEmail}'s isLoggedIn status: `, error);

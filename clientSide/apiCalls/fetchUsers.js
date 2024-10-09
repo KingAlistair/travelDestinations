@@ -22,7 +22,7 @@ export async function createNewUser(userPayload) {
 
 // Authenticate user and handle error responses
 export async function authenticateUser(credentials) {
-  const response = await fetch(`${url}/authentication`, {
+  const response = await fetch(`${url}/login`, {
     method: "POST",
     body: JSON.stringify(credentials),
     headers: {
@@ -30,15 +30,23 @@ export async function authenticateUser(credentials) {
     },
   });
 
-  // Check if response was successful
   if (response.ok) {
-    return await response.json(); // Successful login, return user data
+    const data = await response.json(); // Successful login, get response data
+    const token = data.token; // Extract token from response
+
+    if (token) {
+      localStorage.setItem('jwt', token); // Store token in localStorage
+    } else {
+      throw new Error("Token not found in the response.");
+    }
+
+    return data; // Return any other user data if needed
   } else {
-    // Get error message from the response
     const errorData = await response.json();
     throw new Error(errorData.error || "Failed to authenticate user");
   }
 }
+
 
 // Changes user status in db, returns updated user
 export async function changeUserLoggedInStatus(email, status) {
