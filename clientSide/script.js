@@ -329,10 +329,10 @@ const logout = async () => {
   if (currentUserEmail && currentUserEmail !== "") {
     try {
       await changeUserLoggedInStatus(currentUserEmail, false);
-      localStorage.setItem(
-        "currentUser",
-        JSON.stringify({ isLoggedIn: false, email: "" })
-      );
+
+      localStorage.setItem("currentUser", JSON.stringify({ isLoggedIn: false, email: "" }));
+      //Remove jwt
+      localStorage.removeItem('jwt');
       // Clear destination cards from the DOM
       document.getElementById("destinations").innerHTML = "";
       //update the UI

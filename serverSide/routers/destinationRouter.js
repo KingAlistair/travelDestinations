@@ -1,5 +1,6 @@
 import express from "express";
 import multer from "multer";
+import passport from "../auth/passportConfig.js";
 import { v4 as uuidv4 } from "uuid";
 import path from "path";
 import fs from "fs";
@@ -62,7 +63,7 @@ destinationsRouter.get("/users/:email", async (req, res) => {
 
 
 // POST new destination save image into destinationImages folder
-destinationsRouter.post("/", upload.single('image'), async (req, res) => {
+destinationsRouter.post("/", passport.authenticate('jwt', { session: false }),  upload.single('image'), async (req, res) => {
   try {
     const { title, description, link, countryCode } = req.body;
     const userEmail = req.body.userEmail;
@@ -101,7 +102,7 @@ destinationsRouter.post("/", upload.single('image'), async (req, res) => {
 
 
 // Update destination by id and email
-destinationsRouter.put("/:id", upload.single("image"), async (req, res) => {
+destinationsRouter.put("/:id", passport.authenticate('jwt', { session: false }), upload.single("image"), async (req, res) => {
   try {
     const destinationId = req.params.id;
     const userEmail = req.body.userEmail;
@@ -135,7 +136,7 @@ destinationsRouter.put("/:id", upload.single("image"), async (req, res) => {
 });
 
 // DELETE destination
-destinationsRouter.delete("/:id", async (req, res) => {
+destinationsRouter.delete("/:id", passport.authenticate('jwt', { session: false }), async (req, res) => {
   try {
     const destinationId = req.params.id;
     const userEmail = req.body.email;

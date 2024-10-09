@@ -20,7 +20,7 @@ Content-Type: application/json
 
 // Authenticate user
 
-POST http://localhost:3000/api/users/authentication
+POST http://localhost:3000/api/users/login
 Content-Type: application/json
 
 {
@@ -57,6 +57,7 @@ Content-Type: application/json
 
 // Get all destinations
 GET http://localhost:3000/api/destinations
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1MWExZTlmOGYxYjJjMDAxZDNiMGExYSIsImVtYWlsIjoiZGFuaWVsLnN6YWJvQHRyYXZlbC5jb20iLCJpYXQiOjE3Mjg0NzYzNjYsImV4cCI6MTcyODQ3OTk2Nn0.dN1bVHWDFRHMSlD4xxf-cGJFAREYpCCmmvfOmBENnhM
 Content-Type: application/json
 
 ###
