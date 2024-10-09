@@ -163,10 +163,10 @@ header {
   justify-content: center;
   align-items: flex-start;
   padding: 20px;
-  top: 60%;
+  top: 65%;
   left: 55%;
   transform: translateX(
-    -50%
+    -55%
   ); /* Adjust to truly center it based on its width */
 }
 
@@ -274,8 +274,15 @@ form addDestinationForm {
 }
 .user-name {
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
   margin-right: 5px;
+  color: var(--destinationCard-details-color);
+}
+
+.posted-by {
+  font-size: 14px;
+  font-weight: 500;
+  color: #888;
 }
 .user-location {
   color: var(--destinationCard-details-color);
