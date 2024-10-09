@@ -1,13 +1,30 @@
 //import users and destinations
-import { populateCountryDropdown, getCountryFlagUrl, getCountryNameByCode } from "./countries/countries.js";
-import { changeUserLoggedInStatus, getUserByEmail, getUsers } from "./apiCalls/fetchUsers.js";
-import { getAllDestinations, createDestination, deleteDestination, updateDestination } from "./apiCalls/fetchDestinations.js";
+import {
+  populateCountryDropdown,
+  getCountryFlagUrl,
+  getCountryNameByCode,
+} from "./countries/countries.js";
+import {
+  changeUserLoggedInStatus,
+  getUserByEmail,
+  getUsers,
+} from "./apiCalls/fetchUsers.js";
+import {
+  getAllDestinations,
+  createDestination,
+  deleteDestination,
+  updateDestination,
+} from "./apiCalls/fetchDestinations.js";
 
 const destinationsContainer = document.getElementById("destinationsContainer");
 const addDestinationForm = document.getElementById("addDestinationForm");
 const editDestinationForm = document.getElementById("editDestinationForm");
-const addDestinationContainer = document.getElementById("addDestinationContainer");
-const editDestinationContainer = document.getElementById("editDestinationContainer");
+const addDestinationContainer = document.getElementById(
+  "addDestinationContainer"
+);
+const editDestinationContainer = document.getElementById(
+  "editDestinationContainer"
+);
 //const countryFlag = document.getElementById("countryFlag");
 
 //This function gets us the currentUser login status if there is one
@@ -29,14 +46,22 @@ export const checkLoginStatus = async () => {
       const user = await getUserByEmail(email);
       if (user) {
         isLoggedIn = user.isLoggedIn;
-        localStorage.setItem("currentUser", JSON.stringify({ isLoggedIn: user.isLoggedIn, email: user.email }));
+        localStorage.setItem(
+          "currentUser",
+          JSON.stringify({ isLoggedIn: user.isLoggedIn, email: user.email })
+        );
       }
       console.log("isLoggedIn?", user.isLoggedIn);
       return isLoggedIn;
     }
     //if there is no currentUser, set the loginStatus as false and store it
-    localStorage.setItem("currentUser", JSON.stringify({ isLoggedIn: false, email: "" }));
-    console.log("User not found in local storage. Default isLoggedIn set to false.");
+    localStorage.setItem(
+      "currentUser",
+      JSON.stringify({ isLoggedIn: false, email: "" })
+    );
+    console.log(
+      "User not found in local storage. Default isLoggedIn set to false."
+    );
   }
   console.log("isLoggedIn?", isLoggedIn);
   return isLoggedIn;
@@ -92,7 +117,6 @@ const loadUI = async () => {
 };
 
 const displayDestinations = async (currentUserStatus) => {
-
   const allDestinations = await getAllDestinations();
   console.log("allDestinations", allDestinations);
   //also fetch users
@@ -110,23 +134,38 @@ const displayDestinations = async (currentUserStatus) => {
   }
 };
 
-const displayDestination = async (destination, destinationAuthor, currentUserStatus) => {
+const displayDestination = async (
+  destination,
+  destinationAuthor,
+  currentUserStatus
+) => {
   if (destination) {
     let template = document.getElementById("destinationCardTemplate");
     let clone = template.content.cloneNode(true);
     //populate the template with data
     //adding fallback image if there is no image uploaded
-    clone.querySelector(".destination-image").src = `./destinationImages/${destination?.image}` || "./photos/france.jpg";
-    clone.querySelector(".destination-image").alt = `Image for ${destination.title}`;
+    clone.querySelector(".destination-image").src =
+      `./destinationImages/${destination?.image}` || "./photos/france.jpg";
+    clone.querySelector(
+      ".destination-image"
+    ).alt = `Image for ${destination.title}`;
     clone.querySelector(".destination-title").textContent = destination.title;
     clone.querySelector(".user-name").textContent = destinationAuthor;
-    clone.querySelector(".destination-description").textContent = destination.description;
+    clone.querySelector(".destination-description").textContent =
+      destination.description;
 
     //adding hidden or visible for the link div depending if there is data for it
     const wikiLink = clone.querySelector(".wiki-link");
     if (destination?.link && destination?.link !== "") {
-      wikiLink.textContent = "Wiki link";
-      wikiLink.href = destination?.link;
+      wikiLink.textContent = "CHECK OUT LINK";
+      let link = destination.link;
+
+      // Check if link starts with 'http://' or 'https://'
+      if (!/^https?:\/\//i.test(link)) {
+        link = "https://" + link;
+      }
+      wikiLink.href = link;
+
       // Make visible if there is a link
       clone.querySelector(".post-info").style.display = "flex";
     } else {
@@ -141,12 +180,16 @@ const displayDestination = async (destination, destinationAuthor, currentUserSta
 
       //NEED TO CONTINUE
       const editButton = clone.querySelector(".edit-btn");
-      editButton.addEventListener("click", async () => loadEditForm(destination));
+      editButton.addEventListener("click", async () =>
+        loadEditForm(destination)
+      );
 
       // Delete destination functionality
       const deleteButton = clone.querySelector(".delete-btn");
       deleteButton.addEventListener("click", async () => {
-        const confirmed = confirm(`Are you sure you want to delete the destination "${destination.title}"?`);
+        const confirmed = confirm(
+          `Are you sure you want to delete the destination "${destination.title}"?`
+        );
         if (confirmed) {
           const currentUserObject = localStorage.getItem("currentUser");
           const currentUser = JSON.parse(currentUserObject);
@@ -159,8 +202,13 @@ const displayDestination = async (destination, destinationAuthor, currentUserSta
               destinationCard.remove(); // Remove the specific card
             }
           } catch (error) {
-            console.error(`Error deleting destination ${destination.title}: `, error);
-            alert("An error occurred while deleting the destination. Please try again.");
+            console.error(
+              `Error deleting destination ${destination.title}: `,
+              error
+            );
+            alert(
+              "An error occurred while deleting the destination. Please try again."
+            );
           }
         }
       });
@@ -199,10 +247,24 @@ const editDestination = async (e, destination) => {
   }
 
   // Append other form fields
-  formData.append("title", document.getElementById("editDestinationTitle").value || destination.title);
-  formData.append("description", document.getElementById("editDestinationDescription").value || destination.description);
-  formData.append("link", document.getElementById("editDestinationWikiLink").value || destination.link);
-  formData.append("countryCode", document.getElementById("editDestinationCountryCode").value || destination.countryCode);
+  formData.append(
+    "title",
+    document.getElementById("editDestinationTitle").value || destination.title
+  );
+  formData.append(
+    "description",
+    document.getElementById("editDestinationDescription").value ||
+      destination.description
+  );
+  formData.append(
+    "link",
+    document.getElementById("editDestinationWikiLink").value || destination.link
+  );
+  formData.append(
+    "countryCode",
+    document.getElementById("editDestinationCountryCode").value ||
+      destination.countryCode
+  );
   formData.append("userEmail", currentUser.email);
 
   try {
@@ -217,11 +279,10 @@ const editDestination = async (e, destination) => {
       editDestinationContainer.style.display = "none";
       addDestinationContainer.style.display = "flex";
       await loadUI();
-     } else {
-        console.log("Something is strange, but it works, kinda :/");
-        window.location.reload(); // Yeah not the best, but if you don't change the image on edit it's buggy
-      }
-
+    } else {
+      console.log("Something is strange, but it works, kinda :/");
+      window.location.reload(); // Yeah not the best, but if you don't change the image on edit it's buggy
+    }
   } catch (error) {
     console.error("Failed to update destination:", error);
   }
@@ -235,12 +296,17 @@ const loadEditForm = async (destination) => {
 
   // Populate form fields with the existing destination data
   document.getElementById("editDestinationTitle").value = destination.title;
-  document.getElementById("editDestinationDescription").value = destination.description;
+  document.getElementById("editDestinationDescription").value =
+    destination.description;
   const imageInput = document.getElementById("editDestinationImageUrl");
-  const imageUrl = destination.image ? `./destinationImages/${destination.image}` : "./photos/france.jpg";
+  const imageUrl = destination.image
+    ? `./destinationImages/${destination.image}`
+    : "./photos/france.jpg";
   imageInput.placeholder = imageUrl;
-  document.getElementById("editDestinationWikiLink").value = destination.link || "";
-  document.getElementById("editDestinationCountryCode").value = destination.countryCode;
+  document.getElementById("editDestinationWikiLink").value =
+    destination.link || "";
+  document.getElementById("editDestinationCountryCode").value =
+    destination.countryCode;
 
   // Show the existing image as background
   imageInput.style.backgroundImage = `url(${imageUrl})`;
@@ -249,7 +315,9 @@ const loadEditForm = async (destination) => {
   imageInput.style.backgroundRepeat = "no-repeat";
 
   // Add submit event listener to handle the edit submission
-  editDestinationForm.addEventListener("submit", async (e) => editDestination(e, destination));
+  editDestinationForm.addEventListener("submit", async (e) =>
+    editDestination(e, destination)
+  );
 };
 
 //Sign-out functionality
@@ -261,7 +329,10 @@ const logout = async () => {
   if (currentUserEmail && currentUserEmail !== "") {
     try {
       await changeUserLoggedInStatus(currentUserEmail, false);
-      localStorage.setItem("currentUser", JSON.stringify({ isLoggedIn: false, email: "" }));
+      localStorage.setItem(
+        "currentUser",
+        JSON.stringify({ isLoggedIn: false, email: "" })
+      );
       // Clear destination cards from the DOM
       document.getElementById("destinations").innerHTML = "";
       //update the UI
@@ -269,7 +340,9 @@ const logout = async () => {
       // localStorage.removeItem("currentUser");
       alert("The user is now logged out");
     } catch (error) {
-      console.log(`Error changing ${userEmail} isLoggedIn status in database:` + error);
+      console.log(
+        `Error changing ${userEmail} isLoggedIn status in database:` + error
+      );
     }
   }
 };
@@ -310,7 +383,7 @@ const addDestination = async (e) => {
 
   try {
     // Post new destination with formData
-    const response = await createDestination(formData)
+    const response = await createDestination(formData);
 
     const data = await response.json();
 
@@ -335,13 +408,11 @@ const addDestination = async (e) => {
   }
 };
 
-
 const setupCountrySelector = async (formType) => {
   const countryDropdown = document.getElementById(`${formType}CountryCode`);
   // const countryFlag = document.getElementById(`${formType}CountryFlag`);
 
   if (!countryDropdown) return; // If the elements don't exist, exit || !countryFlag
-
 
   // Add event listener for country selection
   countryDropdown.addEventListener("change", function () {
@@ -369,43 +440,44 @@ if (addDestinationForm) {
 //ONLOAD call function to fetch user status
 window.addEventListener("load", loadUI);
 
-
 // Add image to add input field as background
-document.getElementById("destinationImageUrl").addEventListener('change', (e) => {
-  const file = e.target.files[0];
-  const reader = new FileReader();
-  reader.onload = function (evt) {
-    const img = new Image();
-    img.onload = (e) => {
-      const inputField = document.getElementById("destinationImageUrl");
-      inputField.style.backgroundImage = `url(${img.src})`;
+document
+  .getElementById("destinationImageUrl")
+  .addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onload = function (evt) {
+      const img = new Image();
+      img.onload = (e) => {
+        const inputField = document.getElementById("destinationImageUrl");
+        inputField.style.backgroundImage = `url(${img.src})`;
 
-      // Add styling for the background image to fit
-      inputField.style.backgroundSize = "cover";
-      inputField.style.backgroundPosition = "center";
-      inputField.style.backgroundRepeat = "no-repeat";
-
+        // Add styling for the background image to fit
+        inputField.style.backgroundSize = "cover";
+        inputField.style.backgroundPosition = "center";
+        inputField.style.backgroundRepeat = "no-repeat";
+      };
+      img.src = evt.target.result;
     };
-    img.src = evt.target.result;
-  };
-  reader.readAsDataURL(file);
-});
+    reader.readAsDataURL(file);
+  });
 
 // Add image to edit destinaiton input field as background
-document.getElementById("editDestinationImageUrl").addEventListener('change', (e) => {
-  const file = e.target.files[0];
-  const reader = new FileReader();
-  reader.onload = function (evt) {
-    const img = new Image();
-    img.onload = () => {
-      const inputField = document.getElementById("editDestinationImageUrl");
-      inputField.style.backgroundImage = `url(${img.src})`;
-      inputField.style.backgroundSize = "cover";
-      inputField.style.backgroundPosition = "center";
-      inputField.style.backgroundRepeat = "no-repeat";
+document
+  .getElementById("editDestinationImageUrl")
+  .addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onload = function (evt) {
+      const img = new Image();
+      img.onload = () => {
+        const inputField = document.getElementById("editDestinationImageUrl");
+        inputField.style.backgroundImage = `url(${img.src})`;
+        inputField.style.backgroundSize = "cover";
+        inputField.style.backgroundPosition = "center";
+        inputField.style.backgroundRepeat = "no-repeat";
+      };
+      img.src = evt.target.result;
     };
-    img.src = evt.target.result;
-  };
-  reader.readAsDataURL(file);
-});
-
+    reader.readAsDataURL(file);
+  });
