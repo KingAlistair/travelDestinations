@@ -18,6 +18,7 @@
   "scripts": {
     "setup": "node serverSide/db/setupDB.js",
     "queries": "node queries/queryExercises.js",
-    "dev": "nodemon serverSide/app.js"
+    "dev-nodemon": "nodemon serverSide/app.js",
+    "dev-node": "node serverSide/app.js"
   }
 }

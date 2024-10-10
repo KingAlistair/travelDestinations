@@ -4,10 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- Icons Library -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <script src="script.js" type="module" defer></script>
     <link rel="stylesheet" href="style.css" />
     <title>Travel Destinations</title>
@@ -34,11 +31,7 @@
       <!-- Username + Profile icon + sign-out button- shown when user is logged in -->
       <div class="profile-menu" id="profileMenu">
         <h3>Logged in userName</h3>
-        <img
-          src="photos/profile-photo.jpg"
-          alt="Profile"
-          class="profile-icon"
-        />
+        <img src="photos/profile-photo.jpg" alt="Profile" class="profile-icon" />
         <button class="sign-out-btn" id="signOutButton">
           Sign Out
           <i class="fa-solid fa-arrow-right" style="color: #ffffff"></i>
@@ -49,21 +42,12 @@
       <!-- Hero Section -->
       <section class="hero">
         <div class="hero-content">
-          <h1 id="heroHeader">
-            Wander the world, <br />one destination at a time
-          </h1>
-          <p id="heroMessage">
-            From hidden gems to world-famous landmarks, we bring you the places
-            that inspire adventure, connection, and discovery.
-          </p>
+          <h1 id="heroHeader">Wander the world, <br />one destination at a time</h1>
+          <p id="heroMessage">From hidden gems to world-famous landmarks, we bring you the places that inspire adventure, connection, and discovery.</p>
           <a href="formsPage.html">
             <button class="sign-up-btn" id="signUpButton" name="register">
               Register now
-              <i
-                id="arrow-right"
-                class="fa-solid fa-arrow-right"
-                style="color: #ffffff"
-              ></i></button
+              <i id="arrow-right" class="fa-solid fa-arrow-right" style="color: #ffffff"></i></button
           ></a>
         </div>
       </section>
@@ -91,53 +75,29 @@
             <div id="destinationFormContainer">
               <div class="uploadImage input-container">
                 <label for="destinationImageUrl">Upload your image</label>
-                <input
-                  type="file"
-                  id="destinationImageUrl"
-                  placeholder="Image URL"
-                />
+                <input type="file" id="destinationImageUrl" placeholder="Image URL" />
               </div>
               <div>
                 <div class="cardInformation"></div>
                 <div class="input-container">
                   <label for="destinationTitle">Destination title</label>
-                  <input
-                    type="text"
-                    id="destinationTitle"
-                    placeholder="Title"
-                    required
-                  />
+                  <input type="text" id="destinationTitle" placeholder="Title" required />
                 </div>
                 <div class="input-container">
                   <label for="destinationDescription">Description</label>
-                  <input
-                    type="text"
-                    id="destinationDescription"
-                    placeholder="Description"
-                    required
-                  />
+                  <input type="text" id="destinationDescription" placeholder="Description" required />
                 </div>
                 <div class="input-container">
                   <label for="destinationWikiLink">Wikipedia Link</label>
-                  <input
-                    type="text"
-                    id="destinationWikiLink"
-                    placeholder="Wikipedia Link"
-                  />
+                  <input type="text" id="destinationWikiLink" placeholder="Wikipedia Link" />
                 </div>
                 <div class="input-container">
                   <label for="destinationCountryCode">Select a country</label>
-                  <select
-                    id="destinationCountryCode"
-                    placeholder="Select a country"
-                    required
-                  ></select>
+                  <select id="destinationCountryCode" placeholder="Select a country" required></select>
                   <!-- <img id="destinationCountryFlag" class="countryFlag" alt="countryFlag" /> -->
                 </div>
                 <div>
-                  <button class="login-button" type="submit" value="Create now">
-                    Add destination
-                  </button>
+                  <button class="login-button" type="submit" value="Create now">Add destination</button>
                 </div>
               </div>
             </div>
@@ -151,52 +111,29 @@
             <div id="destinationFormContainer">
               <div class="uploadImage input-container">
                 <label for="editDestinationImageUrl">Upload your image</label>
-                <input
-                  type="file"
-                  id="editDestinationImageUrl"
-                  placeholder="Image URL"
-                />
+                <input type="file" id="editDestinationImageUrl" placeholder="Image URL" />
               </div>
               <div>
                 <div class="cardInformation"></div>
                 <div class="input-container">
                   <label for="editDestinationTitle">Destination title</label>
-                  <input
-                    type="text"
-                    id="editDestinationTitle"
-                    placeholder="Title"
-                  />
+                  <input type="text" id="editDestinationTitle" placeholder="Title" />
                 </div>
                 <div class="input-container">
                   <label for="editDestinationDescription">Description</label>
-                  <input
-                    type="text"
-                    id="editDestinationDescription"
-                    placeholder="Description"
-                  />
+                  <input type="text" id="editDestinationDescription" placeholder="Description" />
                 </div>
                 <div class="input-container">
                   <label for="editDestinationWikiLink">Wikipedia Link</label>
-                  <input
-                    type="text"
-                    id="editDestinationWikiLink"
-                    placeholder="Wikipedia Link"
-                  />
+                  <input type="text" id="editDestinationWikiLink" placeholder="Wikipedia Link" />
                 </div>
                 <div class="input-container">
-                  <label for="editDestinationCountryCode"
-                    >Select a country</label
-                  >
-                  <select
-                    id="editDestinationCountryCode"
-                    placeholder="Select a country"
-                  ></select>
+                  <label for="editDestinationCountryCode">Select a country</label>
+                  <select id="editDestinationCountryCode" placeholder="Select a country"></select>
                   <!-- <img id="editDestinationCountryFlag" class="countryFlag" alt="countryFlag" /> -->
                 </div>
                 <div>
-                  <button class="login-button" type="submit" value="Update now">
-                    Update your destination
-                  </button>
+                  <button class="login-button" type="submit" value="Update now">Update your destination</button>
                 </div>
               </div>
             </div>
@@ -220,9 +157,7 @@
             <a href="" class="wiki-link">Open in Maps</a>
           </div>
           <div class="action-buttons">
-            <a href="#editDestinationContainer"
-              ><button class="edit-btn">Edit</button></a
-            >
+            <a href="#editDestinationContainer"><button class="edit-btn">Edit</button></a>
             <button class="delete-btn">Delete</button>
           </div>
           <a href="#addDestinationContainer">

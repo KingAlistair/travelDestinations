@@ -35,9 +35,9 @@ const users = [
   },
   {
     _id: new ObjectId("651a1e9f8f1b2c001d3b0a1e"),
-    userName: "Sophia.W",
-    email: "sophia.wilson@example.com",
-    hashedPassword: "hash5",
+    userName: "Alessia",
+    email: "alessia@example.com",
+    hashedPassword: "alessia@example.com",
     isLoggedIn: false,
     createdOn: new Date(),
   },

@@ -9,7 +9,7 @@ import { getDestinations, getDestinationsByUserId, getDestinationByDestinationId
 
 const destinationsRouter = express.Router();
 
-const imageFolderPath = "clientSide/destinationImages/"
+const imageFolderPath = "../clientSide/destinationImages/";
 
 // Configure multer storage - use ut as middleware
 const storage = multer.diskStorage({
@@ -19,11 +19,10 @@ const storage = multer.diskStorage({
   filename: (req, file, cb) => {
     const uniqueName = `${uuidv4()}${path.extname(file.originalname)}`; // generate unique file name
     cb(null, uniqueName);
-  }
+  },
 });
 
 const upload = multer({ storage: storage });
-
 
 // GET all destinations
 destinationsRouter.get("/", async (req, res) => {
@@ -61,9 +60,8 @@ destinationsRouter.get("/users/:email", async (req, res) => {
   }
 });
 
-
 // POST new destination save image into destinationImages folder
-destinationsRouter.post("/", passport.authenticate('jwt', { session: false }),  upload.single('image'), async (req, res) => {
+destinationsRouter.post("/", passport.authenticate("jwt", { session: false }), upload.single("image"), async (req, res) => {
   try {
     const { title, description, link, countryCode } = req.body;
     const userEmail = req.body.userEmail;
@@ -84,7 +82,7 @@ destinationsRouter.post("/", passport.authenticate('jwt', { session: false }),  
       description,
       image: imageFilename,
       link,
-      countryCode
+      countryCode,
     };
 
     const newDestination = await createDestination(userEmail, destination);
@@ -100,9 +98,8 @@ destinationsRouter.post("/", passport.authenticate('jwt', { session: false }),  
   }
 });
 
-
 // Update destination by id and email
-destinationsRouter.put("/:id", passport.authenticate('jwt', { session: false }), upload.single("image"), async (req, res) => {
+destinationsRouter.put("/:id", passport.authenticate("jwt", { session: false }), upload.single("image"), async (req, res) => {
   try {
     const destinationId = req.params.id;
     const userEmail = req.body.userEmail;
@@ -136,7 +133,7 @@ destinationsRouter.put("/:id", passport.authenticate('jwt', { session: false }),
 });
 
 // DELETE destination
-destinationsRouter.delete("/:id", passport.authenticate('jwt', { session: false }), async (req, res) => {
+destinationsRouter.delete("/:id", passport.authenticate("jwt", { session: false }), async (req, res) => {
   try {
     const destinationId = req.params.id;
     const userEmail = req.body.email;
@@ -148,7 +145,7 @@ destinationsRouter.delete("/:id", passport.authenticate('jwt', { session: false 
 
     // Retrieve the destination to get the image filename
     const destination = await getDestinationByDestinationId(destinationId);
-    console.log(destination)
+    console.log(destination);
     if (!destination) {
       return res.status(404).json({ error: "Destination not found" });
     }
@@ -181,10 +178,9 @@ destinationsRouter.delete("/:id", passport.authenticate('jwt', { session: false 
       return res.status(404).json({ error: "Destination not found" });
     } else {
       console.error("Unexpected error:", error);
-       res.status(500).json({ error: "Failed to delete destination" });
+      res.status(500).json({ error: "Failed to delete destination" });
     }
   }
 });
-
 
 export default destinationsRouter;
