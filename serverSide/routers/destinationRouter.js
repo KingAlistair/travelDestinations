@@ -9,7 +9,7 @@ import { getDestinations, getDestinationsByUserId, getDestinationByDestinationId
 
 const destinationsRouter = express.Router();
 
-const imageFolderPath = "../clientSide/destinationImages/";
+const imageFolderPath = "./clientSide/destinationImages/";
 
 // Configure multer storage - use ut as middleware
 const storage = multer.diskStorage({
