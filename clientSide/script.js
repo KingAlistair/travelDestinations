@@ -55,7 +55,7 @@ const loadUI = async () => {
   //displays destinations
   const currentUserStatus = (await checkLoginStatus()) || false;
   console.log("currentUserStatus", currentUserStatus);
-
+  document.getElementById("destinations").innerHTML = "";
   await setupCountrySelector("destination");
   await setupCountrySelector("editDestination");
   editDestinationForm.reset();
@@ -114,8 +114,13 @@ const displayDestination = async (destination, destinationAuthor, currentUserSta
     let template = document.getElementById("destinationCardTemplate");
     let clone = template.content.cloneNode(true);
     //populate the template with data
+    clone.querySelector(".destination-card").setAttribute("data-id", destination._id);
     //adding fallback image if there is no image uploaded
-    clone.querySelector(".destination-image").src = `./destinationImages/${destination?.image}` || "./photos/france.jpg";
+    if (destination.image && (destination.image !== "" || destination.image !== null)) {
+      clone.querySelector(".destination-image").src = `./destinationImages/${destination?.image}`;
+    } else if (destination.image === "" || destination.image === null) {
+      clone.querySelector(".destination-image").src = "./destinationImages/no-image.jpg";
+    }
     clone.querySelector(".destination-image").alt = `Image for ${destination.title}`;
     clone.querySelector(".destination-title").textContent = destination.title;
     clone.querySelector(".user-name").textContent = destinationAuthor;
@@ -147,7 +152,13 @@ const displayDestination = async (destination, destinationAuthor, currentUserSta
 
       //NEED TO CONTINUE
       const editButton = clone.querySelector(".edit-btn");
-      editButton.addEventListener("click", async () => loadEditForm(destination));
+      const editDestinationHandler = () => {
+        loadEditForm(destination);
+      };
+      editButton.removeEventListener("click", editDestinationHandler);
+      editButton.addEventListener("click", editDestinationHandler);
+
+      //editButton.addEventListener("click", async () => loadEditForm(destination));
 
       // Delete destination functionality
       const deleteButton = clone.querySelector(".delete-btn");
@@ -180,7 +191,7 @@ const displayDestination = async (destination, destinationAuthor, currentUserSta
     document.getElementById("destinations").appendChild(clone);
   } else {
     console.log("No destinations to display");
-    document.getElementById("destinations").textContent = "";
+    // document.getElementById("destinations").textContent = "";
   }
 };
 
@@ -192,49 +203,88 @@ const editDestination = async (e, destination) => {
   const currentUserObject = localStorage.getItem("currentUser");
   const currentUser = JSON.parse(currentUserObject);
 
-  // Use FormData to handle all fields
-  const formData = new FormData();
+  // Get current values from form fields
+  const newTitle = document.getElementById("editDestinationTitle").value;
+  const newDescription = document.getElementById("editDestinationDescription").value;
+  const newLink = document.getElementById("editDestinationWikiLink").value;
+  const newCountryCode = document.getElementById("editDestinationCountryCode").value;
   const imageInput = document.getElementById("editDestinationImageUrl");
   const imageFile = imageInput.files[0];
 
-  // Append either the new file or the existing image path as a string
-  if (imageFile) {
-    formData.append("image", imageFile); // New image file
-  } else {
-    formData.append("image", destination.image); // Existing image path as a string
-  }
+  // Use FormData to handle all fields
+  const formData = new FormData();
 
-  // Append other form fields
-  formData.append("title", document.getElementById("editDestinationTitle").value || destination.title);
-  formData.append("description", document.getElementById("editDestinationDescription").value || destination.description);
-  formData.append("link", document.getElementById("editDestinationWikiLink").value || destination.link);
-  formData.append("countryCode", document.getElementById("editDestinationCountryCode").value || destination.countryCode);
-  formData.append("userEmail", currentUser.email);
+  const hasChanges = newTitle !== destination.title || newDescription !== destination.description || newLink !== destination.link || newCountryCode !== destination.countryCode || (imageFile !== undefined && imageFile !== null); // Check if a new image file is provided
+
+  //check for changes when updating the destination
+  if (!hasChanges) {
+    alert("No changes detected. Please edit at least one field.");
+    return; // Exit the function if no changes were made
+  } else {
+    // Append other form fields
+    formData.append("title", newTitle || destination.title);
+    formData.append("description", newDescription || destination.description);
+    formData.append("link", newLink || destination.link);
+    formData.append("countryCode", newCountryCode || destination.countryCode);
+    formData.append("userEmail", currentUser.email);
+    // Append either the new file or the existing image path as a string
+    if (imageFile) {
+      formData.append("image", imageFile); // New image file
+    } else {
+      formData.append("image", destination.image); // Existing image path as a string
+    }
+  }
 
   try {
     const response = await updateDestination(destination._id, formData);
-    if (response.ok) {
-      const updatedDestination = await response.json();
-      console.log("updatedDestination", updatedDestination);
-      alert(`The destination "${updatedDestination.title}" has been updated.`);
-
+    if (response) {
+      console.log("updatedDestination", response);
+      alert(`The destination "${response.title}" has been updated.`);
+      await updateDestinationCard(response);
       // Reset the form and update the UI
       editDestinationForm.reset();
+      // Reload the form with the updated destination data
+      // loadEditForm(response);
+
       editDestinationContainer.style.display = "none";
       addDestinationContainer.style.display = "flex";
-      await loadUI();
+      //await loadUI();
     } else {
-      console.log("Something is strange, but it works, kinda :/");
-      window.location.reload(); // Yeah not the best, but if you don't change the image on edit it's buggy
+      console.log("Error with updating the destination.");
+      return;
     }
   } catch (error) {
     console.error("Failed to update destination:", error);
   }
 };
+const updateDestinationCard = async (updatedDestination) => {
+  const destinationCard = document.querySelector(`.destination-card[data-id="${updatedDestination._id}"]`);
+  if (destinationCard) {
+    // Update the card elements with the new values
+    destinationCard.querySelector(".destination-title").textContent = updatedDestination.title;
+    destinationCard.querySelector(".destination-description").textContent = updatedDestination.description;
+    // Update the image if necessary
+    const imgElement = destinationCard.querySelector(".destination-image");
+    if (updatedDestination.image) {
+      imgElement.src = `./destinationImages/${updatedDestination.image}`;
+    }
+    // Update the wiki link if necessary
+    const wikiLink = destinationCard.querySelector(".wiki-link");
+    if (updatedDestination.link) {
+      wikiLink.textContent = "Wiki link";
+      wikiLink.href = updatedDestination.link;
+      destinationCard.querySelector(".post-info").style.display = "flex";
+    } else {
+      destinationCard.querySelector(".post-info").style.display = "none";
+    }
+  }
+  editDestinationForm.removeEventListener("submit", editDestination);
+  destinationCard.querySelector(".edit-btn").removeEventListener("click", loadEditForm);
+  destinationCard.querySelector(".edit-btn").addEventListener("click", async () => loadEditForm(updatedDestination));
+};
 
 // Load the edit form with destination data
 const loadEditForm = async (destination) => {
-  editDestinationForm.removeEventListener("submit", editDestination);
   addDestinationContainer.style.display = "none";
   editDestinationContainer.style.display = "flex";
 
@@ -242,7 +292,7 @@ const loadEditForm = async (destination) => {
   document.getElementById("editDestinationTitle").value = destination.title;
   document.getElementById("editDestinationDescription").value = destination.description;
   const imageInput = document.getElementById("editDestinationImageUrl");
-  const imageUrl = destination.image ? `./destinationImages/${destination.image}` : "./photos/france.jpg";
+  const imageUrl = destination.image ? `./destinationImages/${destination?.image}` : "./destinationImages/no-image.jpg";
   imageInput.placeholder = imageUrl;
   document.getElementById("editDestinationWikiLink").value = destination.link || "";
   document.getElementById("editDestinationCountryCode").value = destination.countryCode;
@@ -322,7 +372,7 @@ const addDestination = async (e) => {
 
     if (response) {
       alert(`${response.title} has been added to the destinations!`);
-      document.getElementById("destinations").innerHTML = "";
+      // document.getElementById("destinations").innerHTML = "";
       document.getElementById("addDestinationForm").reset();
       // document.getElementById("countryFlag").style.display = "none";
 
@@ -332,7 +382,7 @@ const addDestination = async (e) => {
       // Clear the saved image from localStorage after submission
       localStorage.removeItem("uploadedImage");
 
-      await loadUI();
+      loadUI();
     } else {
       console.log("Error with adding a destination");
     }
